@@ -366,3 +366,5 @@ $RECYCLE.BIN/
 appsettings.*
 
 documents/
+
+populate.sql

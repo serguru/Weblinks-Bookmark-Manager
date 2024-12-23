@@ -33,36 +33,3 @@ create table pages (
 ); 
 go
 
-declare @userName varchar(50) = 'serguru';
-declare @plainTextPassword  varchar(50) = 'Binary_09';
-declare @salt  varbinary(16) = newid();
-declare @hashedPassword varbinary(64) = hashbytes('SHA2_512', concat(@salt, @plainTextPassword));
-
-insert into accounts (userName, hashedPassword, salt, firstName, lastName)
-    values (@userName, @hashedPassword, @salt, 'Sergey', 'Chernyshov');
-
-declare @lastIdentity int = @@Identity;
-
-insert into pages (accountId, pagePath, caption)
-    values (@lastIdentity, 'general', 'General');
-
-insert into pages (accountId, pagePath, caption)
-    values (@lastIdentity, 'software', 'Software');
-
-set @userName = 'bobbrown';
-set @plainTextPassword  = 'bobBest';
-set @salt = newid();
-set @hashedPassword = hashbytes('SHA2_512', concat(@salt, @plainTextPassword));
-
-insert into accounts (userName, hashedPassword, salt, firstName, lastName)
-    values (@userName, @hashedPassword, @salt, 'Bob', 'Brown');
-
-set @lastIdentity = @@Identity;
-
-insert into pages (accountId, pagePath, caption)
-    values (@lastIdentity, 'general', 'General');
-
-
-insert into pages (accountId, pagePath, caption)
-    values (@lastIdentity, 'news', 'News');
-go
