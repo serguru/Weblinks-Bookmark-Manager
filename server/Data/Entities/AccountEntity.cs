@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace server.Data.Entities;
 
-public partial class Account
+public partial class AccountEntity
 {
     public int Id { get; set; }
 
@@ -16,6 +16,4 @@ public partial class Account
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
-
-    public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
 }

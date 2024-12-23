@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace server.Data.Entities;
 
-public partial class Page
+public partial class PageEntity
 {
     public int Id { get; set; }
 
@@ -13,5 +13,4 @@ public partial class Page
 
     public string? Caption { get; set; }
 
-    public virtual Account Account { get; set; } = null!;
 }

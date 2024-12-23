@@ -17,5 +17,4 @@ public partial class AccountModel
 
     public string? LastName { get; set; }
 
-    public virtual ICollection<PageModel> Pages { get; set; } = new List<PageModel>();
 }

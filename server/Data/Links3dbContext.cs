@@ -16,17 +16,13 @@ public partial class Links3dbContext : DbContext
     {
     }
 
-    public virtual DbSet<Account> Accounts { get; set; }
+    public virtual DbSet<AccountEntity> Accounts { get; set; }
 
-    public virtual DbSet<Page> Pages { get; set; }
-
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server=LAPTOP-UH69GVA4;Initial Catalog=links3db;Integrated Security=SSPI; MultipleActiveResultSets=true;TrustServerCertificate=True;");
+    public virtual DbSet<PageEntity> Pages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Account>(entity =>
+        modelBuilder.Entity<AccountEntity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__accounts__3213E83F9936FDE0");
 
@@ -53,7 +49,7 @@ public partial class Links3dbContext : DbContext
                 .HasColumnName("userName");
         });
 
-        modelBuilder.Entity<Page>(entity =>
+        modelBuilder.Entity<PageEntity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__pages__3213E83F4C389E2C");
 
@@ -72,10 +68,6 @@ public partial class Links3dbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("pagePath");
 
-            entity.HasOne(d => d.Account).WithMany(p => p.Pages)
-                .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__pages__accountId__4F7CD00D");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -12,6 +12,4 @@ public partial class PageModel
     public string PagePath { get; set; } = null!;
 
     public string? Caption { get; set; }
-
-    public virtual AccountModel Account { get; set; } = null!;
 }

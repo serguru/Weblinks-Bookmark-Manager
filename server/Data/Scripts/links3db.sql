@@ -44,5 +44,25 @@ insert into accounts (userName, hashedPassword, salt, firstName, lastName)
 declare @lastIdentity int = @@Identity;
 
 insert into pages (accountId, pagePath, caption)
-    values (@lastIdentity, 'main', null);
+    values (@lastIdentity, 'general', 'General');
+
+insert into pages (accountId, pagePath, caption)
+    values (@lastIdentity, 'software', 'Software');
+
+set @userName = 'bobbrown';
+set @plainTextPassword  = 'bobBest';
+set @salt = newid();
+set @hashedPassword = hashbytes('SHA2_512', concat(@salt, @plainTextPassword));
+
+insert into accounts (userName, hashedPassword, salt, firstName, lastName)
+    values (@userName, @hashedPassword, @salt, 'Bob', 'Brown');
+
+set @lastIdentity = @@Identity;
+
+insert into pages (accountId, pagePath, caption)
+    values (@lastIdentity, 'general', 'General');
+
+
+insert into pages (accountId, pagePath, caption)
+    values (@lastIdentity, 'news', 'News');
 go

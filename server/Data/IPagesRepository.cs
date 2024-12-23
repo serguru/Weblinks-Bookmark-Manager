@@ -1,9 +1,10 @@
-﻿using server.Data.Models;
+﻿
+using server.Data.Entities;
 
 namespace server.Data
 {
     public interface IPagesRepository
     {
-        Task<List<PageModel>> GetAllPagesAsync(int? accountId = null);
+        Task<List<PageEntity>> GetAllPagesAsync(int? accountId = null);
     }
 }
