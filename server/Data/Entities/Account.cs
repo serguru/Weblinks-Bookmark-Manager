@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace server.Data.Entities;
 
-public partial class AccountEntity
+public partial class Account
 {
     public int Id { get; set; }
 

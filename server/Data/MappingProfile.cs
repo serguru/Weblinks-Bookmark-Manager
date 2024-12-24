@@ -9,11 +9,11 @@ public class MappingProfile: Profile
 
     public MappingProfile()
     {
-        CreateMap<PageModel, PageEntity>();
-        CreateMap<PageEntity, PageModel>();
+        CreateMap<PageModel, Page>();
+        CreateMap<Page, PageModel>();
 
-        CreateMap<AccountModel, AccountEntity>();
-        CreateMap<AccountEntity, AccountModel>();
+        CreateMap<AccountModel, Account>();
+        CreateMap<Account, AccountModel>();
 
     }
 }

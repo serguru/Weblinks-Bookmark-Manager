@@ -16,13 +16,13 @@ public partial class Links3dbContext : DbContext
     {
     }
 
-    public virtual DbSet<AccountEntity> Accounts { get; set; }
+    public virtual DbSet<Account> Accounts { get; set; }
 
-    public virtual DbSet<PageEntity> Pages { get; set; }
+    public virtual DbSet<Page> Pages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AccountEntity>(entity =>
+        modelBuilder.Entity<Account>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__accounts__3213E83F9936FDE0");
 
@@ -49,7 +49,7 @@ public partial class Links3dbContext : DbContext
                 .HasColumnName("userName");
         });
 
-        modelBuilder.Entity<PageEntity>(entity =>
+        modelBuilder.Entity<Page>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__pages__3213E83F4C389E2C");
 

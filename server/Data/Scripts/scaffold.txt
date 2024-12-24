@@ -22,4 +22,4 @@ To Scaffold database as model to local project use below cmd.
 
 cd to project's folder
 
-dotnet ef dbcontext scaffold "Server=LAPTOP-UH69GVA4;Initial Catalog=links3db;Integrated Security=SSPI; MultipleActiveResultSets=true;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer  --output-dir "Entities" --context-dir "Data"
+dotnet ef dbcontext scaffold "Server=LAPTOP-UH69GVA4;Initial Catalog=links3db;Integrated Security=SSPI; MultipleActiveResultSets=true;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer  --output-dir "Data/Entities" --context-dir "Data"

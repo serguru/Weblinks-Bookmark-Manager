@@ -5,6 +5,6 @@ namespace server.Data
 {
     public interface IPagesRepository
     {
-        Task<List<PageEntity>> GetAllPagesAsync(int? accountId = null);
+        Task<List<Page>> GetAllPagesAsync(int? accountId = null);
     }
 }

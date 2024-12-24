@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace server.Data.Entities;
 
-public partial class PageEntity
+public partial class Page
 {
     public int Id { get; set; }
 

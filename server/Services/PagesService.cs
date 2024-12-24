@@ -12,7 +12,7 @@ public class PagesService(IPagesRepository pagesRepository, IMapper mapper) : IP
 
     public async Task<List<PageModel>> GetAllPagesAsync(int? accountId = null)
     {
-        List<PageEntity> entities = await _pagesRepository.GetAllPagesAsync(accountId);
+        List<Page> entities = await _pagesRepository.GetAllPagesAsync(accountId);
         List<PageModel> models = _mapper.Map<List<PageModel>>(entities);
         return models;
     }
