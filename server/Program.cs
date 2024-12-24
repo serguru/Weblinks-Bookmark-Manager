@@ -28,12 +28,14 @@ namespace server
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200") // Corrected frontend URL without trailing slash
+                    policy.WithOrigins("http://localhost:4200", "https://links3.azurewebsites.net") // Corrected frontend URL without trailing slash
                           .AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .AllowCredentials();  // Required for SignalR
+                          .AllowAnyMethod();
                 });
             });
+
+
+            builder.Services.AddCors();
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -48,6 +50,7 @@ namespace server
             var app = builder.Build();
 
             app.UseCors("default");
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

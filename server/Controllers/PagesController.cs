@@ -22,6 +22,20 @@ public class PagesController : ControllerBase
     public async Task<ActionResult<List<PageModel>>> GetAllPagesAsync()
     {
         var pages = await _pagesService.GetAllPagesAsync();
+        //var pages = new List<PageModel>()
+        //{
+        //    new PageModel()
+        //    {
+        //        Id = 1,
+        //        PagePath = "path",
+        //    },
+        //    new PageModel()
+        //    {
+        //        Id = 2,
+        //        PagePath = "path2",
+        //    },
+
+        //};
         return Ok(pages);
     }
 }
