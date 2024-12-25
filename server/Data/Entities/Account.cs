@@ -16,4 +16,8 @@ public partial class Account
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
+
+    public string? Settings { get; set; }
+
+    public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
 }

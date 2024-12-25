@@ -13,4 +13,7 @@ public partial class Page
 
     public string? Caption { get; set; }
 
+    public virtual Account Account { get; set; } = null!;
+
+    public virtual ICollection<Lrow> Lrows { get; set; } = new List<Lrow>();
 }
