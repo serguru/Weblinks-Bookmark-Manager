@@ -8,7 +8,7 @@ public interface IAccountsRepository
 {
     Task<List<Account>> GetAllAccountsAsync();
     Task<Account?> GetAccountByIdAsync(int accountId);
-    Task<Account> AddAccountAsync(Account account);
-    Task<Account> UpdateAccountAsync(Account account);
+    Task AddAccountAsync(Account account);
+    Task UpdateAccountAsync(Account account);
     Task DeleteAccountAsync(int accountId);
 }

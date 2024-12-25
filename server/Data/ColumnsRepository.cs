@@ -26,18 +26,16 @@ public class ColumnsRepository : IColumnsRepository
         return columns;
     }
 
-    public async Task<Lcolumn> AddColumnAsync(Lcolumn column)
+    public async Task AddColumnAsync(Lcolumn column)
     {
         await _dbContext.Lcolumns.AddAsync(column);
         await _dbContext.SaveChangesAsync();
-        return column;
     }
 
-    public async Task<Lcolumn> UpdateColumnAsync(Lcolumn column)
+    public async Task UpdateColumnAsync(Lcolumn column)
     {
         _dbContext.Lcolumns.Update(column);
         await _dbContext.SaveChangesAsync();
-        return column;
     }
 
     public async Task<Lcolumn?> GetColumnByIdAsync(int columnId)

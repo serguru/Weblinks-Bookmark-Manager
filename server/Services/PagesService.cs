@@ -20,8 +20,10 @@ public class PagesService(IPagesRepository pagesRepository, IMapper mapper) : IP
     public async Task AddPageAsync(PageModel page)
     {
         Page raw = _mapper.Map<Page>(page);
-
-        Page newPage = await _pagesRepository.AddPageAsync(raw);
+        //raw.Id = 0;
+        //raw.PagePath = raw.PagePath + "AAA1";
+        //raw.Lrows = null;
+        await _pagesRepository.AddPageAsync(raw);
     }
 
     public Task DeletePageAsync(int pageId)

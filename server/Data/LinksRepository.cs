@@ -26,18 +26,16 @@ public class LinksRepository : ILinksRepository
         return links;
     }
 
-    public async Task<Link> AddLinkAsync(Link link)
+    public async Task AddLinkAsync(Link link)
     {
         await _dbContext.Links.AddAsync(link);
         await _dbContext.SaveChangesAsync();
-        return link;
     }
 
-    public async Task<Link> UpdateLinkAsync(Link link)
+    public async Task UpdateLinkAsync(Link link)
     {
         _dbContext.Links.Update(link);
         await _dbContext.SaveChangesAsync();
-        return link;
     }
 
     public async Task<Link?> GetLinkByIdAsync(int linkId)

@@ -26,18 +26,16 @@ public class RowsRepository : IRowsRepository
         return rows;
     }
 
-    public async Task<Lrow> AddRowAsync(Lrow row)
+    public async Task AddRowAsync(Lrow row)
     {
         await _dbContext.Lrows.AddAsync(row);
         await _dbContext.SaveChangesAsync();
-        return row;
     }
 
-    public async Task<Lrow> UpdateRowAsync(Lrow row)
+    public async Task UpdateRowAsync(Lrow row)
     {
         _dbContext.Lrows.Update(row);
         await _dbContext.SaveChangesAsync();
-        return row;
     }
 
     public async Task<Lrow?> GetRowByIdAsync(int rowId)

@@ -29,18 +29,16 @@ public class PagesRepository : IPagesRepository
         return pages;
     }
 
-    public async Task<Page> AddPageAsync(Page page)
+    public async Task AddPageAsync(Page page)
     {
         await _dbContext.Pages.AddAsync(page);
         await _dbContext.SaveChangesAsync();
-        return page;
     }
 
-    public async Task<Page> UpdatePageAsync(Page page)
+    public async Task UpdatePageAsync(Page page)
     {
         _dbContext.Pages.Update(page);
         await _dbContext.SaveChangesAsync();
-        return page;
     }
 
     public async Task<Page?> GetPageByIdAsync(int pageId)
