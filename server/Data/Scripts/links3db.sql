@@ -31,19 +31,75 @@ begin
 end;
 go
 
+if object_id('GenerateSalt') is not null
+begin
+    drop procedure GenerateSalt;
+end;
+go
+
+create procedure GenerateSalt
+@salt nvarchar(24) output
+as
+begin
+    set @salt = cast(crypt_gen_random(18) as varchar(24));
+end
+go
+
+if object_id('HashPassword') is not null
+begin
+    drop function HashPassword;
+end;
+go
+
+create function HashPassword
+(
+    @password nvarchar(max),
+    @salt nvarchar(24)
+)
+returns nvarchar(max)
+as
+begin
+    return convert(nvarchar(max), hashbytes('sha2_512', @password + @salt), 2);
+end
+go
+
+if object_id('VerifyPassword') is not null
+begin
+    drop procedure VerifyPassword;
+end;
+go
+
+create procedure VerifyPassword
+    @providedPassword nvarchar(max),
+    @storedHash nvarchar(max),
+    @salt nvarchar(24),
+    @isValid bit output
+as
+begin
+    declare @calculatedHash nvarchar(max) = dbo.HashPassword(@providedPassword, @salt);
+    set @isValid = case when @calculatedhash = @storedHash then 1 else 0 end;
+end
+go
+
 create table accounts (
     id int identity(1,1) not null,
-    userName varchar(50) not null ,
-    hashedPassword varbinary(64) not null,
-    salt varbinary(16) not null,
+    userName varchar(50) not null,
+    userEmail varchar(255) not null,
+    isAdmin bit not null,
+    hashedPassword nvarchar(max) not null,
+    salt nvarchar(24) not null,
     firstName nvarchar(100) null,
     lastName nvarchar(100) null,
     settings nvarchar(max) null,
 
     constraint pk_accounts_id primary key (id),
     constraint uq_accounts_name unique (userName),
-    constraint uq_accounts_len check(len(userName) >= 3)
+    constraint uq_accounts_len check(len(userName) >= 3),
+    constraint uq_accounts_email unique (userEmail)
 );
+go
+
+alter table accounts add constraint df_accounts_isAdmin default 0 for isAdmin
 go
 
 create table pages (

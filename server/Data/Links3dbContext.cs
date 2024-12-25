@@ -34,22 +34,27 @@ public partial class Links3dbContext : DbContext
 
             entity.ToTable("accounts");
 
+            entity.HasIndex(e => e.UserEmail, "uq_accounts_email").IsUnique();
+
             entity.HasIndex(e => e.UserName, "uq_accounts_name").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.FirstName)
                 .HasMaxLength(100)
                 .HasColumnName("firstName");
-            entity.Property(e => e.HashedPassword)
-                .HasMaxLength(64)
-                .HasColumnName("hashedPassword");
+            entity.Property(e => e.HashedPassword).HasColumnName("hashedPassword");
+            entity.Property(e => e.IsAdmin).HasColumnName("isAdmin");
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .HasColumnName("lastName");
             entity.Property(e => e.Salt)
-                .HasMaxLength(16)
+                .HasMaxLength(24)
                 .HasColumnName("salt");
             entity.Property(e => e.Settings).HasColumnName("settings");
+            entity.Property(e => e.UserEmail)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("userEmail");
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .IsUnicode(false)

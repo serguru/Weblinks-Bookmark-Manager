@@ -9,9 +9,13 @@ public partial class Account
 
     public string UserName { get; set; } = null!;
 
-    public byte[] HashedPassword { get; set; } = null!;
+    public string UserEmail { get; set; } = null!;
 
-    public byte[] Salt { get; set; } = null!;
+    public bool IsAdmin { get; set; }
+
+    public string HashedPassword { get; set; } = null!;
+
+    public string Salt { get; set; } = null!;
 
     public string? FirstName { get; set; }
 
