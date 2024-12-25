@@ -16,6 +16,28 @@ public class PagesService(IPagesRepository pagesRepository, IMapper mapper) : IP
         List<PageModel> models = _mapper.Map<List<PageModel>>(entities);
         return models;
     }
+
+    public async Task AddPageAsync(PageModel page)
+    {
+        Page raw = _mapper.Map<Page>(page);
+
+        Page newPage = await _pagesRepository.AddPageAsync(raw);
+    }
+
+    public Task DeletePageAsync(int pageId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<PageModel?> GetPageByIdAsync(int pageId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdatePageAsync(PageModel page)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 

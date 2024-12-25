@@ -17,4 +17,6 @@ public partial class AccountModel
 
     public string? LastName { get; set; }
 
+    public string? Settings { get; set; }
+
 }

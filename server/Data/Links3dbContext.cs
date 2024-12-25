@@ -71,7 +71,6 @@ public partial class Links3dbContext : DbContext
 
             entity.HasOne(d => d.Row).WithMany(p => p.Lcolumns)
                 .HasForeignKey(d => d.RowId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_lcolumns_row_id");
         });
 
@@ -93,7 +92,6 @@ public partial class Links3dbContext : DbContext
 
             entity.HasOne(d => d.Column).WithMany(p => p.Links)
                 .HasForeignKey(d => d.ColumnId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_links_column_id");
         });
 
@@ -112,7 +110,6 @@ public partial class Links3dbContext : DbContext
 
             entity.HasOne(d => d.Page).WithMany(p => p.Lrows)
                 .HasForeignKey(d => d.PageId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_lrows_page_id");
         });
 
@@ -137,7 +134,6 @@ public partial class Links3dbContext : DbContext
 
             entity.HasOne(d => d.Account).WithMany(p => p.Pages)
                 .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_pages_account_id");
         });
 

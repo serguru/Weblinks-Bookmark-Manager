@@ -6,9 +6,17 @@ namespace server.Data;
 
 public class MappingProfile: Profile
 {
-
     public MappingProfile()
     {
+        CreateMap<LinkModel, Link>();
+        CreateMap<Link, LinkModel>();
+
+        CreateMap<LcolumnModel, Lcolumn>();
+        CreateMap<Lcolumn, LcolumnModel>();
+
+        CreateMap<LrowModel, Lrow>();
+        CreateMap<Lrow, LrowModel>();
+
         CreateMap<PageModel, Page>();
         CreateMap<Page, PageModel>();
 

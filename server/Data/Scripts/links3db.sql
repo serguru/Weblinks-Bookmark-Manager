@@ -52,7 +52,7 @@ create table pages (
     pagePath varchar(50) not null,
     caption varchar(50) null,
     constraint pk_pages_id primary key (id),
-    constraint fk_pages_account_id foreign key (accountId) references accounts(id),
+    constraint fk_pages_account_id foreign key (accountId) references accounts(id) on delete cascade,
     constraint uq_page_path unique (accountId, pagePath),
     constraint uq_page_path_len check(len(pagePath) >= 3)
 ); 
@@ -63,7 +63,7 @@ create table lrows (
     pageId int not null,
     caption varchar(50) null,
     constraint pk_lrows_id primary key (id),
-    constraint fk_lrows_page_id foreign key (pageId) references pages(id),
+    constraint fk_lrows_page_id foreign key (pageId) references pages(id) on delete cascade,
 ); 
 go
 
@@ -72,7 +72,7 @@ create table lcolumns (
     rowId int not null,
     caption varchar(50) null,
     constraint pk_lcolumns_id primary key (id),
-    constraint fk_lcolumns_row_id foreign key (rowId) references lrows(id),
+    constraint fk_lcolumns_row_id foreign key (rowId) references lrows(id) on delete cascade,
 ); 
 go
 
@@ -82,7 +82,7 @@ create table links (
     aUrl varchar(max) not null,
     caption varchar(50) not null,
     constraint pk_links_id primary key (id),
-    constraint fk_links_column_id foreign key (columnId) references lcolumns(id),
+    constraint fk_links_column_id foreign key (columnId) references lcolumns(id) on delete cascade,
 ); 
 go
 

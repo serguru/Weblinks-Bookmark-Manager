@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Collections.Generic;
 
 namespace server.Data.Entities;
@@ -16,4 +17,5 @@ public partial class Page
     public virtual Account Account { get; set; } = null!;
 
     public virtual ICollection<Lrow> Lrows { get; set; } = new List<Lrow>();
+
 }
