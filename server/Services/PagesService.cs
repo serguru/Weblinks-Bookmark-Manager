@@ -17,28 +17,36 @@ public class PagesService(IPagesRepository pagesRepository, IMapper mapper) : IP
         return models;
     }
 
-    public async Task AddPageAsync(PageModel page)
+    public async Task<PageModel> AddPageAsync(PageModel page)
     {
-        Page raw = _mapper.Map<Page>(page);
-        //raw.Id = 0;
-        //raw.PagePath = raw.PagePath + "AAA1";
-        //raw.Lrows = null;
-        await _pagesRepository.AddPageAsync(raw);
+        Page entity = _mapper.Map<Page>(page);
+        await _pagesRepository.AddPageAsync(entity);
+        PageModel result = _mapper.Map<PageModel>(entity);    
+        return result;
     }
 
-    public Task DeletePageAsync(int pageId)
+    public async Task DeletePageAsync(int pageId)
     {
-        throw new NotImplementedException();
+        await _pagesRepository.DeletePageAsync(pageId);
     }
 
-    public Task<PageModel?> GetPageByIdAsync(int pageId)
+    public async Task<PageModel?> GetPageByIdAsync(int pageId)
     {
-        throw new NotImplementedException();
+        Page? entity = await pagesRepository.GetPageByIdAsync(pageId);
+        if (entity == null) 
+        { 
+            return null;
+        }
+        PageModel model = _mapper.Map<PageModel>(entity);
+        return model;
     }
 
-    public Task UpdatePageAsync(PageModel page)
+    public async Task<PageModel> UpdatePageAsync(PageModel page)
     {
-        throw new NotImplementedException();
+        Page entity = _mapper.Map<Page>(page);
+        await _pagesRepository.UpdatePageAsync(entity);
+        PageModel model = _mapper.Map<PageModel>(entity);
+        return model;
     }
 }
 

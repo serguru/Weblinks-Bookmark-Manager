@@ -6,7 +6,7 @@ public interface IPagesService
 {
     Task<List<PageModel>> GetAllPagesAsync(int? accountId = null);
     Task<PageModel?> GetPageByIdAsync(int pageId);
-    Task AddPageAsync(PageModel page);
-    Task UpdatePageAsync(PageModel page);
+    Task<PageModel> AddPageAsync(PageModel page);
+    Task<PageModel> UpdatePageAsync(PageModel page);
     Task DeletePageAsync(int pageId);
 }
