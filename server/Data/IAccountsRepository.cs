@@ -13,7 +13,6 @@ public interface IAccountsRepository
     Task AddAccountAsync(Account account);
     Task UpdateAccountAsync(Account account);
     Task DeleteAccountAsync(int accountId);
-
     Task<bool> VerifyPasswordAsync(string providedPassword, string hashedStoredPassword, string salt);
-    Task<string> ValidateNewAccount(Account account);
+    Task<string> ValidateNewAccountAsync(Account account);
 }

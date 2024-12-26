@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using AutoMapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using server.Data;
@@ -15,14 +16,16 @@ public class AccountsService : IAccountsService
 {
     private readonly IConfiguration _configuration;
     private readonly IAccountsRepository _accountsRepository;
+    private readonly IMapper _mapper;
 
-    public AccountsService(IConfiguration configuration, IAccountsRepository accountsRepository)
+    public AccountsService(IConfiguration configuration, IAccountsRepository accountsRepository, IMapper mapper)
     {
         _configuration = configuration;
         _accountsRepository = accountsRepository;
+        _mapper = mapper;
     }
 
-    public async Task<Account?> FindAccount(string userEmail)
+    public async Task<Account?> GetAccountByEmailAsync(string userEmail)
     {
         Account? account = await _accountsRepository.GetAccountByEmailAsync(userEmail);
         return account;
@@ -30,7 +33,7 @@ public class AccountsService : IAccountsService
 
     public async Task<Account?> CheckPasswordAsync(LoginModel login)
     {
-        Account? account = await FindAccount(login.UserEmail);
+        Account? account = await GetAccountByEmailAsync(login.UserEmail);
         if (account == null)
         {
             return null;
@@ -66,7 +69,11 @@ public class AccountsService : IAccountsService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-
-
-
+    public async Task<AccountModel> AddAccountAsync(AccountModel newAccount)
+    {
+        Account account = _mapper.Map<Account>(newAccount);
+        await _accountsRepository.AddAccountAsync(account);
+        AccountModel result = _mapper.Map<AccountModel>(account);
+        return result;
+    }
 }

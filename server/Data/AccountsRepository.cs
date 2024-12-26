@@ -1,10 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using NuGet.Protocol.Plugins;
 using server.Data.Entities;
-using server.Data.Models;
 using System.Data;
 
 namespace server.Data;
@@ -47,7 +43,7 @@ public class AccountsRepository : IAccountsRepository
         }
 
         account.Id = 0;
-        message = await ValidateNewAccount(account);
+        message = await ValidateNewAccountAsync(account);
 
         if (!String.IsNullOrEmpty(message))
         {
@@ -56,14 +52,19 @@ public class AccountsRepository : IAccountsRepository
 
         var parameters = new[]
         {
-            new SqlParameter("@salt", SqlDbType.NVarChar) { Direction = ParameterDirection.Output }
+            new SqlParameter("@salt", SqlDbType.NVarChar, 24) { Direction = ParameterDirection.Output }
         };
-        await _dbContext.Database.ExecuteSqlRawAsync("EXEC GenerateSalt @salt OUTPUT", parameters);
+        await _dbContext.Database.ExecuteSqlRawAsync("exec GenerateSalt @salt output", parameters);
         account.Salt = (string)parameters[0].Value;
 
-        account.HashedPassword = await _dbContext.Database
-                    .SqlQuery<string>($"SELECT dbo.HashPassword({account.HashedPassword}, {account.Salt})")
-                    .FirstAsync();
+        parameters = new[]
+        {
+            new SqlParameter("@password", account.HashedPassword),
+            new SqlParameter("@salt", account.Salt),
+            new SqlParameter("@hashedPassword", SqlDbType.NVarChar, 8000) { Direction = ParameterDirection.Output }
+        };
+        await _dbContext.Database.ExecuteSqlRawAsync("exec HashPassword @password, @salt, @hashedPassword output", parameters);
+        account.HashedPassword = (string)parameters[2].Value;
 
         _dbContext.Accounts.Add(account);
         await _dbContext.SaveChangesAsync();
@@ -88,7 +89,7 @@ public class AccountsRepository : IAccountsRepository
     public async Task<bool> VerifyPasswordAsync(string providedPassword, string hashedStoredPassword, string salt)
     {
         var parameters = new[]
-               {
+        {
             new SqlParameter("@providedPassword", providedPassword),
             new SqlParameter("@storedHash", hashedStoredPassword),
             new SqlParameter("@salt", salt),
@@ -103,16 +104,17 @@ public class AccountsRepository : IAccountsRepository
         return (bool)parameters[3].Value;
     }
 
-    public async Task<string> ValidateNewAccount(Account account)
+    public async Task<string> ValidateNewAccountAsync(Account account)
     {
         var parameters = new[]
         {
             new SqlParameter("@userName", account.UserName),
             new SqlParameter("@userEmail", account.UserEmail),
-            new SqlParameter("@existingAccountId", account.Id > 0 ? account.Id : null),
-            new SqlParameter("@message", SqlDbType.VarChar) { Direction = ParameterDirection.Output }
+            new SqlParameter("@existingAccountId", account.Id),
+            new SqlParameter("@message", SqlDbType.VarChar, 1000) { Direction = ParameterDirection.Output }
         };
-        await _dbContext.Database.ExecuteSqlRawAsync("EXEC ValidateNewAccount @userName, @userEmail, @message OUTPUT", parameters);
+        await _dbContext.Database.ExecuteSqlRawAsync("EXEC dbo.ValidateNewAccount @userName, @userEmail, @existingAccountId, @message OUTPUT", parameters);
+        
         return (string)parameters[3].Value;
     }
 

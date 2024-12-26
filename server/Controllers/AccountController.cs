@@ -1,13 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
 using server.Data.Entities;
 using server.Data.Models;
 using server.Services;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace server.Controllers;
 
@@ -20,6 +14,13 @@ public class AccountController : ControllerBase
     public AccountController(IAccountsService accountsService)
     {
         _accountsService = accountsService;
+    }
+
+    [HttpPost("create")]
+    public async Task<IActionResult> Create([FromBody] AccountModel model)
+    {
+        AccountModel result = await _accountsService.AddAccountAsync(model);
+        return Ok(result);
     }
 
     [HttpPost("login")]

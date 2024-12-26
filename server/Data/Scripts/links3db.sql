@@ -47,19 +47,17 @@ go
 
 if object_id('HashPassword') is not null
 begin
-    drop function HashPassword;
+    drop procedure HashPassword;
 end;
 go
 
-create function HashPassword
-(
-    @password nvarchar(max),
-    @salt nvarchar(24)
-)
-returns nvarchar(max)
+create procedure HashPassword
+@password nvarchar(max),
+@salt nvarchar(24),
+@hashedPassword nvarchar(max) output
 as
 begin
-    return convert(nvarchar(max), hashbytes('sha2_512', @password + @salt), 2);
+    set @hashedPassword = convert(nvarchar(max), hashbytes('sha2_512', @password + @salt), 2);
 end
 go
 
@@ -107,7 +105,8 @@ create procedure VerifyPassword
     @isValid bit output
 as
 begin
-    declare @calculatedHash nvarchar(max) = dbo.HashPassword(@providedPassword, @salt);
+    declare @calculatedHash nvarchar(max);
+    exec HashPassword @providedPassword, @salt, @calculatedHash output;
     set @isValid = case when @calculatedhash = @storedHash then 1 else 0 end;
 end
 go
@@ -230,10 +229,10 @@ begin
     end else if dbo.ValidateEmail(@userEmail) = 0
     begin
         set @message = 'Invalid email';
-    end else if exists (select null from accounts where userEmail = @userEmail and (@existingAccountId is null or id != @existingAccountId))
+    end else if exists (select null from accounts where userEmail = @userEmail and (@existingAccountId = 0 or id != @existingAccountId))
     begin
         set @message = 'Account with email ' + @userEmail + ' already exists';
-    end else if exists (select null from accounts where userName = @userName and (@existingAccountId is null or id != @existingAccountId))
+    end else if exists (select null from accounts where userName = @userName and (@existingAccountId = 0 or id != @existingAccountId))
     begin
         set @message = 'Account with user name ' + @userName + ' already exists';
     end else
@@ -242,3 +241,4 @@ begin
     end;
 end
 go
+
