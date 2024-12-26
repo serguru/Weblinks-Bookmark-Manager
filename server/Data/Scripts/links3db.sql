@@ -63,12 +63,43 @@ begin
 end
 go
 
+if object_id('ValidateEmail') is not null
+begin
+    drop function ValidateEmail;
+end;
+go
+
+create function ValidateEmail
+(
+    @email varchar(max)
+)
+returns bit
+as
+begin
+    declare @result bit = 0;
+        
+    if @email like '%_@__%.__%' and
+        patindex('%[^a-zA-Z0-9@._-]%', @email) = 0 and
+        len(@email) >= 6 and
+        len(@email) <= 254 and
+        @email not like '%@%@%' and
+        @email not like '%@.%' and
+        @email not like '%.@%' and
+        left(@email, 1) not in ('.', '@') and
+        right(@email, 1) not in ('.', '@')
+    begin
+        set @result = 1;
+    end;
+
+    return @result;
+end
+go
+
 if object_id('VerifyPassword') is not null
 begin
     drop procedure VerifyPassword;
 end;
 go
-
 create procedure VerifyPassword
     @providedPassword nvarchar(max),
     @storedHash nvarchar(max),
@@ -78,6 +109,30 @@ as
 begin
     declare @calculatedHash nvarchar(max) = dbo.HashPassword(@providedPassword, @salt);
     set @isValid = case when @calculatedhash = @storedHash then 1 else 0 end;
+end
+go
+
+if object_id('ValidateUserName') is not null
+begin
+    drop function ValidateUserName;
+end;
+go
+
+create function ValidateUserName
+(
+    @name varchar(max)
+)
+returns bit
+as
+begin
+        declare @result bit = 0;
+        
+        if patindex('%[^a-zA-Z0-9]%', @name) = 0
+        begin
+            set @result = 1;
+        end;
+
+        return @result;
 end
 go
 
@@ -91,11 +146,13 @@ create table accounts (
     firstName nvarchar(100) null,
     lastName nvarchar(100) null,
     settings nvarchar(max) null,
-
     constraint pk_accounts_id primary key (id),
     constraint uq_accounts_name unique (userName),
-    constraint uq_accounts_len check(len(userName) >= 3),
-    constraint uq_accounts_email unique (userEmail)
+    constraint uq_accounts_email unique (userEmail),
+    constraint ch_accounts_name_min_length check (len(userName) >= 3),
+    constraint ch_accounts_name_characters check (dbo.ValidateUserName(userName) = 1),
+    constraint ch_accounts_email_max_length check(len(userEmail) <= 254),
+    constraint ch_accounts_email check (dbo.ValidateEmail(userEmail) = 1)
 );
 go
 
@@ -142,4 +199,46 @@ create table links (
 ); 
 go
 
+if object_id('ValidateNewAccount') is not null
+begin
+    drop procedure ValidateNewAccount;
+end;
+go
 
+create procedure ValidateNewAccount
+    @userName varchar(max),
+    @userEmail varchar(max),
+    @existingAccountId int,
+    @message varchar(max) output
+as
+begin
+    if @userName is null or len(@userName) = 0
+    begin
+        set @message = 'User name is required';
+    end else if len(@userName) < 3 or len(@userName) > 50
+    begin
+        set @message = 'Username length must be between 3 and 50 characters';
+    end else if dbo.ValidateUserName(@userName) = 0
+    begin
+        set @message = 'Username can only contain the characters a-z, A-Z and 0-1';
+    end else if @userEmail is null or len(@userEmail) = 0
+    begin
+        set @message = 'Email is required';
+    end else if len(@userEmail) < 6 or len(@userEmail) > 254
+    begin
+        set @message = 'Email length must be between 6 and 254 characters';
+    end else if dbo.ValidateEmail(@userEmail) = 0
+    begin
+        set @message = 'Invalid email';
+    end else if exists (select null from accounts where userEmail = @userEmail and (@existingAccountId is null or id != @existingAccountId))
+    begin
+        set @message = 'Account with email ' + @userEmail + ' already exists';
+    end else if exists (select null from accounts where userName = @userName and (@existingAccountId is null or id != @existingAccountId))
+    begin
+        set @message = 'Account with user name ' + @userName + ' already exists';
+    end else
+    begin
+        set @message = '';
+    end;
+end
+go

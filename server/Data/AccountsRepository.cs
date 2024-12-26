@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using NuGet.Protocol.Plugins;
 using server.Data.Entities;
 using server.Data.Models;
 using System.Data;
@@ -16,20 +18,10 @@ public class AccountsRepository : IAccountsRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Account?> GetAccountByNameOrEmailAsync(string? userName, string? userEmail)
+    public async Task<Account?> GetAccountByEmailAsync(string userEmail)
     {
-        Account? account = null;
-        string s;
-        if (userName != null)
-        {
-            s = userName.ToLower();
-            account = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.UserName != null && x.UserName.ToLower() == s);
-        } else if (userEmail != null)
-        {
-            s = userEmail.ToLower();
-            account = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.UserEmail != null && x.UserEmail.ToLower() == s);
-        }
-
+        string s = userEmail.ToLower();
+        Account? account  = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.UserEmail.ToLower() == s);
         return account;
     }
 
@@ -47,7 +39,33 @@ public class AccountsRepository : IAccountsRepository
 
     public async Task AddAccountAsync(Account account)
     {
-        await _dbContext.Accounts.AddAsync(account);
+        // initially account.HashedPassword is not hashed 
+        string message = PasswordValid(account.HashedPassword);
+        if (!String.IsNullOrEmpty(message))
+        {
+            throw new ArgumentException(message);
+        }
+
+        account.Id = 0;
+        message = await ValidateNewAccount(account);
+
+        if (!String.IsNullOrEmpty(message))
+        {
+            throw new ArgumentException(message);
+        }
+
+        var parameters = new[]
+        {
+            new SqlParameter("@salt", SqlDbType.NVarChar) { Direction = ParameterDirection.Output }
+        };
+        await _dbContext.Database.ExecuteSqlRawAsync("EXEC GenerateSalt @salt OUTPUT", parameters);
+        account.Salt = (string)parameters[0].Value;
+
+        account.HashedPassword = await _dbContext.Database
+                    .SqlQuery<string>($"SELECT dbo.HashPassword({account.HashedPassword}, {account.Salt})")
+                    .FirstAsync();
+
+        _dbContext.Accounts.Add(account);
         await _dbContext.SaveChangesAsync();
     }
 
@@ -85,32 +103,34 @@ public class AccountsRepository : IAccountsRepository
         return (bool)parameters[3].Value;
     }
 
-    public async Task<Account?> CreateAccount(LoginModel login)
+    public async Task<string> ValidateNewAccount(Account account)
     {
         var parameters = new[]
         {
-            new SqlParameter("@salt", SqlDbType.NVarChar) { Direction = ParameterDirection.Output }
+            new SqlParameter("@userName", account.UserName),
+            new SqlParameter("@userEmail", account.UserEmail),
+            new SqlParameter("@existingAccountId", account.Id > 0 ? account.Id : null),
+            new SqlParameter("@message", SqlDbType.VarChar) { Direction = ParameterDirection.Output }
         };
-        await _dbContext.Database.ExecuteSqlRawAsync("EXEC GenerateSalt @salt OUTPUT", parameters);
-
-        string salt = (string)parameters[0].Value;
-
-        string hash = await _dbContext.Database
-                    .SqlQuery<string>($"SELECT dbo.HashPassword({login.UserPassword}, {salt})")
-                    .FirstAsync();
-
-        Account account = new Account
-        {
-            UserName = login.UserName,
-            UserEmail = login.UserEmail,
-            HashedPassword = hash,
-            Salt = salt
-        };
-
-        _dbContext.Accounts.Add(account);
-        await _dbContext.SaveChangesAsync();
-        return account;
+        await _dbContext.Database.ExecuteSqlRawAsync("EXEC ValidateNewAccount @userName, @userEmail, @message OUTPUT", parameters);
+        return (string)parameters[3].Value;
     }
+
+    public string PasswordValid(string password)
+    {
+        if (string.IsNullOrEmpty(password))
+        {
+            return "Password is required";
+        }
+
+        if (password.Length < 8)
+        {
+            return "The password length must be at least 8 characters";
+        }
+
+        return "";
+    }
+
 }
 
 

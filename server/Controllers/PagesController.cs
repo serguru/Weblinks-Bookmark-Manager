@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using server.Data.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
 using server.Data.Models;
 using server.Services;
 

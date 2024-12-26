@@ -9,11 +9,11 @@ public interface IAccountsRepository
 {
     Task<List<Account>> GetAllAccountsAsync();
     Task<Account?> GetAccountByIdAsync(int accountId);
-    Task<Account?> GetAccountByNameOrEmailAsync(string? userName, string? userEmail);
+    Task<Account?> GetAccountByEmailAsync(string userEmail);
     Task AddAccountAsync(Account account);
     Task UpdateAccountAsync(Account account);
     Task DeleteAccountAsync(int accountId);
 
     Task<bool> VerifyPasswordAsync(string providedPassword, string hashedStoredPassword, string salt);
-    Task<Account> CreateAccount(LoginModel login);
+    Task<string> ValidateNewAccount(Account account);
 }

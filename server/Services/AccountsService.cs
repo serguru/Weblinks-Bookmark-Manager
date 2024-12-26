@@ -22,15 +22,15 @@ public class AccountsService : IAccountsService
         _accountsRepository = accountsRepository;
     }
 
-    public async Task<Account?> FindAccount(string? userName, string? userEmail)
+    public async Task<Account?> FindAccount(string userEmail)
     {
-        Account? account = await _accountsRepository.GetAccountByNameOrEmailAsync(userName, userEmail);
+        Account? account = await _accountsRepository.GetAccountByEmailAsync(userEmail);
         return account;
     }
 
     public async Task<Account?> CheckPasswordAsync(LoginModel login)
     {
-        Account? account = await FindAccount(login.UserName, login.UserEmail);
+        Account? account = await FindAccount(login.UserEmail);
         if (account == null)
         {
             return null;
@@ -66,10 +66,7 @@ public class AccountsService : IAccountsService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public Task<Account?> CreateAccount(LoginModel login)
-    {
 
 
-    }
 
 }

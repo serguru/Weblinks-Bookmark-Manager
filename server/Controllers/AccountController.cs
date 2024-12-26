@@ -36,17 +36,4 @@ public class AccountController : ControllerBase
         return Ok(new { token });
 
     }
-    [HttpPost("create")]
-    public async Task<IActionResult> Create([FromBody] Account model)
-    {
-        Account? account = await _accountsService.CheckPasswordAsync(model);
-
-        if (account == null)
-        {
-            return Unauthorized();
-        }
-
-        string token = _accountsService.GenerateToken(account);
-        return Ok(new { token });
-    }
 }
