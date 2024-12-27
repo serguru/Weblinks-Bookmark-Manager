@@ -8,11 +8,11 @@ import { PageModel } from '../models/PageModel';
   providedIn: 'root'
 })
 export class PagesService {
-  private baseUrl = `${environment.apiUrl}/pages`;
+  private apiUrl = `${environment.apiUrl}/pages`;
 
   constructor(private http: HttpClient) { }
 
   getPages(): Observable<PageModel[]> {
-    return this.http.get<PageModel[]>(`${this.baseUrl}`);
+    return this.http.get<PageModel[]>(`${this.apiUrl}`);
   }
 }

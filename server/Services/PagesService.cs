@@ -10,9 +10,9 @@ public class PagesService(IPagesRepository pagesRepository, IMapper mapper) : IP
     private readonly IPagesRepository _pagesRepository = pagesRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<List<PageModel>> GetAllPagesAsync(int? accountId = null)
+    public async Task<List<PageModel>> GetAllPagesAsync()
     {
-        List<Page> entities = await _pagesRepository.GetAllPagesAsync(accountId);
+        List<Page> entities = await _pagesRepository.GetAllPagesAsync();
         List<PageModel> models = _mapper.Map<List<PageModel>>(entities);
         return models;
     }

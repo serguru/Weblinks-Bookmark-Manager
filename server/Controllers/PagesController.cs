@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using server.Data.Entities;
 using server.Data.Models;
 using server.Services;
+using System.Security.Claims;
 
 namespace server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class PagesController : ControllerBase
 {
     private readonly IPagesService _pagesService;

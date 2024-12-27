@@ -5,7 +5,7 @@ namespace server.Data;
 
 public interface IPagesRepository
 {
-    Task<List<Page>> GetAllPagesAsync(int? pageId = null);
+    Task<List<Page>> GetAllPagesAsync();
     Task<Page?> GetPageByIdAsync(int pageId);
     Task AddPageAsync(Page page);
     Task UpdatePageAsync(Page page);

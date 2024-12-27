@@ -53,9 +53,7 @@ public class AccountsService : IAccountsService
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-            new Claim(ClaimTypes.Email, account.UserEmail),
-            new Claim(ClaimTypes.Role, account.IsAdmin ? "admin" : "public")
+            new Claim(ClaimTypes.PrimarySid, account.Id.ToString()),
         };
 
         var token = new JwtSecurityToken(

@@ -1,2 +1,7 @@
-<app-home></app-home>
-<router-outlet />
+<nav>
+    <a routerLink="/" routerLinkActive="active" 
+       [routerLinkActiveOptions]="{exact: true}">Home</a>
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+  </nav>
+
+  <router-outlet />

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using server.Data.Entities;
 using server.Data.Models;
 using server.Services;
+using System.Security.Claims;
 
 namespace server.Controllers;
 
@@ -32,9 +34,7 @@ public class AccountController : ControllerBase
         {
             return Unauthorized();
         }
-
         string token = _accountsService.GenerateToken(account);
-        return Ok(new { token });
-
+        return Ok(new {token});
     }
 }
