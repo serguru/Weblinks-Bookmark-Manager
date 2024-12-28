@@ -13,7 +13,6 @@ import { NotFoundComponent } from '../not-found/not-found.component';
   styleUrl: './pages.component.css'
 })
 export class PagesComponent implements OnInit {
-[x: string]: any;
   pages: PageModel[] = [];
   selectedPage: PageModel | null = null;
   pageMode: PageMode | null = null;

@@ -1,4 +1,14 @@
-.page-spacer {
+.toolbar-spacer {
     flex: 1 1 auto;
   }
   
+  mat-toolbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  
+  /* router-outlet {
+    margin-top: 64px;  Adjust based on the height of your toolbar 
+  } */

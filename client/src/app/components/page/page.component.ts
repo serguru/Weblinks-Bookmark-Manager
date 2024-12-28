@@ -1,21 +1,21 @@
 import { Component, Input } from '@angular/core';
-import { PagesService } from '../../services/pages.service';
-import { ActivatedRoute } from '@angular/router';
 import { PageModel } from '../../models/PageModel';
 import { PageMode } from '../../enums';
-import {MatCardModule} from '@angular/material/card';
+import { CommonModule } from '@angular/common';
+import { NotFoundComponent } from "../not-found/not-found.component";
+import { RowComponent } from '../row/row.component';
 
 @Component({
   selector: 'app-page',
   imports: [
-    MatCardModule
-  ],
+    CommonModule,
+    NotFoundComponent,
+    RowComponent
+],
   templateUrl: './page.component.html',
   styleUrl: './page.component.css'
 })
 export class PageComponent {
-  @Input() selectedPage: PageModel | null = null;
+  @Input() page: PageModel | null = null;
   @Input() pageMode: PageMode | null = null;
-
-
 }

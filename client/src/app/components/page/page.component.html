@@ -1,1 +1,7 @@
-<mat-card>Selected page path: {{selectedPage?.pagePath }}</mat-card>
+<ng-container *ngIf="!page">
+    <app-not-found></app-not-found>
+</ng-container>
+<ng-container *ngIf="page">
+    <h2>{{page.caption}}</h2>
+    <app-row *ngFor="let lrow of page.lrows" [row]="lrow"></app-row>
+</ng-container>
