@@ -1,1 +1,9 @@
-<app-page [selectedPage]="selectedPage" [pageMode]="pageMode"></app-page>
+<ng-container *ngIf="!pageMode || pageMode === 5">
+    <app-not-found></app-not-found>
+</ng-container>
+
+<ng-container *ngIf="pageMode && pageMode !== 5">
+    <app-page [selectedPage]="selectedPage" [pageMode]="pageMode"></app-page>    
+</ng-container>
+
+

@@ -2,13 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PageModel } from '../../models/PageModel';
 import { PagesService } from '../../services/pages.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
 import { PageMode } from '../../enums';
 import { PageComponent } from '../page/page.component';
+import { NotFoundComponent } from '../not-found/not-found.component';
 
 @Component({
   selector: 'app-pages',
-  imports: [CommonModule, PageComponent],
+  imports: [CommonModule, PageComponent, NotFoundComponent],
   templateUrl: './pages.component.html',
   styleUrl: './pages.component.css'
 })
@@ -18,7 +18,7 @@ export class PagesComponent implements OnInit {
   selectedPage: PageModel | null = null;
   pageMode: PageMode | null = null;
 
-  constructor(private pagesService: PagesService, private route: ActivatedRoute) {}
+  constructor(private pagesService: PagesService) {}
 
   ngOnInit(): void {
     this.pagesService.pages$.subscribe(x => {
@@ -30,7 +30,6 @@ export class PagesComponent implements OnInit {
     this.pagesService.pageMode$.subscribe(x => {
       this.pageMode = x;
     });
-    const path = (this.route.snapshot.paramMap.get('path') || "").toLowerCase();
-    this.pagesService.getPages(path);
+    this.pagesService.getPages();
   }
 }

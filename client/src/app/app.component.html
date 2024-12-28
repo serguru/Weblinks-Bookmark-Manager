@@ -1,7 +1,18 @@
-<nav>
-    <a routerLink="/" routerLinkActive="active" 
-       [routerLinkActiveOptions]="{exact: true}">Home</a>
-    <a routerLink="/login" routerLinkActive="active">Login</a>
-  </nav>
+<mat-toolbar>
+   <ng-container *ngIf="!showPagesInMenu">
+      <button mat-button routerLink="/">Pages</button>
+      <button mat-button routerLink="/login">Login</button>
+   </ng-container>
+   <ng-container *ngIf="showPagesInMenu">
+      <button *ngFor="let page of pages" mat-button [routerLink]="'page/'+page.pagePath">{{page.caption}}</button>
+      <span class="page-spacer"></span>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+         <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+         <button mat-menu-item routerLink="/login">Login</button>
+       </mat-menu>
+   </ng-container>
+</mat-toolbar>
 
-  <router-outlet/>
+<router-outlet />
