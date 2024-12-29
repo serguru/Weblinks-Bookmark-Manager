@@ -1,2 +1,4 @@
-<h4>{{column?.caption}}</h4>
-<app-link *ngFor="let link of column?.links" [link]="link"></app-link>
+<div class="column-container">
+    <h4>{{column?.caption}}</h4>
+    <app-link *ngFor="let link of column?.links" [link]="link"></app-link>
+</div>

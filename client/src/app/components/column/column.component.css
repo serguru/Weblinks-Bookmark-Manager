@@ -1,0 +1,20 @@
+.column-container {
+
+    /* background-color: #f7f6f6;
+    flex: 1;
+    display: flex;
+    flex-direction: column; */
+  
+
+    flex: 1;
+    padding: 0em 1em 1em 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 300px;
+    min-width: 150px;
+    background-color: #f7f6f6;
+    margin: 0.5em;
+    padding: 0.5em;
+    border-radius: 1em;
+}

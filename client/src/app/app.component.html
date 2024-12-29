@@ -1,4 +1,4 @@
-<mat-toolbar>
+<!-- <mat-toolbar>
    <ng-container *ngIf="!showPagesInMenu">
       <button mat-button routerLink="/">Pages</button>
       <button mat-button routerLink="/login">Login</button>
@@ -13,6 +13,28 @@
          <button mat-menu-item routerLink="/login">Login</button>
        </mat-menu>
    </ng-container>
+</mat-toolbar> -->
+
+<mat-toolbar>
+   <ng-container *ngIf="!showPagesInMenu">
+      <button mat-button routerLink="/" routerLinkActive="active-link"
+         [routerLinkActiveOptions]="{ exact: true }">Pages</button>
+      <button mat-button routerLink="/login" routerLinkActive="active-link">Login</button>
+   </ng-container>
+   <ng-container *ngIf="showPagesInMenu">
+      <div class="wrappable-menu">
+         <button *ngFor="let page of pages" mat-button [routerLink]="'/page/' + page.pagePath"
+            routerLinkActive="active-link">{{ page.caption }}</button>
+      </div>
+      <span class="toolbar-spacer"></span>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+         <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+         <button mat-menu-item routerLink="/login" routerLinkActive="active-link">Login</button>
+      </mat-menu>
+   </ng-container>
 </mat-toolbar>
+
 
 <router-outlet />

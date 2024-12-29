@@ -8,7 +8,25 @@
     width: 100%;
     z-index: 1000;
   }
+
+  mat-toolbar button {
+    font-size: large;
+  }
   
   /* router-outlet {
     margin-top: 64px;  Adjust based on the height of your toolbar 
   } */
+
+  .active-link {
+    font-weight: bold;
+    color: #1976d2; /* Example color for active link */
+  }
+
+  .wrappable-menu {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .wrappable-menu button {
+    flex: 1 0 auto; /* Allow buttons to grow and shrink as needed */
+  }
