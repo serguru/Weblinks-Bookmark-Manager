@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, first, Observable } from 'rxjs';
 import { PageModel } from '../models/PageModel';
 import { PageMode } from '../enums';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { PageMode } from '../enums';
 export class PagesService {
   private apiUrl = `${environment.apiUrl}/pages`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   private pagesSubject = new BehaviorSubject<any>(null);
   public pages$ = this.pagesSubject.asObservable();
@@ -38,9 +39,8 @@ export class PagesService {
       return;
     }
     if (!path) {
-      this.updateSelectedPage(pages[0])
-      this.updatePageMode(PageMode.Browse);
-      return;
+        this.router.navigate(['/page', pages[0].pagePath]);
+        return;
     }
     path = path.toLowerCase();
     const page = pages.find(x => x.pagePath && x.pagePath.toLowerCase() === path) || null;

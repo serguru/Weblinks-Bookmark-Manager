@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
+import {  NavigationEnd, Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -13,7 +13,7 @@ import { filter } from 'rxjs';
 @Component({
   selector: 'app-root',
   imports: [FormsModule, CommonModule, RouterOutlet, RouterLink, 
-    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, RouterModule ],
+    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, RouterModule, RouterLinkActive ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -22,28 +22,37 @@ export class AppComponent implements OnInit {
   pages: PageModel[] = [];
   selectedPage: PageModel | null = null;
   activeRoute: string | null = null;
+  readonly PAGE = '/page/';
+
+  get isPageRoute(): boolean {
+    return this.activeRoute === '/' || !!this.activeRoute?.toLowerCase().startsWith(this.PAGE);
+  }
   get activePagePath(): string {
     const s = this.activeRoute?.toLowerCase() || '';
-    return s.startsWith('/page/') ? s.substring(6) : '';
+    return s.startsWith(this.PAGE) ? s.substring(6) : '';
   }
   get showPagesInMenu(): boolean {
     const s = this.activeRoute?.toLowerCase() || '';
-    return !s || s.startsWith('/page/') || s === '/';
+    return !s || s.startsWith(this.PAGE) || s === '/';
   }
 
-  constructor(private pagesService: PagesService, private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private pagesService: PagesService, private router: Router) { }
 
   ngOnInit(): void {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       this.activeRoute = this.router.url;
-      this.pagesService.setSelectedPageByPath(this.pages, this.activePagePath);
+      if (this.isPageRoute) {
+        this.pagesService.setSelectedPageByPath(this.pages, this.activePagePath);
+      }
     });
 
     this.pagesService.pages$.subscribe(x => {
       this.pages = x;
-      this.pagesService.setSelectedPageByPath(this.pages, this.activePagePath);
+      if (this.isPageRoute) {
+        this.pagesService.setSelectedPageByPath(this.pages, this.activePagePath);
+      }
     });
     this.pagesService.selectedPage$.subscribe(x => {
       this.selectedPage = x;

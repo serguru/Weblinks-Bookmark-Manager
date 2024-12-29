@@ -1,32 +1,34 @@
 .toolbar-spacer {
-    flex: 1 1 auto;
-  }
-  
-  mat-toolbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-  }
+  flex: 1 1 auto;
+}
 
-  mat-toolbar button {
-    font-size: large;
-  }
-  
-  /* router-outlet {
-    margin-top: 64px;  Adjust based on the height of your toolbar 
-  } */
+/* 
+Top fixed toolbar
+.toolbar-content {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #f7f6f6;
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 4rem;
+  align-items: center;
+}
+ */
+.toolbar-content {
+  background-color: #f7f6f6;
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 4rem;
+  align-items: center;
+}
 
-  .active-link {
-    font-weight: bold;
-    color: #1976d2; /* Example color for active link */
-  }
+.toolbar-content button {
+  font-size: large;
+  color: #333333;
+}
 
-  .wrappable-menu {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .wrappable-menu button {
-    flex: 1 0 auto; /* Allow buttons to grow and shrink as needed */
-  }
+.active-link {
+  color: #1976d2 !important;
+}
