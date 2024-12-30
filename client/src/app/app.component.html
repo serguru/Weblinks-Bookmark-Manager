@@ -1,9 +1,9 @@
-<div class="toolbar-content">
+<div *ngIf="loginService.isAuthenticated" class="toolbar-content">
    <ng-container *ngIf="!showPagesInMenu">
-      <button mat-button routerLink="/" routerLinkActive="active-link"
+      <button *ngIf="loginService.isAuthenticated" mat-button routerLink="/" routerLinkActive="active-link"
          [routerLinkActiveOptions]="{ exact: true }">Pages</button>
-      <button mat-button routerLink="/login" routerLinkActive="active-link">Login</button>
-   </ng-container>
+         <button *ngIf="loginService.isAuthenticated" mat-button (click)="logOut()">Log out</button>
+      </ng-container>
    <ng-container *ngIf="showPagesInMenu">
       <button *ngFor="let page of pages" mat-button [routerLink]="'/page/' + page.pagePath"
          routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">{{ page.caption }}</button>
@@ -12,7 +12,9 @@
          <mat-icon>menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-         <button mat-menu-item routerLink="/login" routerLinkActive="active-link">Login</button>
+         <div *ngIf="loginService.isAuthenticated" class="link3-title">{{this.loginService.accountClaims.userName}}</div>
+         <button *ngIf="!loginService.isAuthenticated" mat-menu-item routerLink="/login" routerLinkActive="active-link">Log in</button>
+         <button *ngIf="loginService.isAuthenticated" mat-menu-item (click)="logOut()">Log out</button>
       </mat-menu>
    </ng-container>
 </div>

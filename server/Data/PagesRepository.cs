@@ -13,7 +13,7 @@ public class PagesRepository(Links3dbContext dbContext, IHttpContextAccessor htt
     {
         get
         {
-            return int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.PrimarySid));
+            return int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue("id"));
         }
     }
 

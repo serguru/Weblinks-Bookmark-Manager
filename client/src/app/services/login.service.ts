@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,12 +28,29 @@ export class LoginService {
     localStorage.removeItem('token');
   }
 
-  isAuthenticated(): boolean {
-    const token = localStorage.getItem('token');
+  get isAuthenticated(): boolean {
+    //const token = localStorage.getItem('token');
+    const token = this.token;
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  getToken(): string | null {
+  get token(): string | null {
     return localStorage.getItem('token');
   }
+
+  get accountClaims(): any {
+    if (!this.isAuthenticated) {
+      return null;
+    }
+    const claims = this.jwtHelper.decodeToken(this.token || '');
+    return claims;
+  }
+
+  get userName(): string {
+    if (!this.isAuthenticated) {
+      return '';
+    }
+    return this.accountClaims.userName;
+  }
+
 }

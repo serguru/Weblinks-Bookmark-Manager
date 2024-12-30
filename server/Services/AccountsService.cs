@@ -53,7 +53,9 @@ public class AccountsService : IAccountsService
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.PrimarySid, account.Id.ToString()),
+            new Claim("id", account.Id.ToString()),
+            new Claim("userName", account.UserName),
+            new Claim("userEmail", account.UserEmail),
         };
 
         var token = new JwtSecurityToken(

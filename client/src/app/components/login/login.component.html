@@ -1,4 +1,7 @@
-<form (ngSubmit)="onSubmit()">
+
+<div *ngIf="loginService.isAuthenticated">Logged in as {{loginService.userName}}</div>
+
+<form *ngIf="!loginService.isAuthenticated" (ngSubmit)="onSubmit()">
     <input type="email" [(ngModel)]="email" name="email" placeholder="Email">
     <input type="password" [(ngModel)]="password" name="password" placeholder="Password">
     <button type="submit">Login</button>

@@ -5,7 +5,7 @@ import { inject } from '@angular/core';
 
 export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
 
-  const token = inject(LoginService).getToken();
+  const token = inject(LoginService).token;
 
   if (token) {
     req = req.clone({
@@ -13,10 +13,4 @@ export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
     });
   };
   return next(req);
-
-  // return next(request).pipe(tap(event => {
-  //   if (event.type === HttpEventType.Response) {
-
-  //   }
-  // }));
 };
