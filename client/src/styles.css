@@ -1,4 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root {
+    --mat-menu-container-color: #f7f6f6; 
+    --mat-menu-item-label-text-font: "Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    --mat-menu-item-label-text-size: large;
+    --mat-menu-item-label-text-weight: 400;
+    /* This section is for app component */
+    --mdc-text-button-label-text-size: large;
+    --mdc-text-button-label-text-color: #7c7c7c;
+    --mdc-text-button-label-text-font: "Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    --mdc-text-button-label-text-weight: 400;
+    --mat-menu-item-label-text-color: #7c7c7c; 
+}

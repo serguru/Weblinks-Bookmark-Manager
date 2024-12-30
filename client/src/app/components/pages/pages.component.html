@@ -3,6 +3,5 @@
 </ng-container>
 
 <ng-container *ngIf="pageMode && pageMode !== 5">
-    <h2>{{selectedPage?.caption}}</h2>
     <app-page [page]="selectedPage" [pageMode]="pageMode"></app-page>
 </ng-container>
