@@ -1,7 +1,7 @@
 .row-container {
     display: flex;
     flex-direction: row;
-    padding: 0rem 0.5rem 0rem 1.5rem;
+    padding: 0rem 0.5rem 0rem 0.5rem;
     flex-wrap: wrap;
     align-items: stretch;
 }
@@ -11,3 +11,22 @@ app-column {
     display: flex;
     flex-direction: column;
 }
+
+/* .row-title {
+    font: var(--mat-sys-title-medium);
+    color: #7c7c7c;
+    padding: 0.5rem 0rem 0.5rem 1rem;
+} */
+
+.row-title {
+    font-family: var(--mdc-text-button-label-text-font);
+    color: var(--mdc-text-button-label-text-color);
+    font-size: var(--mdc-text-button-label-text-size);
+    font-weight: var(--mdc-text-button-label-text-weight);
+    padding: 0.5rem 0rem 0.5rem 1rem;
+}
+
+
+
+
+
