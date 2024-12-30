@@ -20,5 +20,15 @@ body {
     --mdc-text-button-label-text-font: "Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
     --mdc-text-button-label-text-weight: 400;
     --mat-menu-item-label-text-color: #7c7c7c; 
+    --mdc-outlined-card-container-color: #f7f6f6;
+    --mdc-outlined-card-outline-width: 0;
+}
 
+
+.link3-title {
+    font-family: var(--mdc-text-button-label-text-font);
+    color: var(--mdc-text-button-label-text-color);
+    font-size: var(--mdc-text-button-label-text-size);
+    font-weight: var(--mdc-text-button-label-text-weight);
+    padding: 0.5rem 0rem 0.5rem 1rem;
 }

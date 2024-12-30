@@ -1,9 +1,10 @@
 .row-container {
     display: flex;
     flex-direction: row;
-    padding: 0rem 0.5rem 0rem 0.5rem;
+    padding: 0rem 1rem 0rem 1rem;
     flex-wrap: wrap;
     align-items: stretch;
+    gap: 1rem;
 }
 
 app-column {
@@ -18,13 +19,6 @@ app-column {
     padding: 0.5rem 0rem 0.5rem 1rem;
 } */
 
-.row-title {
-    font-family: var(--mdc-text-button-label-text-font);
-    color: var(--mdc-text-button-label-text-color);
-    font-size: var(--mdc-text-button-label-text-size);
-    font-weight: var(--mdc-text-button-label-text-weight);
-    padding: 0.5rem 0rem 0.5rem 1rem;
-}
 
 
 
