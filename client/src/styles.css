@@ -33,3 +33,13 @@ body {
     font-weight: var(--mdc-text-button-label-text-weight);
     padding: 0.5rem 0rem 0.5rem 1rem;
 }
+
+.error-snackbar {
+    background: #f44336;
+    color: white;
+  }
+  
+  .success-snackbar {
+    background: #4caf50;
+    color: white;
+  }
