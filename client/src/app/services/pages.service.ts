@@ -25,17 +25,17 @@ export class PagesService {
 
   private pageModeSubject = new BehaviorSubject<any>(null);
   public pageMode$ = this.pageModeSubject.asObservable();
-  updateSelectedPage(page: PageModel | null) {
-    this.selectedPageSubject.next(page);
+  updatePageMode(mode: PageMode | null) {
+    this.pageModeSubject.next(mode);
   }
-  get pageMode(): PageMode {
+  get pageMode(): PageMode | null {
     return this.pageModeSubject.getValue();
   }
 
   private selectedPageSubject = new BehaviorSubject<PageModel | null>(null);
   public selectedPage$ = this.selectedPageSubject.asObservable();
-  updatePageMode(mode: PageMode) {
-    this.pageModeSubject.next(mode);
+  updateSelectedPage(page: PageModel | null) {
+    this.selectedPageSubject.next(page);
   }
   get selectedPage(): PageModel | null {
     return this.selectedPageSubject.getValue();
@@ -69,7 +69,23 @@ export class PagesService {
       })
     );
   }  
+
+  clearPages(): void {
+    this.updatePages([]);
+  }
+
+  clearSelectedPage(): void {
+    this.updateSelectedPage(null);
+  }
+
+  clearPageMode(): void {
+    this.updatePageMode(null);
+  }   
+
+  clearAll(): void {
+    this.clearPages();
+    this.clearSelectedPage();
+    this.clearPageMode();
+  }    
+
 }
-// .subscribe(pages => {
-//   this.updatePages(pages);
-// });

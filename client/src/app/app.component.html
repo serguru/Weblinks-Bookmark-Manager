@@ -1,29 +1,18 @@
 <div *ngIf="loginService.isAuthenticated" class="toolbar-content">
-   <ng-container *ngIf="!showPagesInMenu">
-      <button *ngIf="loginService.isAuthenticated" mat-button routerLink="/" routerLinkActive="active-link"
-         [routerLinkActiveOptions]="{ exact: true }">Pages</button>
-      <button *ngIf="loginService.isAuthenticated" mat-button (click)="logOut()">Log out</button>
-   </ng-container>
-   <ng-container *ngIf="showPagesInMenu">
-      <button *ngFor="let page of pages" mat-button [routerLink]="'/page/' + page.pagePath"
-         routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">{{ page.caption }}</button>
-      <span class="toolbar-spacer"></span>
-      
-         <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>menu</mat-icon>
-         </button>
-         <mat-menu #menu="matMenu">
-            <div *ngIf="loginService.isAuthenticated" class="link3-title">{{this.loginService.accountClaims.userName}}
-            </div>
-            <button *ngIf="!loginService.isAuthenticated" mat-menu-item routerLink="/login" routerLinkActive="active-link">Log in</button>
-            <ng-container *ngIf="loginService.isAuthenticated">
-               <button  mat-menu-item (click)="addPage()">Add page</button>
-               <button mat-menu-item (click)="logOut()">Log out</button>
-            </ng-container>
-         </mat-menu>
-      
-      
-   </ng-container>
+   <button *ngFor="let page of pages" mat-button [routerLink]="'/page/' + page.pagePath" routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }">{{ page.caption }}</button>
+   <span class="toolbar-spacer"></span>
+   <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+   </button>
+   <mat-menu #menu="matMenu">
+      <div class="link3-title">{{this.loginService.accountClaims.userName}}
+      </div>
+      <ng-container>
+         <button mat-menu-item (click)="addPage()">Add page</button>
+         <button mat-menu-item (click)="logOut()">Log out</button>
+      </ng-container>
+   </mat-menu>
 </div>
 
 <router-outlet />

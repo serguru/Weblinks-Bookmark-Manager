@@ -8,7 +8,7 @@ import { PageModel } from './models/PageModel';
 import { PagesService } from './services/pages.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { filter } from 'rxjs';
+import { filter, finalize } from 'rxjs';
 import { LoginService } from './services/login.service';
 import { PageMode } from './enums';
 
@@ -44,14 +44,10 @@ export class AppComponent implements OnInit {
   }
   get activePagePath(): string {
     const s = this.activeRoute?.toLowerCase() || '';
-    return s.startsWith(this.PAGE) ? s.substring(6) : '';
-  }
-  get showPagesInMenu(): boolean {
-    const s = this.activeRoute?.toLowerCase() || '';
-    return !s || s.startsWith(this.PAGE) || s === '/';
+    return s.startsWith(this.PAGE) ? s.substring(this.PAGE.length) : '';
   }
 
-  ngOnInit(): void {
+  subscribeToNavigationEnd(): void {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -64,17 +60,26 @@ export class AppComponent implements OnInit {
         this.router.navigate(['/']);
       }
     });
+  }
 
-    // this.pagesService.pages$.subscribe(x => {
-    //   if (this.isPageRoute) {
-    //     this.pagesService.setSelectedPageByPath(this.activePagePath);
-    //   }
-    // });
+  ngOnInit(): void {
+    if (!this.loginService.isAuthenticated) {
+      // will be redirected to login page by the guard
+      return;
+    }
+    this.pagesService.getPages()
+      .pipe(
+        finalize(() => {
+          this.subscribeToNavigationEnd();
+        })
+      )
+      .subscribe();
   }
 
   logOut(): void {
     this.loginService.logout();
-    this.router.navigate(['/']);
+    this.pagesService.clearAll();
+    this.router.navigate(['/login']);
   }
 
   addPage(): void {
