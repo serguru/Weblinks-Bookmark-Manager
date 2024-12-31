@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
+import { PagesService } from '../../services/pages.service';
 
 
 @Component({
@@ -38,12 +39,12 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     public loginService: LoginService,
     private router: Router,
-    private snackBar: MatSnackBar
-
+    private snackBar: MatSnackBar,
+    private pagesService: PagesService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['']
     });
   }
 
@@ -62,12 +63,16 @@ export class LoginComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.pagesService.getPages()
+            .subscribe(x => {
+              this.router.navigate(['/']);
+            });
+
         },
         error: (error) => {
           if (error.status === 401) {
             this.handleLoginError('Invalid email or password');
-          } else {  
+          } else {
             this.handleLoginError('Unknowm error. Please try again later.');
           }
         }

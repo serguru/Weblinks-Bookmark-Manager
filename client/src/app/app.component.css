@@ -8,9 +8,9 @@
   flex-wrap: wrap;
   min-height: 4rem;
   align-items: center;
+  padding-right: 4px; /* To prevent the last element from overflowing */
 }
 
 .active-link {
   font-weight: bolder;
 }
-

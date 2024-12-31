@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { filter } from 'rxjs';
 import { LoginService } from './services/login.service';
+import { PageMode } from './enums';
 
 @Component({
   selector: 'app-root',
@@ -20,11 +21,20 @@ import { LoginService } from './services/login.service';
 })
 export class AppComponent implements OnInit {
   title = 'Links 3';
-  pages: PageModel[] = [];
-  selectedPage: PageModel | null = null;
   activeRoute: string | null = null;
   readonly PAGE = '/page/';
   readonly LOGIN = '/login';
+  public PageMode = PageMode;
+
+  constructor(private pagesService: PagesService, private router: Router, public loginService: LoginService) { }
+
+  get pages(): PageModel[] {
+    return this.pagesService.pages;
+  }
+
+  get selectedPage(): PageModel | null {
+    return this.pagesService.selectedPage;
+  }
 
   get isPageRoute(): boolean {
     return this.activeRoute === '/' || !!this.activeRoute?.toLowerCase().startsWith(this.PAGE);
@@ -41,15 +51,13 @@ export class AppComponent implements OnInit {
     return !s || s.startsWith(this.PAGE) || s === '/';
   }
 
-  constructor(private pagesService: PagesService, private router: Router, public loginService: LoginService) { }
-
   ngOnInit(): void {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       this.activeRoute = this.router.url;
       if (this.isPageRoute) {
-        this.pagesService.setSelectedPageByPath(this.pages, this.activePagePath);
+        this.pagesService.setSelectedPageByPath(this.activePagePath);
         return;
       }
       if (this.isLoginRoute && this.loginService.isAuthenticated) {
@@ -57,28 +65,20 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.pagesService.pages$.subscribe(x => {
-      this.pages = x;
-      if (this.isPageRoute) {
-        this.pagesService.setSelectedPageByPath(this.pages, this.activePagePath);
-      }
-    });
-    this.pagesService.selectedPage$.subscribe(x => {
-      this.selectedPage = x;
-    });
-  }
-
-
-  get claimsJson(): string {
-    if (!this.loginService.isAuthenticated) {
-      return '';
-    }
-    return JSON.stringify(this.loginService.accountClaims, null, 2);
+    // this.pagesService.pages$.subscribe(x => {
+    //   if (this.isPageRoute) {
+    //     this.pagesService.setSelectedPageByPath(this.activePagePath);
+    //   }
+    // });
   }
 
   logOut(): void {
     this.loginService.logout();
     this.router.navigate(['/']);
+  }
+
+  addPage(): void {
+    this.pagesService.updatePageMode(PageMode.Add);
   }
 
 }
