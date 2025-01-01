@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from './services/login.service';
 import { LOGIN } from './common/constants';
-import { isPageRoute } from './common/utils';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +20,6 @@ import { isPageRoute } from './common/utils';
 export class AppComponent {
   title = 'Links 3';
 
-  isPageRoute = isPageRoute;
-
   constructor(public pagesService: PagesService, private router: Router, public loginService: LoginService) { }
 
   logOut(): void {
@@ -30,4 +27,5 @@ export class AppComponent {
     this.pagesService.clearPages();
     this.router.navigate([LOGIN]);
   }
+
 }

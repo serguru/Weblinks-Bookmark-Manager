@@ -8,7 +8,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 import { PagesService } from '../../services/pages.service';
@@ -24,7 +23,6 @@ import { PagesService } from '../../services/pages.service';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatSnackBarModule,
     MatProgressSpinnerModule
   ],
   templateUrl: './login.component.html',
@@ -39,7 +37,6 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     public loginService: LoginService,
     private router: Router,
-    private snackBar: MatSnackBar,
     private pagesService: PagesService
   ) {
     this.loginForm = this.fb.group({
@@ -71,21 +68,13 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           if (error.status === 401) {
-            this.handleLoginError('Invalid email or password');
+            this.pagesService.showError('Invalid email or password');
           } else {
-            this.handleLoginError('Unknowm error. Please try again later.');
+            this.pagesService.showError('Unknowm error. Please try again later.');
           }
         }
       });
   }
 
-  private handleLoginError(error: string): void {
-    this.snackBar.open(error, 'Close', {
-      duration: 5000,
-      panelClass: ['error-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
-  }
 
 }

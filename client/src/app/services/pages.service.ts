@@ -6,7 +6,9 @@ import { PageModel } from '../models/PageModel';
 import { NavigationEnd, Router } from '@angular/router';
 import { LOGIN, PAGE } from '../common/constants';
 import { LoginService } from './login.service';
-import { isPageRoute, isRootPath } from '../common/utils';
+import { isPageRoute, isPage_Route } from '../common/utils';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,8 @@ export class PagesService {
   private apiUrl = `${environment.apiUrl}/pages`;
   private activeRoute: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router, public loginService: LoginService) {
+  constructor(private http: HttpClient, private router: Router, 
+    public loginService: LoginService, private snackBar: MatSnackBar) {
     if (!this.loginService.isAuthenticated) {
       this.subscribeToNavigationEnd();
       return;
@@ -23,6 +26,11 @@ export class PagesService {
     this.getPages().subscribe(() => {
       this.subscribeToNavigationEnd();
     });
+  }
+
+
+  get isPageRoute(): boolean {
+    return isPageRoute(this.activeRoute?.toLowerCase() || null);
   }
 
   subscribeToNavigationEnd() {
@@ -35,11 +43,19 @@ export class PagesService {
         this.router.navigate(['/']);
         return;
       }
-      if (isRootPath(ar) && this.activePage) {
-        this.router.navigate([PAGE + this.activePage.pagePath]);
+      if (!isPageRoute(ar) && !isPage_Route(ar)) {
         return;
       }
-      if (isPageRoute(ar) && !this.activePage) {
+      const ap = this.activePage;
+      if (isPage_Route(ar) ) {
+        if (ap) {
+          this.router.navigate([PAGE + ap.pagePath]);
+        } else {
+          this.router.navigate(['/add-page']);
+        }
+        return;
+      }
+      if (!ap) {
         this.router.navigate(['/not-found']);
         return;
       }
@@ -51,7 +67,7 @@ export class PagesService {
       return null;
     }
 
-    if (isRootPath(this.activePagePath)) { 
+    if (!this.activePagePath) { 
       return this.pages[0];
     }
 
@@ -72,16 +88,6 @@ export class PagesService {
     return this.pagesSubject.getValue();
   }
 
-
-  // private selectedPageSubject = new BehaviorSubject<PageModel | null>(null);
-  // public selectedPage$ = this.selectedPageSubject.asObservable();
-  // updateSelectedPage(page: PageModel | null) {
-  //   this.selectedPageSubject.next(page);
-  // }
-  // get selectedPage(): PageModel | null {
-  //   return this.selectedPageSubject.getValue();
-  // }
-
   getPages(): Observable<PageModel[]> {
     return this.http.get<PageModel[]>(this.apiUrl).pipe(
       tap((pages) => {
@@ -94,6 +100,28 @@ export class PagesService {
     this.updatePages([]);
   }
 
+  addPage(pagePath: string, caption: string): Observable<PageModel> {
+    if (!this.loginService.isAuthenticated) { 
+      throw new Error('Unauthorized');
+    }
 
+    return this.http.post(this.apiUrl + '/add-page', { pagePath: pagePath, caption: caption })
+      .pipe(
+        tap((response: any) => {
+          const pages = this.pages || [];
+          pages.push(response);
+          this.updatePages(pages);
+        })
+      );
+  }
+
+  showError(error: string): void {
+    this.snackBar.open(error, 'Close', {
+      duration: 5000,
+      panelClass: ['error-snackbar'],
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
+  }
 
 }

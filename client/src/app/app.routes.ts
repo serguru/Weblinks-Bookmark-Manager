@@ -8,6 +8,11 @@ import { AddPageComponent } from './components/add-page/add-page.component';
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: 'page',
+    pathMatch: 'full'
+  },
+  {
+    path: 'page',
     component: PageComponent,
     canActivate: [loginGuard]
   },

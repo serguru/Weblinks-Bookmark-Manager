@@ -24,4 +24,12 @@ public class PagesController : ControllerBase
         List<PageModel> pages = await _pagesService.GetAllPagesAsync();
         return Ok(pages);
     }
+
+    [HttpPost("add-page")]
+    public async Task<IActionResult> AddPage([FromBody] PageModel model)
+    {
+        PageModel result = await _pagesService.AddPageAsync(model);
+        return Ok(result);
+    }
+
 }
