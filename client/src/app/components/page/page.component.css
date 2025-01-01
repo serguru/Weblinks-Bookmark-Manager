@@ -4,3 +4,21 @@
 }
 
 
+/* .toolbar-content {
+    background-color: #f7f6f6;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 4rem;
+    align-items: center;
+    padding-right: 20px;
+  } */
+  
+  .toolbar-spacer {
+    flex: 1 1 auto;
+  }
+  
+  
+  .active-link {
+    font-weight: bolder;
+  }
+  

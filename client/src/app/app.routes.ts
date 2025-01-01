@@ -3,6 +3,7 @@ import { LoginComponent } from './components/login/login.component';
 import { loginGuard } from './guards/login.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PageComponent } from './components/page/page.component';
+import { AddPageComponent } from './components/add-page/add-page.component';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,7 @@ export const routes: Routes = [
     canActivate: [loginGuard]
   },
   { path: 'login', component: LoginComponent },
+  { path: 'add-page', component: AddPageComponent },
   { path: '**', component: NotFoundComponent }
 ];
 

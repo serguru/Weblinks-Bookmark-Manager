@@ -1,39 +1,28 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { PageModel } from '../../models/PageModel';
-import { PageMode } from '../../enums';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NotFoundComponent } from "../not-found/not-found.component";
 import { RowComponent } from '../row/row.component';
 import { PagesService } from '../../services/pages.service';
-import { AddPageComponent } from '../add-page/add-page.component';
+import { RouterLinkActive, RouterModule } from '@angular/router';
+import { LoginService } from '../../services/login.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-page',
   imports: [
     CommonModule,
-    NotFoundComponent,
+    RouterModule,
     RowComponent,
-    AddPageComponent
+    RouterLinkActive,
+    MatButtonModule
 ],
   templateUrl: './page.component.html',
   styleUrl: './page.component.css'
 })
 export class PageComponent implements OnInit {
-  page: PageModel | null = null;
-  pageMode: PageMode | null = null;
-  public PageMode = PageMode;
 
-  constructor(private pagesService: PagesService) {}
+  constructor(public pagesService: PagesService, public loginService: LoginService) {}
 
   ngOnInit(): void {
-    this.pagesService.selectedPage$.subscribe(x => {
-      this.page = x;
-    });
-    this.pagesService.pageMode$.subscribe(x => {
-      this.pageMode = x;
-    });
-    this.pagesService.getPages().subscribe();
   }
-
 
 }

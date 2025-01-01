@@ -1,18 +1,8 @@
-<ng-container *ngIf="pageMode === PageMode.Browse || pageMode === PageMode.Edit; else others">
-    <div class="page-container">
-        <app-row *ngFor="let row of page?.lrows" [row]="row"></app-row>
-    </div>
-</ng-container>
-<ng-template #others>
-    <ng-container [ngSwitch]="pageMode">
-        <ng-container *ngSwitchCase="PageMode.Add">
-            <app-add-page></app-add-page>
-        </ng-container>
-        <ng-container *ngSwitchCase="PageMode.NotFound">
-            <app-not-found></app-not-found>
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-            <div></div>
-        </ng-container>
-    </ng-container>
-</ng-template>
+<div class="toolbar-content">
+    <button *ngFor="let page of pagesService.pages" mat-button [routerLink]="'/page/' + page.pagePath" routerLinkActive="active-link"
+       [routerLinkActiveOptions]="{ exact: true }">{{ page.caption }}</button>
+</div>
+<div class="page-container">
+    <app-row *ngFor="let row of pagesService.activePage?.lrows" [row]="row"></app-row>
+</div>
+

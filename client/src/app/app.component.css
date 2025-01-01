@@ -1,16 +1,6 @@
-.toolbar-spacer {
-  flex: 1 1 auto;
-}
-
-.toolbar-content {
-  background-color: #f7f6f6;
-  display: flex;
-  flex-wrap: wrap;
-  min-height: 4rem;
-  align-items: center;
-  padding-right: 4px; /* To prevent the last element from overflowing */
-}
-
-.active-link {
-  font-weight: bolder;
+.menu-icon {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
 }
