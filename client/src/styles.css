@@ -24,6 +24,9 @@ body {
     --mdc-outlined-card-container-color: #f7f6f6;
     --mdc-outlined-card-outline-width: 0;
     --mat-icon-color: #7c7c7c; 
+    --mat-sys-corner-extra-large: 0.5rem;
+    --mdc-dialog-subhead-size: 0.9rem;
+    --mdc-dialog-supporting-text-size: 1rem;
 }
 
 

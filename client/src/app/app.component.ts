@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from './services/login.service';
 import { LOGIN } from './common/constants';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +22,12 @@ import { LOGIN } from './common/constants';
 export class AppComponent {
   title = 'Links 3';
 
-  constructor(public pagesService: PagesService, private router: Router, public loginService: LoginService) { }
+  constructor(
+    public pagesService: PagesService,
+    private router: Router,
+    public loginService: LoginService,
+    private dialog: MatDialog
+  ) { }
 
   logOut(): void {
     this.loginService.logout();
@@ -29,9 +36,27 @@ export class AppComponent {
   }
 
   deletePage(): void {
-    this.pagesService.deletePage(this.pagesService.activePage!.id).subscribe(() => {
-      this.router.navigate(['/']);
+
+    const page = this.pagesService.activePage?.caption || this.pagesService.activePage?.pagePath;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Page',
+        question: `Are you sure you want to delete page ${page}?`,
+        yes: 'Yes',
+        no: 'No'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+      this.pagesService.deletePage(this.pagesService.activePage!.id).subscribe(() => {
+        this.router.navigate(['/']);
+      });
     });
   }
+
 
 }
