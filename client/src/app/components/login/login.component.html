@@ -26,12 +26,6 @@
           <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-          <!-- <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-            Password is required
-          </mat-error>
-          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
-            Password must be at least 8 characters long
-          </mat-error> -->
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading"

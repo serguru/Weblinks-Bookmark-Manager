@@ -4,6 +4,7 @@ import { loginGuard } from './guards/login.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PageComponent } from './components/page/page.component';
 import { AddPageComponent } from './components/add-page/add-page.component';
+import { UpdatePageComponent } from './components/update-page/update-page.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,8 @@ export const routes: Routes = [
   },
   { path: 'login', component: LoginComponent },
   { path: 'add-page', component: AddPageComponent },
+  { path: 'update-page', component: UpdatePageComponent },
+  { path: 'update-page/:path', component: UpdatePageComponent },
   { path: '**', component: NotFoundComponent }
 ];
 

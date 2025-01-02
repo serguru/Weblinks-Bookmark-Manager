@@ -8,5 +8,6 @@ public interface IPagesService
     Task<PageModel?> GetPageByIdAsync(int pageId);
     Task<PageModel> AddPageAsync(PageModel page);
     Task<PageModel> UpdatePageAsync(PageModel page);
+    Task<PageModel> AddOrUpdatePageAsync(PageModel page);
     Task DeletePageAsync(int pageId);
 }

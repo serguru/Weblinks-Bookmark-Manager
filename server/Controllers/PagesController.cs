@@ -25,11 +25,29 @@ public class PagesController : ControllerBase
         return Ok(pages);
     }
 
-    [HttpPost("add-page")]
-    public async Task<IActionResult> AddPage([FromBody] PageModel model)
+    [HttpPost("add-update-page")]
+    public async Task<IActionResult> AddOrUpdatePage([FromBody] PageModel model)
     {
-        PageModel result = await _pagesService.AddPageAsync(model);
-        return Ok(result);
+        try
+        {
+            PageModel result = await _pagesService.AddOrUpdatePageAsync(model);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("delete-page/{pageId}")]
+    public async Task<IActionResult> DeletePage(int pageId)
+    {
+        await _pagesService.DeletePageAsync(pageId);
+        return Ok();
     }
 
 }

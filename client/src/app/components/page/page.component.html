@@ -1,6 +1,6 @@
 <div class="toolbar-content">
     <button *ngFor="let page of pagesService.pages" mat-button [routerLink]="'/page/' + page.pagePath" routerLinkActive="active-link"
-       [routerLinkActiveOptions]="{ exact: true }">{{ page.caption }}</button>
+       [routerLinkActiveOptions]="{ exact: true }">{{ page.caption || page.pagePath }}</button>
 </div>
 <div class="page-container">
     <app-row *ngFor="let row of pagesService.activePage?.lrows" [row]="row"></app-row>

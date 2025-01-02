@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -26,6 +26,12 @@ export class AppComponent {
     this.loginService.logout();
     this.pagesService.clearPages();
     this.router.navigate([LOGIN]);
+  }
+
+  deletePage(): void {
+    this.pagesService.deletePage(this.pagesService.activePage!.id).subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 
 }

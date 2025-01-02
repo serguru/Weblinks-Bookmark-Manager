@@ -9,7 +9,7 @@ public class PagesRepository(Links3dbContext dbContext, IHttpContextAccessor htt
     private readonly Links3dbContext _dbContext = dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    private int accountId 
+    private int accountId
     {
         get
         {
@@ -33,11 +33,24 @@ public class PagesRepository(Links3dbContext dbContext, IHttpContextAccessor htt
     {
         page.AccountId = accountId;
         await _dbContext.Pages.AddAsync(page);
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+
+        }
+        catch (DbUpdateException ex)
+        {
+            if (ex.InnerException != null && ex.InnerException.Message.Contains("uq_page_path"))
+            {
+                throw new InvalidOperationException($"Page path {page.PagePath} already exists");
+            }
+            throw;
+        }
     }
 
     public async Task UpdatePageAsync(Page page)
     {
+        page.AccountId = accountId;
         Page? existingPage = await GetPageByIdAsync(page.Id);
 
         if (existingPage == null)
@@ -45,8 +58,21 @@ public class PagesRepository(Links3dbContext dbContext, IHttpContextAccessor htt
             throw new InvalidOperationException("Page to update not found");
         }
 
+        _dbContext.Entry(existingPage).State = EntityState.Detached;
         _dbContext.Pages.Update(page);
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+
+        }
+        catch (DbUpdateException ex)
+        {
+            if (ex.InnerException != null && ex.InnerException.Message.Contains("uq_page_path"))
+            {
+                throw new InvalidOperationException($"Page path {page.PagePath} already exists");
+            }
+            throw;
+        }
     }
 
     public async Task<Page?> GetPageByIdAsync(int pageId)
@@ -65,6 +91,4 @@ public class PagesRepository(Links3dbContext dbContext, IHttpContextAccessor htt
         _dbContext.Pages.Remove(page);
         await _dbContext.SaveChangesAsync();
     }
-
-
 }

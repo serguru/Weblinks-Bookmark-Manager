@@ -48,6 +48,21 @@ public class PagesService(IPagesRepository pagesRepository, IMapper mapper) : IP
         PageModel model = _mapper.Map<PageModel>(entity);
         return model;
     }
+
+    public async Task<PageModel> AddOrUpdatePageAsync(PageModel page)
+    {
+        Page entity = _mapper.Map<Page>(page);
+        if (entity.Id == 0)
+        {
+            await _pagesRepository.AddPageAsync(entity);
+        }
+        else
+        {
+            await _pagesRepository.UpdatePageAsync(entity);
+        }
+        PageModel model = _mapper.Map<PageModel>(entity);
+        return model;
+    }
 }
 
 
