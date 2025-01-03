@@ -5,10 +5,6 @@
    <mat-menu #menu="matMenu">
       <div class="link3-title">{{ loginService.accountClaims.userName }}</div>
       <button *ngIf="!pagesService.isPageRoute" mat-menu-item [routerLink]="'/page'">Pages</button>
-      <button *ngIf="pagesService.isPageRoute" mat-menu-item [routerLink]="'/add-page'">Add page</button>
-      <button *ngIf="pagesService.isPageRoute" mat-menu-item [routerLink]="'/update-page'">Update page</button>
-      <button *ngIf="pagesService.isPageRoute" mat-menu-item [disabled]="!pagesService.activePage"
-         (click)="deletePage()">Delete page</button>
    </mat-menu>
 </ng-container>
 

@@ -111,13 +111,13 @@ begin
 end
 go
 
-if object_id('ValidateUserName') is not null
+if object_id('ValidateLimitedString') is not null
 begin
-    drop function ValidateUserName;
+    drop function ValidateLimitedString;
 end;
 go
 
-create function ValidateUserName
+create function ValidateLimitedString
 (
     @name varchar(max)
 )
@@ -126,7 +126,7 @@ as
 begin
         declare @result bit = 0;
         
-        if patindex('%[^a-zA-Z0-9]%', @name) = 0
+        if patindex('%[^a-zA-Z0-9-_]%', @name) = 0
         begin
             set @result = 1;
         end;
@@ -149,7 +149,7 @@ create table accounts (
     constraint uq_accounts_name unique (userName),
     constraint uq_accounts_email unique (userEmail),
     constraint ch_accounts_name_min_length check (len(userName) >= 3),
-    constraint ch_accounts_name_characters check (dbo.ValidateUserName(userName) = 1),
+    constraint ch_accounts_name_characters check (dbo.ValidateLimitedString(userName) = 1),
     constraint ch_accounts_email_max_length check(len(userEmail) <= 254),
     constraint ch_accounts_email check (dbo.ValidateEmail(userEmail) = 1)
 );
@@ -166,7 +166,8 @@ create table pages (
     constraint pk_pages_id primary key (id),
     constraint fk_pages_account_id foreign key (accountId) references accounts(id) on delete cascade,
     constraint uq_page_path unique (accountId, pagePath),
-    constraint uq_page_path_len check(len(pagePath) >= 3)
+    constraint uq_page_path_len check(len(pagePath) >= 3),
+    constraint ch_pages_path_characters check (dbo.ValidateLimitedString(pagePath) = 1),
 ); 
 go
 
@@ -217,7 +218,7 @@ begin
     end else if len(@userName) < 3 or len(@userName) > 50
     begin
         set @message = 'Username length must be between 3 and 50 characters';
-    end else if dbo.ValidateUserName(@userName) = 0
+    end else if dbo.ValidateLimitedString(@userName) = 0
     begin
         set @message = 'Username can only contain the characters a-z, A-Z and 0-1';
     end else if @userEmail is null or len(@userEmail) = 0

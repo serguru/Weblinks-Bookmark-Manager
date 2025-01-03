@@ -13,7 +13,16 @@
               <mat-error *ngIf="form.get('pagePath')?.hasError('required')">
                 Page path is required
               </mat-error>
-            </mat-form-field>
+              <mat-error *ngIf="form.get('pagePath')?.hasError('minlength')">
+                Page path must be at least 3 characters long
+              </mat-error>
+              <mat-error *ngIf="form.get('pagePath')?.hasError('maxlength')">
+                Page path cannot be more than 50 characters long
+              </mat-error>
+              <mat-error *ngIf="form.get('pagePath')?.hasError('pattern')">
+                Page path can only contain letters, numbers, hyphens, and underscores
+              </mat-error>
+                  </mat-form-field>
   
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Caption</mat-label>

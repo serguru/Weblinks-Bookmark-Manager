@@ -43,7 +43,12 @@ export class PageFormComponent implements OnInit {
     private pagesService: PagesService
   ) {
     this.form = this.fb.group({
-      pagePath: ['', [Validators.required]],
+      pagePath: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        Validators.pattern('^[a-zA-Z0-9-_]+$')
+      ]],
       caption: ['']
     });
   }

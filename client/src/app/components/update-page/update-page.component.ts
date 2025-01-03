@@ -18,7 +18,7 @@ export class UpdatePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pagePath = this.pagesService.getParam('/update-page/');
+    this.pagePath = this.pagesService.getParam('/update-page/', this.pagesService.activeRoute);
     // exiistence of a page with pagePath is checked in the service
   }
 }

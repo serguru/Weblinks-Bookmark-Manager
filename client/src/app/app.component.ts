@@ -10,7 +10,6 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from './services/login.service';
 import { LOGIN } from './common/constants';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -35,28 +34,6 @@ export class AppComponent {
     this.router.navigate([LOGIN]);
   }
 
-  deletePage(): void {
-
-    const page = this.pagesService.activePage?.caption || this.pagesService.activePage?.pagePath;
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Delete Page',
-        question: `Are you sure you want to delete page ${page}?`,
-        yes: 'Yes',
-        no: 'No'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
-        return;
-      }
-      this.pagesService.deletePage(this.pagesService.activePage!.id).subscribe(() => {
-        this.router.navigate(['/']);
-      });
-    });
-  }
 
 
 }

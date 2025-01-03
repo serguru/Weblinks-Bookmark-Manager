@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class PagesService {
   private apiUrl = `${environment.apiUrl}/pages`;
-  private activeRoute: string | null = null;
+  public activeRoute: string | null = null;
 
   constructor(private http: HttpClient, private router: Router,
     public loginService: LoginService, private snackBar: MatSnackBar) {
@@ -42,17 +42,19 @@ export class PagesService {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.activeRoute = this.router.url;
-      const ar = this.activeRoute?.toLowerCase();
+      const r = this.router.url;
+      const ar = r?.toLowerCase();
       if (ar === LOGIN && this.loginService.isAuthenticated) {
         this.router.navigate(['/']);
         return;
       }
       if (ar?.startsWith("/update-page/")) {
-        const path = this.getParam("/update-page/");
+        const path = this.getParam("/update-page/", ar);
         if (!this.findPage(path)) {
           this.router.navigate(['/not-found']);
+          return;
         }
+        this.activeRoute = r;
         return;
       }
       if (ar?.startsWith("/update-page")) {
@@ -65,21 +67,26 @@ export class PagesService {
         return;
       }
       if (!isPageRoute(ar) && !isPage_Route(ar)) {
+        this.activeRoute = r;
         return;
       }
       const ap = this.activePage;
       if (isPage_Route(ar)) {
         if (ap) {
           this.router.navigate([PAGE + ap.pagePath]);
+        } else if (this.pages?.length > 0) {
+          this.router.navigate([PAGE + this.pages[0].pagePath]);
         } else {
-          this.router.navigate(['/add-page']);
+          this.router.navigate(['/not-found']);
         }
         return;
       }
-      if (!ap) {
+      const path = this.getParam(PAGE, ar);
+      if (!this.findPage(path)) {
         this.router.navigate(['/not-found']);
         return;
       }
+      this.activeRoute = r;
     });
   }
 
@@ -88,15 +95,15 @@ export class PagesService {
       return null;
     }
 
-    if (!this.getParam(PAGE)) {
+    if (!this.getParam(PAGE, this.activeRoute)) {
       return this.pages[0];
     }
 
-    return this.pages?.find(p => p.pagePath.toLowerCase() === this.getParam(PAGE)) || null;
+    return this.pages?.find(p => p.pagePath.toLowerCase() === this.getParam(PAGE, this.activeRoute)) || null;
   }
 
-  getParam(root: string): string {
-    const s = this.activeRoute?.toLowerCase() || '';
+  getParam(root: string, route: string | null): string {
+    const s = route?.toLowerCase() || '';
     return s.startsWith(root) ? s.substring(root.length) : '';
   }
 
