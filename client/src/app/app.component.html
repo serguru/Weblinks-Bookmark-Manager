@@ -5,6 +5,7 @@
    <mat-menu #menu="matMenu">
       <div class="link3-title">{{ loginService.accountClaims.userName }}</div>
       <button *ngIf="!pagesService.isPageRoute" mat-menu-item [routerLink]="'/page'">Pages</button>
+      <button *ngIf="loginService.isAuthenticated" mat-menu-item (click)="logOut()">Log out</button>
    </mat-menu>
 </ng-container>
 

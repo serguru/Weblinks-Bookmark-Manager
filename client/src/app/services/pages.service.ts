@@ -76,8 +76,8 @@ export class PagesService {
           this.router.navigate([PAGE + ap.pagePath]);
         } else if (this.pages?.length > 0) {
           this.router.navigate([PAGE + this.pages[0].pagePath]);
-        } else {
-          this.router.navigate(['/not-found']);
+        // } else {
+        //   this.router.navigate(['/not-found']);
         }
         return;
       }

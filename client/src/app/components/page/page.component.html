@@ -1,8 +1,9 @@
 <div class="toolbar-content">
+  <button *ngIf="!pagesService.pages || pagesService.pages.length === 0" mat-button [routerLink]="'/add-page'">Add page</button>
   <button *ngFor="let page of pagesService.pages" mat-button
     [class]="pagesService.activePage?.pagePath === page.pagePath ? 'active-link' : ''"
     (click)="navigateToPage(page.pagePath)" [cdkContextMenuTriggerFor]="context_menu"
-    (cdkContextMenuOpened)="onContextMenuOpened(page)" >{{
+    (cdkContextMenuOpened)="onContextMenuOpened(page)">{{
     page.caption || page.pagePath }}</button>
 </div>
 <div class="page-container">
@@ -12,7 +13,9 @@
 <ng-template #context_menu>
   <div class="example-menu" cdkMenu>
     <button class="example-menu-item" cdkMenuItem [routerLink]="'/add-page'">Add</button>
-    <button class="example-menu-item" cdkMenuItem [disabled]="!this.popupPage" [routerLink]="'/update-page'+this.popupPage!.pagePath">Update</button>
-    <button class="example-menu-item" [disabled]="!this.popupPage" (click)="deletePopupPage()" cdkMenuItem>Delete</button>
+    <button class="example-menu-item" cdkMenuItem [disabled]="!this.popupPage"
+      [routerLink]="'/update-page'+this.popupPage!.pagePath">Update</button>
+    <button class="example-menu-item" [disabled]="!this.popupPage" (click)="deletePopupPage()"
+      cdkMenuItem>Delete</button>
   </div>
 </ng-template>
