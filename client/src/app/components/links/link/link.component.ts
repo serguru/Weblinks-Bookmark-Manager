@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { LinkModel } from '../../models/LinkModel';
+import { LinkModel } from '../../../models/LinkModel';
 
 @Component({
   selector: 'app-link',

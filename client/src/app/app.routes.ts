@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
 import { loginGuard } from './guards/login.guard';
-import { NotFoundComponent } from './components/not-found/not-found.component';
-import { PageComponent } from './components/page/page.component';
-import { AddPageComponent } from './components/add-page/add-page.component';
-import { UpdatePageComponent } from './components/update-page/update-page.component';
-import { AddRowComponent } from './components/add-row/add-row.component';
-import { UpdateRowComponent } from './components/update-row/update-row.component';
-import { AddColumnComponent } from './components/add-column/add-column.component';
-import { UpdateColumnComponent } from './components/update-column/update-column.component';
+import { NotFoundComponent } from './components/base/not-found/not-found.component';
+import { AddColumnComponent } from './components/columns/add-column/add-column.component';
+import { UpdateColumnComponent } from './components/columns/update-column/update-column.component';
+import { PageComponent } from './components/pages/page/page.component';
+import { LoginComponent } from './components/base/login/login.component';
+import { AddPageComponent } from './components/pages/add-page/add-page.component';
+import { UpdatePageComponent } from './components/pages/update-page/update-page.component';
+import { AddRowComponent } from './components/rows/add-row/add-row.component';
+import { UpdateRowComponent } from './components/rows/update-row/update-row.component';
 
 export const routes: Routes = [
   {
@@ -29,11 +29,9 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'add-page', component: AddPageComponent },
   { path: 'update-page', component: UpdatePageComponent },
-  { path: 'update-page/:path', component: UpdatePageComponent },
   { path: 'add-row', component: AddRowComponent },
-  { path: 'update-row/:rowId', component: UpdateRowComponent },
-  { path: 'add-column/:rowId', component: AddColumnComponent },
-  { path: 'update-column/:rowId/:columnId', component: UpdateColumnComponent },
+  { path: 'update-row', component: UpdateRowComponent },
+  { path: 'add-column', component: AddColumnComponent },
+  { path: 'update-column', component: UpdateColumnComponent },
   { path: '**', component: NotFoundComponent }
 ];
-

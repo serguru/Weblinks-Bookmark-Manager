@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from '../../services/login.service';
-import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { LoginService } from '../../../services/login.service';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -10,14 +10,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
-import { PagesService } from '../../services/pages.service';
-import { PAGE } from '../../common/constants';
-import { PageModel } from '../../models/PageModel';
-import { LrowModel } from '../../models/LrowModel';
+import { PagesService } from '../../../services/pages.service';
+import { LrowModel } from '../../../models/LrowModel';
 import { ActivatedRoute } from '@angular/router';
+import { LcolumnModel } from '../../../models/LcolumnModel';
 
 @Component({
-  selector: 'app-row-form',
+  selector: 'app-column-form',
   imports: [
     FormsModule,
     CommonModule,
@@ -28,14 +27,15 @@ import { ActivatedRoute } from '@angular/router';
     ReactiveFormsModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './row-form.component.html',
-  styleUrl: './row-form.component.css'
+  templateUrl: './column-form.component.html',
+  styleUrl: './column-form.component.css'
 })
-export class RowFormComponent implements OnInit {
+export class ColumnFormComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
 
   rowModel!: LrowModel;
+  columnModel: LcolumnModel | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -53,21 +53,30 @@ export class RowFormComponent implements OnInit {
     this.route.params.subscribe(params => {
       const rowId = params['rowId'];
       if (!rowId) {
-        this.router.navigate(['/not-found']);
+        this.router.navigate(['not-found']);
         throw new Error('Row Id is required');
       }
       const r = this.pagesService.getActivePageRow(rowId);
       if (!r) {
-        this.router.navigate(['/not-found']);
-        throw new Error('Active Row is required');
+        this.router.navigate(['not-found']);
+        throw new Error('Active Page Row is required');
       }
       this.rowModel = r;
-      this.form.get('caption')!.setValue(this.rowModel.caption);
+      const columnId = params['columnId'];
+      if (columnId) {
+        const c = r.lcolumns?.find(x => x.id === +columnId);
+        if (!c) {
+          this.router.navigate(['not-found']);
+          throw new Error('Column is required');
+        }
+        this.columnModel = c;
+        this.form.get('caption')!.setValue(this.columnModel.caption);
+      }
     });
   }
 
   get formTitle(): string {
-    return this.rowModel ? 'Update Row' : 'Add Row';
+    return this.columnModel ? 'Update Column' : 'Add Column';
   }
 
   onSubmit(): void {
@@ -76,9 +85,8 @@ export class RowFormComponent implements OnInit {
     }
     this.isLoading = true;
     const caption = this.form.get("caption")!.value;
-    const id = this.rowModel?.id || 0;
-    const page = this.pagesService.activePage!;
-    this.pagesService.addOrUpdateRow(page, id, caption)
+    const id = this.columnModel?.id || 0;
+    this.pagesService.addOrUpdateColumn(this.rowModel, id, caption)
       .pipe(
         finalize(() => {
           this.isLoading = false;

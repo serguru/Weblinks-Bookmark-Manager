@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PagesService } from '../../services/pages.service';
+import { PagesService } from '../../../services/pages.service';
 import { PageFormComponent } from '../page-form/page-form.component';
 
 @Component({

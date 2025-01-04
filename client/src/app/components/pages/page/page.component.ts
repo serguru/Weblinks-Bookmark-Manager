@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RowComponent } from '../row/row.component';
-import { PagesService } from '../../services/pages.service';
 import { Router, RouterModule } from '@angular/router';
-import { LoginService } from '../../services/login.service';
 import { MatButtonModule } from '@angular/material/button';
 import { CdkContextMenuTrigger, CdkMenuItem, CdkMenu } from '@angular/cdk/menu';
-import { PAGE } from '../../common/constants';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { PageModel } from '../../models/PageModel';
 import { finalize } from 'rxjs';
+import { RowComponent } from '../../rows/row/row.component';
+import { PagesService } from '../../../services/pages.service';
+import { LoginService } from '../../../services/login.service';
+import { PageModel } from '../../../models/PageModel';
+import { PAGE } from '../../../common/constants';
+import { ConfirmDialogComponent } from '../../base/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-page',

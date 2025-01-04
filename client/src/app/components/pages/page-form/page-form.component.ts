@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from '../../services/login.service';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -10,9 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
-import { PagesService } from '../../services/pages.service';
-import { PAGE } from '../../common/constants';
-import { PageModel } from '../../models/PageModel';
+import { PageModel } from '../../../models/PageModel';
+import { PagesService } from '../../../services/pages.service';
+import { LoginService } from '../../../services/login.service';
+import { PAGE } from '../../../common/constants';
 
 @Component({
   selector: 'app-page-form',
