@@ -9,6 +9,7 @@ import { LoginService } from './login.service';
 import { isPageRoute, isPage_Route } from '../common/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LrowModel } from '../models/LrowModel';
+import { LcolumnModel } from '../models/LcolumnModel';
 
 
 @Injectable({
@@ -159,7 +160,7 @@ export class PagesService {
     this.updatePages([]);
   }
 
-  addOrUpdatePage(id: number, pagePath: string, caption: string): Observable<PageModel | null> {
+  addOrUpdatePage(id: number, pagePath: string, caption: string): Observable<PageModel> {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
@@ -223,53 +224,44 @@ export class PagesService {
   }
 
 
-  addOrUpdateRow(id: number, pageId: number, caption: string): Observable<LrowModel> {
+  addOrUpdateRow(page: PageModel, id: number, caption: string): Observable<LrowModel> {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
 
-    return this.http.post(this.apiUrl + '/add-update-row', { id: id, pageId: pageId, caption: caption })
+    return this.http.post(this.apiUrl + '/add-update-row', { id: id, pageId: page.id, caption: caption })
       .pipe(
         tap((response: any) => {
-          const pages = this.pages || [];
-          const page = pages.find((p: PageModel) => p.id === response.pageId);
-          if (!page) {
-            throw new Error('Page not found');
-          }
           if (!page.lrows) {
             page.lrows = [];
           }
           if (id === 0) {
             page.lrows.push(response);
           } else {
-            const index = page.lrows.findIndex((x: LrowModel) => x.id === id);
+            const index = page.lrows.findIndex((x: LrowModel) => x.id === response.id);
             if (index === -1) {
               throw new Error('Row not found');
             }
             page.lrows[index].pageId = response.pageId;
             page.lrows[index].caption = response.caption;
           }
-          this.updatePages(pages);
           this.showSuccess(`Row ${id === 0 ? 'added' : 'updated'}`);
         }),
       );
   }
 
-  deleteRow(id: number, pageId: number): Observable<any> {
+  deleteRow(row: LrowModel): Observable<any> {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
-    if (!id) {
-      throw new Error('No row id provided');
-    }
-    return this.http.delete(this.apiUrl + '/delete-row/' + id)
+    return this.http.delete(this.apiUrl + '/delete-row/' + row.id)
       .pipe(
         tap(() => {
-          const page = this.getPageById(pageId);
+          const page = this.getPageById(row.pageId);
           if (!page) {
             throw new Error('Page not found');
           }
-          const index = page.lrows!.findIndex((p: LrowModel) => p.id === id);
+          const index = page.lrows!.findIndex((p: LrowModel) => p.id === row.id);
           if (index === -1) {
             throw new Error('Row not found');
           }
@@ -291,4 +283,50 @@ export class PagesService {
     rowId = +rowId;
     return this.activePage.lrows?.find((r: LrowModel) => r.id === rowId) || null;
   }
+
+  addOrUpdateColumn(row: LrowModel, id: number, caption: string): Observable<LcolumnModel> {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+    
+    return this.http.post(this.apiUrl + '/add-update-column', { id: id, rowId: row.id, caption: caption })
+      .pipe(
+        tap((response: any) => {
+          if (!row.lcolumns) {
+            row.lcolumns = [];
+          }
+          if (id === 0) {
+            row.lcolumns.push(response);
+          } else {
+            const index = row.lcolumns.findIndex((x: LcolumnModel) => x.id === response.id);
+            if (index === -1) {
+              throw new Error('Column not found');
+            }
+            row.lcolumns[index].rowId = response.rowId;
+            row.lcolumns[index].caption = response.caption;
+          }
+          this.showSuccess(`Column ${id === 0 ? 'added' : 'updated'}`);
+        }),
+      );
+  }
+
+  deleteColumn(row: LrowModel, column: LcolumnModel): Observable<any> {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+    return this.http.delete(this.apiUrl + '/delete-column/' + column.id)
+      .pipe(
+        tap(() => {
+          const index = row.lcolumns!.findIndex((p: LcolumnModel) => p.id === column.id);
+          if (index === -1) {
+            throw new Error('Column not found');
+          }
+          row.lcolumns!.splice(index, 1);
+          this.showSuccess(`Column deleted`);
+        }),
+      );
+  }
+
+
+
 }

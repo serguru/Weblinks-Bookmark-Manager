@@ -36,6 +36,7 @@ body {
     font-size: var(--mdc-text-button-label-text-size);
     font-weight: var(--mdc-text-button-label-text-weight);
     padding: 0.5rem 0rem 0.5rem 1rem;
+    cursor: pointer; 
 }
 
 .error-snackbar {

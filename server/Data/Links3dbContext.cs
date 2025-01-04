@@ -70,7 +70,6 @@ public partial class Links3dbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Caption)
                 .HasMaxLength(50)
-                .IsUnicode(false)
                 .HasColumnName("caption");
             entity.Property(e => e.RowId).HasColumnName("rowId");
 
@@ -91,7 +90,6 @@ public partial class Links3dbContext : DbContext
                 .HasColumnName("aUrl");
             entity.Property(e => e.Caption)
                 .HasMaxLength(50)
-                .IsUnicode(false)
                 .HasColumnName("caption");
             entity.Property(e => e.ColumnId).HasColumnName("columnId");
 
@@ -109,7 +107,6 @@ public partial class Links3dbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Caption)
                 .HasMaxLength(50)
-                .IsUnicode(false)
                 .HasColumnName("caption");
             entity.Property(e => e.PageId).HasColumnName("pageId");
 
@@ -130,7 +127,6 @@ public partial class Links3dbContext : DbContext
             entity.Property(e => e.AccountId).HasColumnName("accountId");
             entity.Property(e => e.Caption)
                 .HasMaxLength(50)
-                .IsUnicode(false)
                 .HasColumnName("caption");
             entity.Property(e => e.PagePath)
                 .HasMaxLength(50)

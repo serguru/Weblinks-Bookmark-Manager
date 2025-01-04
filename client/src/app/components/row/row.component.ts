@@ -48,7 +48,7 @@ export class RowComponent {
       if (!result) {
         return;
       }
-      this.pagesService.deleteRow(this.row.id, this.row.pageId)
+      this.pagesService.deleteRow(this.row)
       .pipe(
         finalize(() => {
         })

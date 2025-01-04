@@ -7,6 +7,8 @@ import { AddPageComponent } from './components/add-page/add-page.component';
 import { UpdatePageComponent } from './components/update-page/update-page.component';
 import { AddRowComponent } from './components/add-row/add-row.component';
 import { UpdateRowComponent } from './components/update-row/update-row.component';
+import { AddColumnComponent } from './components/add-column/add-column.component';
+import { UpdateColumnComponent } from './components/update-column/update-column.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +32,8 @@ export const routes: Routes = [
   { path: 'update-page/:path', component: UpdatePageComponent },
   { path: 'add-row', component: AddRowComponent },
   { path: 'update-row/:rowId', component: UpdateRowComponent },
+  { path: 'add-column/:rowId', component: AddColumnComponent },
+  { path: 'update-column/:rowId/:columnId', component: UpdateColumnComponent },
   { path: '**', component: NotFoundComponent }
 ];
 

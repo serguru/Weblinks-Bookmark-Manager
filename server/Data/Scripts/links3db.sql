@@ -162,7 +162,7 @@ create table pages (
     id int identity(1,1) not null,
     accountId int not null,
     pagePath varchar(50) not null,
-    caption varchar(50) null,
+    caption nvarchar(50) null,
     constraint pk_pages_id primary key (id),
     constraint fk_pages_account_id foreign key (accountId) references accounts(id) on delete cascade,
     constraint uq_page_path unique (accountId, pagePath),
@@ -174,7 +174,7 @@ go
 create table lrows (
     id int identity(1,1) not null,
     pageId int not null,
-    caption varchar(50) null,
+    caption nvarchar(50) null,
     constraint pk_lrows_id primary key (id),
     constraint fk_lrows_page_id foreign key (pageId) references pages(id) on delete cascade,
 ); 
@@ -183,7 +183,7 @@ go
 create table lcolumns (
     id int identity(1,1) not null,
     rowId int not null,
-    caption varchar(50) null,
+    caption nvarchar(50) null,
     constraint pk_lcolumns_id primary key (id),
     constraint fk_lcolumns_row_id foreign key (rowId) references lrows(id) on delete cascade,
 ); 
@@ -193,7 +193,7 @@ create table links (
     id int identity(1,1) not null,
     columnId int not null,
     aUrl varchar(max) not null,
-    caption varchar(50) not null,
+    caption nvarchar(50) not null,
     constraint pk_links_id primary key (id),
     constraint fk_links_column_id foreign key (columnId) references lcolumns(id) on delete cascade,
 ); 

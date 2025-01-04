@@ -1,6 +1,6 @@
 <div class="link3-title row-title" [cdkContextMenuTriggerFor]="context_menu">{{row.caption}} </div>
 <div class="row-container">
-    <app-column *ngFor="let column of row?.lcolumns" [column]="column"></app-column>
+    <app-column *ngFor="let column of row?.lcolumns" [row]="row" [column]="column"></app-column>
 </div>
 
 <ng-template #context_menu>
