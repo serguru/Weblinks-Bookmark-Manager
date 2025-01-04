@@ -20,5 +20,12 @@ public interface IPagesService
     Task<LrowModel> AddOrUpdateRowAsync(LrowModel row);
     Task DeleteRowAsync(int rowId);
 
+    // columns
+    Task<LcolumnModel?> GetColumnByIdAsync(int columnId);
+    Task<LcolumnModel> AddColumnAsync(LcolumnModel column);
+    Task<LcolumnModel> UpdateColumnAsync(LcolumnModel column);
+    Task<LcolumnModel> AddOrUpdateColumnAsync(LcolumnModel column);
+    Task DeleteColumnAsync(int columnId);
+
 
 }

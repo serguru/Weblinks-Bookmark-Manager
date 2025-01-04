@@ -8,10 +8,12 @@ namespace server.Services;
 public class PagesService(
     IPagesRepository pagesRepository,
     IRowsRepository rowsRepository,
+    IColumnsRepository columnsRepository,
     IMapper mapper) : IPagesService
 {
     private readonly IPagesRepository _pagesRepository = pagesRepository;
     private readonly IRowsRepository _rowsRepository = rowsRepository;
+    private readonly IColumnsRepository _columnsRepository = columnsRepository;
     private readonly IMapper _mapper = mapper;
 
     #region Pages
@@ -123,6 +125,56 @@ public class PagesService(
     public async Task DeleteRowAsync(int rowId)
     {
         await _rowsRepository.DeleteRowAsync(rowId);
+    }
+    #endregion
+
+    #region Columns
+
+    public async Task<LcolumnModel?> GetColumnByIdAsync(int columnId)
+    {
+        Lcolumn? entity = await _columnsRepository.GetColumnByIdAsync(columnId);
+        if (entity == null)
+        {
+            return null;
+        }
+        LcolumnModel model = _mapper.Map<LcolumnModel>(entity);
+        return model;
+    }
+
+    public async Task<LcolumnModel> AddColumnAsync(LcolumnModel column)
+    {
+        Lcolumn entity = _mapper.Map<Lcolumn>(column);
+        await _columnsRepository.AddColumnAsync(entity);
+        LcolumnModel result = _mapper.Map<LcolumnModel>(entity);
+        return result;
+    }
+
+    public async Task<LcolumnModel> UpdateColumnAsync(LcolumnModel column)
+    {
+        Lcolumn entity = _mapper.Map<Lcolumn>(column);
+        await _columnsRepository.UpdateColumnAsync(entity);
+        LcolumnModel model = _mapper.Map<LcolumnModel>(entity);
+        return model;
+    }
+
+    public async Task<LcolumnModel> AddOrUpdateColumnAsync(LcolumnModel column)
+    {
+        Lcolumn entity = _mapper.Map<Lcolumn>(column);
+        if (entity.Id == 0)
+        {
+            await _columnsRepository.AddColumnAsync(entity);
+        }
+        else
+        {
+            await _columnsRepository.UpdateColumnAsync(entity);
+        }
+        LcolumnModel model = _mapper.Map<LcolumnModel>(entity);
+        return model;
+    }
+
+    public async Task DeleteColumnAsync(int columnId)
+    {
+        await _columnsRepository.DeleteColumnAsync(columnId);
     }
 
     #endregion
