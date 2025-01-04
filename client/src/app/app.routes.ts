@@ -28,10 +28,10 @@ export const routes: Routes = [
   },
   { path: 'login', component: LoginComponent },
   { path: 'add-page', component: AddPageComponent },
-  { path: 'update-page', component: UpdatePageComponent },
+  { path: 'update-page/:path', component: UpdatePageComponent },
   { path: 'add-row', component: AddRowComponent },
-  { path: 'update-row', component: UpdateRowComponent },
-  { path: 'add-column', component: AddColumnComponent },
-  { path: 'update-column', component: UpdateColumnComponent },
+  { path: 'update-row/:rowId', component: UpdateRowComponent },
+  { path: 'add-column/:rowId', component: AddColumnComponent },
+  { path: 'update-column/:rowId/:columnId', component: UpdateColumnComponent },
   { path: '**', component: NotFoundComponent }
 ];

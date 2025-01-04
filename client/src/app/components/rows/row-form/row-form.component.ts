@@ -35,7 +35,7 @@ export class RowFormComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
 
-  rowModel!: LrowModel;
+  rowModel: LrowModel | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -53,13 +53,12 @@ export class RowFormComponent implements OnInit {
     this.route.params.subscribe(params => {
       const rowId = params['rowId'];
       if (!rowId) {
-        this.router.navigate(['/not-found']);
-        throw new Error('Row Id is required');
+        return;
       }
-      const r = this.pagesService.getActivePageRow(rowId);
+      const r = this.pagesService.getActivePageRow(+rowId);
       if (!r) {
         this.router.navigate(['/not-found']);
-        throw new Error('Active Row is required');
+        throw new Error('Row is required');
       }
       this.rowModel = r;
       this.form.get('caption')!.setValue(this.rowModel.caption);
