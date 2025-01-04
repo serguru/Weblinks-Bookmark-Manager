@@ -13,13 +13,12 @@ app-column {
     flex-direction: column;
 }
 
-/* .row-title {
-    font: var(--mat-sys-title-medium);
-    color: #7c7c7c;
-    padding: 0.5rem 0rem 0.5rem 1rem;
-} */
-
-
+.row-title {
+    min-height: 0.5rem;
+    /* min-width: 5rem;
+    background-color:aliceblue; */
+    cursor: pointer; 
+}
 
 
 

@@ -1,0 +1,23 @@
+<div class="add-row-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{formTitle}}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Caption</mat-label>
+                    <input matInput type="text" formControlName="caption" placeholder="Enter page caption">
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading"
+                    class="full-width">
+                    <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+                    <span *ngIf="!isLoading">Submit</span>
+                </button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

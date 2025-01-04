@@ -5,11 +5,16 @@ using server.Data.Models;
 
 namespace server.Services;
 
-public class PagesService(IPagesRepository pagesRepository, IMapper mapper) : IPagesService
+public class PagesService(
+    IPagesRepository pagesRepository,
+    IRowsRepository rowsRepository,
+    IMapper mapper) : IPagesService
 {
     private readonly IPagesRepository _pagesRepository = pagesRepository;
+    private readonly IRowsRepository _rowsRepository = rowsRepository;
     private readonly IMapper _mapper = mapper;
 
+    #region Pages
     public async Task<List<PageModel>> GetAllPagesAsync()
     {
         List<Page> entities = await _pagesRepository.GetAllPagesAsync();
@@ -63,6 +68,64 @@ public class PagesService(IPagesRepository pagesRepository, IMapper mapper) : IP
         PageModel model = _mapper.Map<PageModel>(entity);
         return model;
     }
+    #endregion
+
+    #region Rows
+    public async Task<List<LrowModel>> GetAllRowsAsync(int pageId)
+    {
+        List<Lrow> entities = await _rowsRepository.GetAllRowsAsync(pageId);
+        List<LrowModel> models = _mapper.Map<List<LrowModel>>(entities);
+        return models;
+    }
+
+    public async Task<LrowModel?> GetRowByIdAsync(int rowId)
+    {
+        Lrow? entity = await _rowsRepository.GetRowByIdAsync(rowId);
+        if (entity == null)
+        {
+            return null;
+        }
+        LrowModel model = _mapper.Map<LrowModel>(entity);
+        return model;
+    }
+
+    public async Task<LrowModel> AddRowAsync(LrowModel row)
+    {
+        Lrow entity = _mapper.Map<Lrow>(row);
+        await _rowsRepository.AddRowAsync(entity);
+        LrowModel result = _mapper.Map<LrowModel>(entity);
+        return result;
+    }
+
+    public async Task<LrowModel> UpdateRowAsync(LrowModel row)
+    {
+        Lrow entity = _mapper.Map<Lrow>(row);
+        await _rowsRepository.UpdateRowAsync(entity);
+        LrowModel model = _mapper.Map<LrowModel>(entity);
+        return model;
+    }
+
+    public async Task<LrowModel> AddOrUpdateRowAsync(LrowModel row)
+    {
+        Lrow entity = _mapper.Map<Lrow>(row);
+        if (entity.Id == 0)
+        {
+            await _rowsRepository.AddRowAsync(entity);
+        }
+        else
+        {
+            await _rowsRepository.UpdateRowAsync(entity);
+        }
+        LrowModel model = _mapper.Map<LrowModel>(entity);
+        return model;
+    }
+
+    public async Task DeleteRowAsync(int rowId)
+    {
+        await _rowsRepository.DeleteRowAsync(rowId);
+    }
+
+    #endregion
 }
 
 

@@ -13,9 +13,11 @@ import { finalize } from 'rxjs';
 import { PagesService } from '../../services/pages.service';
 import { PAGE } from '../../common/constants';
 import { PageModel } from '../../models/PageModel';
+import { LrowModel } from '../../models/LrowModel';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-page-form',
+  selector: 'app-row-form',
   imports: [
     FormsModule,
     CommonModule,
@@ -26,48 +28,45 @@ import { PageModel } from '../../models/PageModel';
     ReactiveFormsModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './page-form.component.html',
-  styleUrl: './page-form.component.css'
+  templateUrl: './row-form.component.html',
+  styleUrl: './row-form.component.css'
 })
-export class PageFormComponent implements OnInit {
-  @Input() pagePath: string | null = null;
+export class RowFormComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
 
-  pageModel!: PageModel;
+  rowModel!: LrowModel;
 
   constructor(
     private fb: FormBuilder,
     public loginService: LoginService,
     private router: Router,
-    private pagesService: PagesService
+    private pagesService: PagesService,
+    private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
-      pagePath: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        Validators.pattern('^[a-zA-Z0-9-_]+$')
-      ]],
       caption: ['']
     });
   }
 
   ngOnInit(): void {
-    if (this.pagePath) {
-      const pm = this.pagesService.findPage(this.pagePath);
-      if (!pm) {
-        this.router.navigate(['/not-found']);
-        return;
+
+    this.route.params.subscribe(params => {
+      const rowId = params['rowId'];
+      if (rowId) {
+        const r = this.pagesService.getActivePageRow(rowId);
+        if (!r) {
+          this.router.navigate(['/not-found']);
+          return;
+        }
+        this.rowModel = r;
+        this.form.get('caption')!.setValue(this.rowModel.caption);
       }
-      this.pageModel = pm;
-      this.form.get('pagePath')!.setValue(this.pageModel.pagePath);
-      this.form.get('caption')!.setValue(this.pageModel.caption);
-    }
+    });
   }
 
   get formTitle(): string {
-    return this.pagePath ? 'Update Page' : 'Add Page';
+    return this.rowModel ? 'Update Row' : 'Add Row';
   }
 
   onSubmit(): void {
@@ -75,22 +74,19 @@ export class PageFormComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-    const pagePath = this.form.get("pagePath")!.value;
     const caption = this.form.get("caption")!.value;
-    const id = this.pageModel?.id || 0;
-    this.pagesService.addOrUpdatePage(id, pagePath, caption)
+    const id = this.rowModel?.id || 0;
+    const pageId = this.pagesService.activePage!.id;
+    this.pagesService.addOrUpdateRow(id, pageId, caption)
       .pipe(
         finalize(() => {
           this.isLoading = false;
         })
       )
-      .subscribe({
-        next: (x: PageModel | null) => {
-          if (!x) {
-            return;
-          }
-          this.router.navigate([PAGE + x.pagePath]);
+      .subscribe(
+        () => {
+          this.router.navigate(['/page']);
         }
-      });
+      );
   }
 }

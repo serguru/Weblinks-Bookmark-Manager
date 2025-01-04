@@ -5,7 +5,7 @@ namespace server.Data;
 
 public interface IRowsRepository
 {
-    Task<List<Lrow>> GetAllRowsAsync(int? pageId = null);
+    Task<List<Lrow>> GetAllRowsAsync(int pageId);
     Task<Lrow?> GetRowByIdAsync(int rowId);
     Task AddRowAsync(Lrow row);
     Task UpdateRowAsync(Lrow row);

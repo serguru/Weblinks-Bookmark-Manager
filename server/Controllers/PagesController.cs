@@ -18,6 +18,8 @@ public class PagesController : ControllerBase
         _pagesService = pagesService;
     }
 
+    #region Pages
+
     [HttpGet]
     public async Task<ActionResult<List<PageModel>>> GetAllPagesAsync()
     {
@@ -49,5 +51,28 @@ public class PagesController : ControllerBase
         await _pagesService.DeletePageAsync(pageId);
         return Ok();
     }
+
+    [HttpGet("rows/{pageId}")]
+    public async Task<ActionResult<List<LrowModel>>> GetAllRowsAsync(int pageId)
+    {
+        List<LrowModel> rows = await _pagesService.GetAllRowsAsync(pageId);
+        return Ok(rows);
+    }
+
+    [HttpPost("add-update-row")]
+    public async Task<IActionResult> AddOrUpdateRow([FromBody] LrowModel model)
+    {
+        LrowModel result = await _pagesService.AddOrUpdateRowAsync(model);
+        return Ok(result);
+    }
+
+    [HttpDelete("delete-row/{rowId}")]
+    public async Task<IActionResult> DeleteRow(int rowId)
+    {
+        await _pagesService.DeleteRowAsync(rowId);
+        return Ok();
+    }
+
+    #endregion
 
 }

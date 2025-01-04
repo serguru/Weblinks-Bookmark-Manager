@@ -34,6 +34,9 @@ export class AppComponent {
     this.router.navigate([LOGIN]);
   }
 
+  click() {
+    throw new Error('Error message');
+  }
 
 
 }

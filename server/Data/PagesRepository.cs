@@ -4,17 +4,12 @@ using System.Security.Claims;
 
 namespace server.Data;
 
-public class PagesRepository(Links3dbContext dbContext, IHttpContextAccessor httpContextAccessor) : IPagesRepository
+public class PagesRepository : BaseRepository, IPagesRepository
 {
-    private readonly Links3dbContext _dbContext = dbContext;
-    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    private int accountId
+    public PagesRepository(Links3dbContext dbContext, IHttpContextAccessor httpContextAccessor)
+            : base(dbContext, httpContextAccessor)
     {
-        get
-        {
-            return int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue("id"));
-        }
     }
 
     public async Task<List<Page>> GetAllPagesAsync()

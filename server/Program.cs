@@ -61,6 +61,11 @@ namespace server
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+
+            builder.Services.AddScoped<ILinksRepository, LinksRepository>();
+            builder.Services.AddScoped<IColumnsRepository, ColumnsRepository>();
+            builder.Services.AddScoped<IRowsRepository, RowsRepository>();
             builder.Services.AddScoped<IPagesRepository, PagesRepository>();
             builder.Services.AddScoped<IPagesService, PagesService>();
             builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, filter, find, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, find, Observable, of, tap, throwError } from 'rxjs';
 import { PageModel } from '../models/PageModel';
 import { NavigationEnd, Router } from '@angular/router';
 import { LOGIN, PAGE } from '../common/constants';
 import { LoginService } from './login.service';
 import { isPageRoute, isPage_Route } from '../common/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { LrowModel } from '../models/LrowModel';
 
 
 @Injectable({
@@ -19,12 +20,14 @@ export class PagesService {
 
   constructor(private http: HttpClient, private router: Router,
     public loginService: LoginService, private snackBar: MatSnackBar) {
-    if (!this.loginService.isAuthenticated) {
-      this.subscribeToNavigationEnd();
-      return;
-    }
+
+    this.subscribeToNavigationEnd();
+    // if (!this.loginService.isAuthenticated) {
+    //   this.subscribeToNavigationEnd();
+    //   return;
+    // }
     this.getPages().subscribe(() => {
-      this.subscribeToNavigationEnd();
+      this.router.navigate(["/"]);
     });
   }
 
@@ -37,6 +40,22 @@ export class PagesService {
     return this.pages?.find(p => p.pagePath.toLowerCase() === pagePath.toLowerCase()) || null;
   }
 
+  // get activePage(): PageModel | null {
+  //   if (!this.pages || this.pages.length === 0) {
+  //     return null;
+  //   }
+
+  //   if (!this.getParam(PAGE, this.activeRoute)) {
+  //     return this.pages[0];
+  //   }
+
+  //   return this.pages?.find(p => p.pagePath.toLowerCase() === this.getParam(PAGE, this.activeRoute)) || null;
+  // }
+  private _activePage: PageModel | null = null;
+
+  get activePage(): PageModel | null {
+    return this._activePage;
+  }
 
   subscribeToNavigationEnd() {
     this.router.events.pipe(
@@ -66,41 +85,47 @@ export class PagesService {
         this.router.navigate(['/update-page/' + ap.pagePath]);
         return;
       }
+      const ap = this.activePage;
+      if (ar?.startsWith("/add-row")) {
+        if (!ap) {
+          this.router.navigate(['/not-found']);
+          return;
+        }
+        this.activeRoute = r;
+        return;
+      }
+      if (ar?.startsWith("/update-row")) {
+        if (!ap) {
+          this.router.navigate(['/not-found']);
+          return;
+        }
+        this.activeRoute = r;
+        return;
+      }
       if (!isPageRoute(ar) && !isPage_Route(ar)) {
         this.activeRoute = r;
         return;
       }
-      const ap = this.activePage;
       if (isPage_Route(ar)) {
         if (ap) {
           this.router.navigate([PAGE + ap.pagePath]);
         } else if (this.pages?.length > 0) {
           this.router.navigate([PAGE + this.pages[0].pagePath]);
-        // } else {
-        //   this.router.navigate(['/not-found']);
         }
         return;
       }
       const path = this.getParam(PAGE, ar);
-      if (!this.findPage(path)) {
+      const page = this.findPage(path);
+      if (!page) {
+        this._activePage = null;
         this.router.navigate(['/not-found']);
         return;
       }
       this.activeRoute = r;
+      this._activePage = page;
     });
   }
 
-  get activePage(): PageModel | null {
-    if (!this.pages || this.pages.length === 0) {
-      return null;
-    }
-
-    if (!this.getParam(PAGE, this.activeRoute)) {
-      return this.pages[0];
-    }
-
-    return this.pages?.find(p => p.pagePath.toLowerCase() === this.getParam(PAGE, this.activeRoute)) || null;
-  }
 
   getParam(root: string, route: string | null): string {
     const s = route?.toLowerCase() || '';
@@ -111,6 +136,12 @@ export class PagesService {
   public pages$ = this.pagesSubject.asObservable();
   updatePages(pages: PageModel[]) {
     this.pagesSubject.next(pages);
+    if (!this.activePage) {
+      this._activePage = null;
+      return;
+    }
+    const page = this.getPageById(this.activePage.id);
+    this._activePage = page || null;
   }
   get pages(): PageModel[] {
     return this.pagesSubject.getValue();
@@ -128,7 +159,7 @@ export class PagesService {
     this.updatePages([]);
   }
 
-  addOrUpdatePage(id: number, pagePath: string, caption: string): Observable<PageModel> {
+  addOrUpdatePage(id: number, pagePath: string, caption: string): Observable<PageModel | null> {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
@@ -141,18 +172,15 @@ export class PagesService {
             pages.push(response);
           } else {
             const index = pages.findIndex((p: PageModel) => p.id === id);
-            if (index !== -1) {
-              pages[index].pagePath = response.pagePath;
-              pages[index].caption = response.caption;
+            if (index === -1) {
+              throw new Error('Page not found');
             }
+            pages[index].pagePath = response.pagePath;
+            pages[index].caption = response.caption;
           }
           this.updatePages(pages);
           this.showSuccess(`Page ${id === 0 ? 'added' : 'updated'}`);
         }),
-        catchError((error) => {
-          this.showError(error.error);
-          return throwError(() => error);
-        })
       );
   }
 
@@ -173,10 +201,6 @@ export class PagesService {
             this.showSuccess(`Page deleted`);
           }
         }),
-        catchError((error) => {
-          this.showError(error.error);
-          return throwError(() => error);
-        })
       );
   }
 
@@ -198,4 +222,73 @@ export class PagesService {
     });
   }
 
+
+  addOrUpdateRow(id: number, pageId: number, caption: string): Observable<LrowModel> {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+
+    return this.http.post(this.apiUrl + '/add-update-row', { id: id, pageId: pageId, caption: caption })
+      .pipe(
+        tap((response: any) => {
+          const pages = this.pages || [];
+          const page = pages.find((p: PageModel) => p.id === response.pageId);
+          if (!page) {
+            throw new Error('Page not found');
+          }
+          if (!page.lrows) {
+            page.lrows = [];
+          }
+          if (id === 0) {
+            page.lrows.push(response);
+          } else {
+            const index = page.lrows.findIndex((x: LrowModel) => x.id === id);
+            if (index === -1) {
+              throw new Error('Row not found');
+            }
+            page.lrows[index].pageId = response.pageId;
+            page.lrows[index].caption = response.caption;
+          }
+          this.updatePages(pages);
+          this.showSuccess(`Row ${id === 0 ? 'added' : 'updated'}`);
+        }),
+      );
+  }
+
+  deleteRow(id: number, pageId: number): Observable<any> {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+    if (!id) {
+      throw new Error('No row id provided');
+    }
+    return this.http.delete(this.apiUrl + '/delete-row/' + id)
+      .pipe(
+        tap(() => {
+          const page = this.getPageById(pageId);
+          if (!page) {
+            throw new Error('Page not found');
+          }
+          const index = page.lrows!.findIndex((p: LrowModel) => p.id === id);
+          if (index === -1) {
+            throw new Error('Row not found');
+          }
+          page.lrows!.splice(index, 1);
+          this.showSuccess(`Row deleted`);
+        }),
+      );
+  }
+
+  getPageById(pageId: number) {
+    const pages = this.pages || [];
+    return pages.find((p: PageModel) => p.id === pageId);
+  }
+
+  getActivePageRow(rowId: number) {
+    if (!this.activePage) {
+      return null;
+    }
+    rowId = +rowId;
+    return this.activePage.lrows?.find((r: LrowModel) => r.id === rowId) || null;
+  }
 }
