@@ -1,3 +1,12 @@
-<div class="link-container">
-    <a [href]="link?.aUrl" target="_blank" rel="noreferrer">{{link?.caption}}</a>
+<div class="link-container" [cdkContextMenuTriggerFor]="context_menu">
+    <a [href]="link.aUrl" target="_blank" rel="noreferrer">{{link.caption}}</a>
 </div>
+
+<ng-template #context_menu>
+    <app-context-menu [title]="'Link'" [addPath]="'/add-link/'+row.id+'/'+column.id" 
+    [updatePath]="'/update-link/'+row.id+'/'+column.id+'/'+link.id"
+        [delete]="delete.bind(this)" [disabled]="false">
+    </app-context-menu>
+
+
+</ng-template>

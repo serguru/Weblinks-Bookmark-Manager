@@ -1,56 +1,70 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using server.Data.Entities;
 
 namespace server.Data;
 
-public class LinksRepository : ILinksRepository
+public class LinksRepository : BaseRepository, ILinksRepository
 {
-    private readonly Links3dbContext _dbContext;
-
-    public LinksRepository(Links3dbContext dbContext)
+    public LinksRepository(Links3dbContext dbContext, IHttpContextAccessor httpContextAccessor)
+            : base(dbContext, httpContextAccessor)
     {
-        _dbContext = dbContext;
-    }
-
-    public async Task<List<Link>> GetAllLinksAsync(int? columnId = null)
-    {
-        IQueryable<Link> query = _dbContext.Links.AsQueryable();
-
-        if (columnId.HasValue) 
-        {
-            query = query
-                .Where(c => c.ColumnId == columnId.Value);
-        }
-
-        List<Link> links = await query.ToListAsync();
-        return links;
-    }
-
-    public async Task AddLinkAsync(Link link)
-    {
-        await _dbContext.Links.AddAsync(link);
-        await _dbContext.SaveChangesAsync();
-    }
-
-    public async Task UpdateLinkAsync(Link link)
-    {
-        _dbContext.Links.Update(link);
-        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<Link?> GetLinkByIdAsync(int linkId)
     {
-        Link? link = await _dbContext.Links.FirstOrDefaultAsync(x => x.Id == linkId);
+        Link? link = await _dbContext.Links
+            .Include(x => x.Column)
+            .ThenInclude(x => x.Row)
+            .ThenInclude(x => x.Page)
+            .Where(x => x.Column.Row.Page.AccountId == accountId)
+            .FirstOrDefaultAsync(x => x.Id == linkId);
         return link;
     }
 
-    public async Task DeleteLinkAsync(int linkId)
+    public async Task AddLinkAsync(Link link)
+    {
+        Lcolumn? column = await _dbContext.Lcolumns
+            .Include(x => x.Row)
+            .ThenInclude(x => x.Page)
+            .Where(x => x.Row.Page.AccountId == accountId)
+            .FirstOrDefaultAsync(x => x.Id == link.ColumnId);
+
+        if (column == null)
+        {
+            throw new InvalidOperationException("Row not found");
+        }
+
+        await _dbContext.Links.AddAsync(link);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    private async Task<Link> CheckLinkAccountAsync(int linkId)
     {
         Link? link = await GetLinkByIdAsync(linkId);
-        if (link != null)
+
+        if (link == null)
         {
-            _dbContext.Links.Remove(link);
-            await _dbContext.SaveChangesAsync();
+            throw new InvalidOperationException("Link not found");
         }
+
+        return link;
+    }
+
+
+    public async Task UpdateLinkAsync(Link link)
+    {
+        Link existingLink = await CheckLinkAccountAsync(link.Id);
+        _dbContext.Entry(existingLink).State = EntityState.Detached;
+        _dbContext.Links.Update(link);
+        await _dbContext.SaveChangesAsync();
+    }
+
+
+    public async Task DeleteLinkAsync(int linkId)
+    {
+        Link existingLink = await CheckLinkAccountAsync(linkId);
+        _dbContext.Links.Remove(existingLink);
+        await _dbContext.SaveChangesAsync();
     }
 }

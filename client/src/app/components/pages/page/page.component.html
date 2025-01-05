@@ -4,7 +4,8 @@
   <button *ngFor="let page of pagesService.pages" mat-button
     [class]="pagesService.activePage?.pagePath === page.pagePath ? 'active-link' : ''"
     (click)="navigateToPage(page.pagePath)" [cdkContextMenuTriggerFor]="context_menu"
-    (cdkContextMenuOpened)="onContextMenuOpened(page)">{{
+    (cdkContextMenuOpened)="onContextMenuOpened(page)"
+    >{{
     page.caption || page.pagePath }}</button>
 </div>
 <div class="page-container" *ngIf="pagesService.activePage">
@@ -17,11 +18,7 @@
 </div>
 
 <ng-template #context_menu>
-  <div class="links3-menu" cdkMenu>
-    <button class="links3-menu-item" cdkMenuItem [routerLink]="'/add-page'">Add</button>
-    <button class="links3-menu-item" cdkMenuItem [disabled]="!this.popupPage"
-      [routerLink]="'/update-page'+this.popupPage!.pagePath">Update</button>
-    <button class="links3-menu-item" [disabled]="!this.popupPage" (click)="deletePopupPage()"
-      cdkMenuItem>Delete</button>
-  </div>
+  <app-context-menu [title]="'Page'" [addPath]="'/add-page'" [updatePath]="'/update-page'+this.popupPage?.pagePath"
+    [delete]="deletePopupPage.bind(this)" [disabled]="!this.popupPage">
+  </app-context-menu>
 </ng-template>

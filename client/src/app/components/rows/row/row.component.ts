@@ -1,27 +1,28 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { LrowModel } from '../../../models/LrowModel';
 import { CommonModule } from '@angular/common';
 import { PagesService } from '../../../services/pages.service';
 import { Router, RouterModule } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
 import { MatButtonModule } from '@angular/material/button';
-import { CdkMenuItem, CdkMenu, CdkContextMenuTrigger } from '@angular/cdk/menu';
+import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../base/confirm-dialog/confirm-dialog.component';
 import { finalize } from 'rxjs';
 import { ColumnComponent } from '../../columns/column/column.component';
-
+import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
+import { CdkMenuTrigger } from '@angular/cdk/menu';
 
 @Component({
   selector: 'app-row',
   imports: [
-    CommonModule, 
+    CommonModule,
     ColumnComponent,
     RouterModule,
     MatButtonModule,
-    CdkMenu,
-    CdkMenuItem,
-    CdkContextMenuTrigger
+    CdkContextMenuTrigger,
+    ContextMenuComponent,
+    CdkMenuTrigger,
   ],
   templateUrl: './row.component.html',
   styleUrl: './row.component.css'
@@ -32,6 +33,11 @@ export class RowComponent {
   constructor(public pagesService: PagesService, public loginService: LoginService,
     private router: Router, private dialog: MatDialog) { }
 
+  @ViewChild('menuTrigger') menuTrigger!: CdkMenuTrigger;
+
+  openMenu() {
+    this.menuTrigger.open();
+  }
 
   delete(): void {
 
@@ -49,12 +55,12 @@ export class RowComponent {
         return;
       }
       this.pagesService.deleteRow(this.row)
-      .pipe(
-        finalize(() => {
-        })
-      )
-      .subscribe(() => {
-      });
+        .pipe(
+          finalize(() => {
+          })
+        )
+        .subscribe(() => {
+        });
     });
   }
 

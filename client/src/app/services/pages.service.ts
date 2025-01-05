@@ -10,6 +10,7 @@ import { isPageRoute, isPage_Route } from '../common/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LrowModel } from '../models/LrowModel';
 import { LcolumnModel } from '../models/LcolumnModel';
+import { LinkModel } from '../models/LinkModel';
 
 
 @Injectable({
@@ -21,12 +22,7 @@ export class PagesService {
 
   constructor(private http: HttpClient, private router: Router,
     public loginService: LoginService, private snackBar: MatSnackBar) {
-
     this.subscribeToNavigationEnd();
-    // if (!this.loginService.isAuthenticated) {
-    //   this.subscribeToNavigationEnd();
-    //   return;
-    // }
     this.getPages().subscribe(() => {
       this.router.navigate(["/"]);
     });
@@ -41,17 +37,6 @@ export class PagesService {
     return this.pages?.find(p => p.pagePath.toLowerCase() === pagePath.toLowerCase()) || null;
   }
 
-  // get activePage(): PageModel | null {
-  //   if (!this.pages || this.pages.length === 0) {
-  //     return null;
-  //   }
-
-  //   if (!this.getParam(PAGE, this.activeRoute)) {
-  //     return this.pages[0];
-  //   }
-
-  //   return this.pages?.find(p => p.pagePath.toLowerCase() === this.getParam(PAGE, this.activeRoute)) || null;
-  // }
   private _activePage: PageModel | null = null;
 
   get activePage(): PageModel | null {
@@ -327,6 +312,47 @@ export class PagesService {
       );
   }
 
+  addOrUpdateLink(column: LcolumnModel, id: number, aUrl: string, caption: string): Observable<LinkModel> {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+    
+    return this.http.post(this.apiUrl + '/add-update-link', { id: id, columnId: column.id, aUrl: aUrl, caption: caption })
+      .pipe(
+        tap((response: any) => {
+          if (!column.links) {
+            column.links = [];
+          }
+          if (id === 0) {
+            column.links.push(response);
+          } else {
+            const index = column.links.findIndex((x: LinkModel) => x.id === response.id);
+            if (index === -1) {
+              throw new Error('Link not found');
+            }
+            column.links[index].columnId = response.columnId;
+            column.links[index].aUrl = response.aUrl;
+            column.links[index].caption = response.caption;
+          }
+          this.showSuccess(`Link ${id === 0 ? 'added' : 'updated'}`);
+        }),
+      );
+  }
 
-
+  deleteLink(column: LcolumnModel, link: LinkModel): Observable<any> {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+    return this.http.delete(this.apiUrl + '/delete-link/' + link.id)
+      .pipe(
+        tap(() => {
+          const index = column.links!.findIndex((p: LinkModel) => p.id === link.id);
+          if (index === -1) {
+            throw new Error('Link not found');
+          }
+          column.links!.splice(index, 1);
+          this.showSuccess(`Link deleted`);
+        }),
+      );
+  }
 }

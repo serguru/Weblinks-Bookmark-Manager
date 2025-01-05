@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +30,6 @@ import { PAGE } from '../../../common/constants';
   styleUrl: './page-form.component.css'
 })
 export class PageFormComponent implements OnInit {
-  @Input() pagePath: string | null = null;
   form: FormGroup;
   isLoading = false;
 
@@ -40,7 +39,8 @@ export class PageFormComponent implements OnInit {
     private fb: FormBuilder,
     public loginService: LoginService,
     private router: Router,
-    private pagesService: PagesService
+    private pagesService: PagesService,
+    private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
       pagePath: ['', [
@@ -54,20 +54,25 @@ export class PageFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.pagePath) {
-      const pm = this.pagesService.findPage(this.pagePath);
+
+    this.route.params.subscribe(params => {
+      const path = params['path'];
+      if (!path) {
+        return;
+      }
+      const pm = this.pagesService.findPage(path);
       if (!pm) {
         this.router.navigate(['/not-found']);
-        return;
+        throw new Error('Page is required');
       }
       this.pageModel = pm;
       this.form.get('pagePath')!.setValue(this.pageModel.pagePath);
       this.form.get('caption')!.setValue(this.pageModel.caption);
-    }
+    });
   }
 
   get formTitle(): string {
-    return this.pagePath ? 'Update Page' : 'Add Page';
+    return this.pageModel ? 'Update Page' : 'Add Page';
   }
 
   onSubmit(): void {

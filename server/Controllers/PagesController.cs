@@ -96,4 +96,22 @@ public class PagesController : ControllerBase
 
     #endregion
 
+    #region Links
+
+    [HttpPost("add-update-link")]
+    public async Task<IActionResult> AddOrUpdateLink([FromBody] LinkModel model)
+    {
+        LinkModel result = await _pagesService.AddOrUpdateLinkAsync(model);
+        return Ok(result);
+    }
+
+    [HttpDelete("delete-link/{linkId}")]
+    public async Task<IActionResult> DeleteLink(int linkId)
+    {
+        await _pagesService.DeleteLinkAsync(linkId);
+        return Ok();
+    }
+
+    #endregion
+
 }

@@ -5,14 +5,15 @@ import { PagesService } from '../../../services/pages.service';
 import { Router, RouterModule } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
 import { MatButtonModule } from '@angular/material/button';
-import { CdkMenuItem, CdkMenu, CdkContextMenuTrigger } from '@angular/cdk/menu';
+import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../base/confirm-dialog/confirm-dialog.component';
 import { finalize } from 'rxjs';
 import { LcolumnModel } from '../../../models/LcolumnModel';
 import {MatCardModule} from '@angular/material/card';
 import { LinkComponent } from '../../links/link/link.component';
-
+import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
+import { CdkMenuTrigger } from '@angular/cdk/menu';
 
 @Component({
   selector: 'app-column',
@@ -21,10 +22,10 @@ import { LinkComponent } from '../../links/link/link.component';
     LinkComponent,
     RouterModule,
     MatButtonModule,
-    CdkMenu,
-    CdkMenuItem,
     CdkContextMenuTrigger,
-    MatCardModule
+    MatCardModule,
+    ContextMenuComponent,
+    CdkMenuTrigger
   ],
   templateUrl: './column.component.html',
   styleUrl: './column.component.css'

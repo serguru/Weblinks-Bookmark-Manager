@@ -27,5 +27,12 @@ public interface IPagesService
     Task<LcolumnModel> AddOrUpdateColumnAsync(LcolumnModel column);
     Task DeleteColumnAsync(int columnId);
 
+    // links
+    Task<LinkModel?> GetLinkByIdAsync(int linkId);
+    Task<LinkModel> AddLinkAsync(LinkModel link);
+    Task<LinkModel> UpdateLinkAsync(LinkModel link);
+    Task<LinkModel> AddOrUpdateLinkAsync(LinkModel link);
+    Task DeleteLinkAsync(int linkId);
+
 
 }

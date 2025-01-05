@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { CdkContextMenuTrigger, CdkMenuItem, CdkMenu } from '@angular/cdk/menu';
+import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 import { RowComponent } from '../../rows/row/row.component';
@@ -11,6 +11,7 @@ import { LoginService } from '../../../services/login.service';
 import { PageModel } from '../../../models/PageModel';
 import { PAGE } from '../../../common/constants';
 import { ConfirmDialogComponent } from '../../base/confirm-dialog/confirm-dialog.component';
+import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
 
 @Component({
   selector: 'app-page',
@@ -20,18 +21,18 @@ import { ConfirmDialogComponent } from '../../base/confirm-dialog/confirm-dialog
     RowComponent,
     MatButtonModule,
     CdkContextMenuTrigger,
-    CdkMenu,
-    CdkMenuItem
+    ContextMenuComponent
   ],
   templateUrl: './page.component.html',
   styleUrl: './page.component.css'
 })
 export class PageComponent implements OnInit {
-
+ 
   constructor(public pagesService: PagesService, public loginService: LoginService,
     private router: Router, private dialog: MatDialog) { }
 
-  popupPage: PageModel | null = null;
+
+    popupPage: PageModel | null = null;
 
   ngOnInit(): void {
   }

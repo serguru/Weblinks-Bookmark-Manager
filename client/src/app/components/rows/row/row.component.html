@@ -1,4 +1,5 @@
-<div class="link3-title row-title" [cdkContextMenuTriggerFor]="context_menu">{{row.caption}} </div>
+<div class="link3-title row-title" [cdkContextMenuTriggerFor]="context_menu" [cdkMenuTriggerFor]="context_menu">
+    {{row.caption}} </div>
 <div class="row-container">
     <ng-container *ngIf="row.lcolumns?.length; else new_column">
         <app-column *ngFor="let column of row?.lcolumns" [row]="row" [column]="column"></app-column>
@@ -9,9 +10,7 @@
 </div>
 
 <ng-template #context_menu>
-    <div class="links3-menu" cdkMenu>
-        <button class="links3-menu-item" cdkMenuItem [routerLink]="'/add-row/'">Add</button>
-        <button class="links3-menu-item" cdkMenuItem [routerLink]="'/update-row/'+row.id">Update</button>
-        <button class="links3-menu-item" (click)="delete()" cdkMenuItem>Delete</button>
-    </div>
+    <app-context-menu [title]="'Row'" [addPath]="'/add-row/'" [updatePath]="'/update-row/'+row.id"
+        [delete]="delete.bind(this)" [disabled]="false">
+    </app-context-menu>
 </ng-template>

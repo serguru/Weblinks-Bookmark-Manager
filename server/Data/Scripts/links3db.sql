@@ -192,7 +192,7 @@ go
 create table links (
     id int identity(1,1) not null,
     columnId int not null,
-    aUrl varchar(max) not null,
+    aUrl nvarchar(max) not null,
     caption nvarchar(50) not null,
     constraint pk_links_id primary key (id),
     constraint fk_links_column_id foreign key (columnId) references lcolumns(id) on delete cascade,

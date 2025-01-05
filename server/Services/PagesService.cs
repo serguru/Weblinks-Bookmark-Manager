@@ -9,11 +9,15 @@ public class PagesService(
     IPagesRepository pagesRepository,
     IRowsRepository rowsRepository,
     IColumnsRepository columnsRepository,
+    ILinksRepository linksRepository,
+
+
     IMapper mapper) : IPagesService
 {
     private readonly IPagesRepository _pagesRepository = pagesRepository;
     private readonly IRowsRepository _rowsRepository = rowsRepository;
     private readonly IColumnsRepository _columnsRepository = columnsRepository;
+    private readonly ILinksRepository _linksRepository = linksRepository;
     private readonly IMapper _mapper = mapper;
 
     #region Pages
@@ -178,6 +182,59 @@ public class PagesService(
     }
 
     #endregion
+
+
+    #region Links
+
+    public async Task<LinkModel?> GetLinkByIdAsync(int linkId)
+    {
+        Link? entity = await _linksRepository.GetLinkByIdAsync(linkId);
+        if (entity == null)
+        {
+            return null;
+        }
+        LinkModel model = _mapper.Map<LinkModel>(entity);
+        return model;
+    }
+
+    public async Task<LinkModel> AddLinkAsync(LinkModel link)
+    {
+        Link entity = _mapper.Map<Link>(link);
+        await _linksRepository.AddLinkAsync(entity);
+        LinkModel result = _mapper.Map<LinkModel>(entity);
+        return result;
+    }
+
+    public async Task<LinkModel> UpdateLinkAsync(LinkModel link)
+    {
+        Link entity = _mapper.Map<Link>(link);
+        await _linksRepository.UpdateLinkAsync(entity);
+        LinkModel model = _mapper.Map<LinkModel>(entity);
+        return model;
+    }
+
+    public async Task<LinkModel> AddOrUpdateLinkAsync(LinkModel link)
+    {
+        Link entity = _mapper.Map<Link>(link);
+        if (entity.Id == 0)
+        {
+            await _linksRepository.AddLinkAsync(entity);
+        }
+        else
+        {
+            await _linksRepository.UpdateLinkAsync(entity);
+        }
+        LinkModel model = _mapper.Map<LinkModel>(entity);
+        return model;
+    }
+
+    public async Task DeleteLinkAsync(int linkId)
+    {
+        await _linksRepository.DeleteLinkAsync(linkId);
+    }
+
+    #endregion
+
 }
 
 
