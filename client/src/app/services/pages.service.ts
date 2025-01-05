@@ -6,7 +6,6 @@ import { PageModel } from '../models/PageModel';
 import { NavigationEnd, Router } from '@angular/router';
 import { LOGIN, PAGE } from '../common/constants';
 import { LoginService } from './login.service';
-import { isPageRoute, isPage_Route } from '../common/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LrowModel } from '../models/LrowModel';
 import { LcolumnModel } from '../models/LcolumnModel';
@@ -18,116 +17,29 @@ import { LinkModel } from '../models/LinkModel';
 })
 export class PagesService {
   private apiUrl = `${environment.apiUrl}/pages`;
-  public activeRoute: string | null = null;
 
   constructor(private http: HttpClient, private router: Router,
     public loginService: LoginService, private snackBar: MatSnackBar) {
-    this.subscribeToNavigationEnd();
-    this.getPages().subscribe(() => {
-      this.router.navigate(["/"]);
-    });
+
   }
 
-
-  get isPageRoute(): boolean {
-    return isPageRoute(this.activeRoute?.toLowerCase() || null);
-  }
 
   findPage(pagePath: string): PageModel | null {
     return this.pages?.find(p => p.pagePath.toLowerCase() === pagePath.toLowerCase()) || null;
   }
 
   private _activePage: PageModel | null = null;
-
   get activePage(): PageModel | null {
     return this._activePage;
   }
-
-  subscribeToNavigationEnd() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      const r = this.router.url;
-      const ar = r?.toLowerCase();
-      if (ar === LOGIN && this.loginService.isAuthenticated) {
-        this.router.navigate(['/']);
-        return;
-      }
-      if (ar?.startsWith("/update-page/")) {
-        const path = this.getParam("/update-page/", ar);
-        if (!this.findPage(path)) {
-          this.router.navigate(['/not-found']);
-          return;
-        }
-        this.activeRoute = r;
-        return;
-      }
-      if (ar?.startsWith("/update-page")) {
-        const ap = this.activePage;
-        if (!ap) {
-          this.router.navigate(['/not-found']);
-          return;
-        }
-        this.router.navigate(['/update-page/' + ap.pagePath]);
-        return;
-      }
-      const ap = this.activePage;
-      if (ar?.startsWith("/add-row")) {
-        if (!ap) {
-          this.router.navigate(['/not-found']);
-          return;
-        }
-        this.activeRoute = r;
-        return;
-      }
-      if (ar?.startsWith("/update-row")) {
-        if (!ap) {
-          this.router.navigate(['/not-found']);
-          return;
-        }
-        this.activeRoute = r;
-        return;
-      }
-      if (!isPageRoute(ar) && !isPage_Route(ar)) {
-        this.activeRoute = r;
-        return;
-      }
-      if (isPage_Route(ar)) {
-        if (ap) {
-          this.router.navigate([PAGE + ap.pagePath]);
-        } else if (this.pages?.length > 0) {
-          this.router.navigate([PAGE + this.pages[0].pagePath]);
-        }
-        return;
-      }
-      const path = this.getParam(PAGE, ar);
-      const page = this.findPage(path);
-      if (!page) {
-        this._activePage = null;
-        this.router.navigate(['/not-found']);
-        return;
-      }
-      this.activeRoute = r;
-      this._activePage = page;
-    });
-  }
-
-
-  getParam(root: string, route: string | null): string {
-    const s = route?.toLowerCase() || '';
-    return s.startsWith(root) ? s.substring(root.length) : '';
+  set activePage(value: PageModel | null) {
+    this._activePage = value;
   }
 
   private pagesSubject = new BehaviorSubject<any>(null);
   public pages$ = this.pagesSubject.asObservable();
   updatePages(pages: PageModel[]) {
     this.pagesSubject.next(pages);
-    if (!this.activePage) {
-      this._activePage = null;
-      return;
-    }
-    const page = this.getPageById(this.activePage.id);
-    this._activePage = page || null;
   }
   get pages(): PageModel[] {
     return this.pagesSubject.getValue();

@@ -1,0 +1,28 @@
+.registration-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  mat-card {
+    max-width: 400px;
+    width: 100%;
+  }
+
+  mat-card-header {
+    margin-bottom: 20px;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .submit-button {
+    margin-top: 20px;
+  }
+
+  mat-form-field {
+    margin-bottom: 16px;
+  }

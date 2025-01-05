@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,14 +27,40 @@ import { ContextMenuComponent } from '../../base/context-menu/context-menu.compo
   styleUrl: './page.component.css'
 })
 export class PageComponent implements OnInit {
- 
+
   constructor(public pagesService: PagesService, public loginService: LoginService,
-    private router: Router, private dialog: MatDialog) { }
+    private router: Router, private dialog: MatDialog,
+    private route: ActivatedRoute) { }
 
 
-    popupPage: PageModel | null = null;
+  popupPage: PageModel | null = null;
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const path = params['path'];
+
+      if (!path) {
+        if (this.pagesService.pages?.length) {
+          if (this.pagesService.activePage) {
+            this.router.navigate(['/page/' + this.pagesService.activePage.pagePath]);
+            return;
+          }
+          this.pagesService.activePage = this.pagesService.pages[0];
+          this.router.navigate(['/page/' + this.pagesService.pages[0].pagePath]);
+        }
+        this.pagesService.activePage = null;
+        return;
+      }
+
+      const page = this.pagesService.findPage(path);
+      if (!page) {
+        this.pagesService.activePage = null;
+        this.router.navigate(['/not-found']);
+        return;
+      }
+
+      this.pagesService.activePage = page;
+    });
   }
 
   onContextMenuOpened(page: PageModel): void {
@@ -69,14 +95,14 @@ export class PageComponent implements OnInit {
         return;
       }
       this.pagesService.deletePage(this.popupPage!.id)
-      .pipe(
-        finalize(() => {
-          this.popupPage = null;
-        })
-      )
-      .subscribe(() => {
-        this.router.navigate(['/']);
-      });
+        .pipe(
+          finalize(() => {
+            this.popupPage = null;
+          })
+        )
+        .subscribe(() => {
+          this.router.navigate(['/']);
+        });
     });
   }
 

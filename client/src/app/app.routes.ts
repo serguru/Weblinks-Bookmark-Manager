@@ -7,6 +7,7 @@ import { PageFormComponent } from './components/pages/page-form/page-form.compon
 import { RowFormComponent } from './components/rows/row-form/row-form.component';
 import { ColumnFormComponent } from './components/columns/column-form/column-form.component';
 import { LinkFormComponent } from './components/links/link-form/link-form.component';
+import { RegisterAccountComponent } from './components/base/register-account/register-account.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'page', pathMatch: 'full'},
@@ -21,5 +22,6 @@ export const routes: Routes = [
   { path: 'update-column/:rowId/:columnId', component: ColumnFormComponent, canActivate: [loginGuard]},
   { path: 'add-link/:rowId/:columnId', component: LinkFormComponent, canActivate: [loginGuard]},
   { path: 'update-link/:rowId/:columnId/:linkId', component: LinkFormComponent, canActivate: [loginGuard]},
-  { path: '**', component: NotFoundComponent, canActivate: [loginGuard]}
+  { path: 'register', component: RegisterAccountComponent},
+  { path: '**', component: NotFoundComponent}
 ];

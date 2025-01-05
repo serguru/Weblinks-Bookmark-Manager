@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -36,8 +36,10 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public loginService: LoginService,
+    private route: ActivatedRoute,
     private router: Router,
     private pagesService: PagesService
+
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -45,7 +47,13 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.route.params.subscribe(params => {
+      if (this.loginService.isAuthenticated) {
+        this.router.navigate(['/']);
+      }
+    });
+  }
 
   onSubmit(): void {
     if (!this.loginForm.valid) {

@@ -18,8 +18,8 @@ public class AccountController : ControllerBase
         _accountsService = accountsService;
     }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> Create([FromBody] AccountModel model)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] AccountModel model)
     {
         AccountModel result = await _accountsService.AddAccountAsync(model);
         return Ok(result);

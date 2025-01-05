@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { finalize } from 'rxjs';
+import { filter, finalize } from 'rxjs';
 import { PageModel } from '../../../models/PageModel';
 import { PagesService } from '../../../services/pages.service';
 import { LoginService } from '../../../services/login.service';
@@ -54,7 +54,6 @@ export class PageFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.route.params.subscribe(params => {
       const path = params['path'];
       if (!path) {

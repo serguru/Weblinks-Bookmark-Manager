@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from './services/login.service';
 import { LOGIN } from './common/constants';
-import { MatDialog } from '@angular/material/dialog';
+import { PageModel } from './models/PageModel';
 
 @Component({
   selector: 'app-root',
@@ -18,24 +18,45 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Links 3';
+
+  isPageRoute: boolean = false;
 
   constructor(
     public pagesService: PagesService,
     private router: Router,
-    public loginService: LoginService,
-    private dialog: MatDialog
+    public loginService: LoginService
   ) { }
+
+  ngOnInit(): void {
+    this.pagesService.getPages().subscribe((pages: PageModel[]) => {
+      if (pages.length) {
+        const s = this.pagesService.activePage?.pagePath.toLowerCase();
+        const p = pages.find(x => x.pagePath.toLowerCase() === s);
+        if (p) {
+          this.pagesService.activePage = p;
+          return;
+        }
+        this.pagesService.activePage = pages[0];
+        return;
+      }
+      this.pagesService.activePage = null;
+    });
+
+    this.router.events.subscribe(event => {
+      if (!(event instanceof NavigationEnd)) {
+        return;
+      }
+      this.isPageRoute = this.router.url?.toLowerCase().startsWith('/page');
+    });
+
+  }
 
   logOut(): void {
     this.loginService.logout();
     this.pagesService.clearPages();
     this.router.navigate([LOGIN]);
-  }
-
-  click() {
-    throw new Error('Error message');
   }
 
 
