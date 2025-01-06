@@ -1,11 +1,13 @@
 import { ErrorHandler, Injectable, Injector } from "@angular/core";
-import { PagesService } from "./services/pages.service";
-import { HttpErrorResponse } from "@angular/common/http";
+import { MessagesService } from "./services/messages.service";
 
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
     constructor(private injector: Injector) {}
     handleError(error: any) {
+        if (error.status == 401) {
+            return;
+        }
         let errorMessage = 'An unexpected error occurred';
         if (typeof error === 'string') {
             errorMessage = error;
@@ -14,8 +16,8 @@ export class AppErrorHandler implements ErrorHandler {
         } else if (typeof error?.message === 'string') {
             errorMessage = error.message;
         }
-        const pagesService: PagesService = this.injector.get(PagesService);
-        pagesService.showError(errorMessage);
+        const messagesService: MessagesService = this.injector.get(MessagesService);
+        messagesService.showError(errorMessage);
     }
   }
 

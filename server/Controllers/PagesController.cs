@@ -13,14 +13,24 @@ namespace server.Controllers;
 public class PagesController : ControllerBase
 {
     private readonly IPagesService _pagesService;
-    public PagesController(IPagesService pagesService)
+    private readonly IAccountsService _accountsService;
+    public PagesController(IPagesService pagesService, IAccountsService accountsService)
     {
         _pagesService = pagesService;
+        _accountsService = accountsService;
     }
+
+    [HttpGet]
+    public async Task<ActionResult<AccountModel>> GetAccountAsync()
+    {
+        AccountModel account = await _accountsService.GetAccountAsync();
+        return Ok(account);
+    }
+
 
     #region Pages
 
-    [HttpGet]
+    [HttpGet("all")]
     public async Task<ActionResult<List<PageModel>>> GetAllPagesAsync()
     {
         List<PageModel> pages = await _pagesService.GetAllPagesAsync();

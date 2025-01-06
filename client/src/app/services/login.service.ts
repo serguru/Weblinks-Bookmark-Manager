@@ -4,18 +4,23 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
+import { AccountModel } from '../models/AccountModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = `${environment.apiUrl}/account/login`;
+  private apiUrl = `${environment.apiUrl}/account`;
   private jwtHelper = new JwtHelperService();
 
   constructor(private http: HttpClient) { }
 
+  register(account: any): Observable<any> {
+    return this.http.post(this.apiUrl + '/register', account)
+  }
+
   login(email: string, password: string): Observable<any> {
-    return this.http.post(this.apiUrl, { userEmail: email, userPassword: password })
+    return this.http.post(this.apiUrl + '/login', { userEmail: email, userPassword: password })
       .pipe(
         tap((response: any) => {
           localStorage.setItem('token', response.token);

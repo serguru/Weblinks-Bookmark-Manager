@@ -10,6 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LrowModel } from '../models/LrowModel';
 import { LcolumnModel } from '../models/LcolumnModel';
 import { LinkModel } from '../models/LinkModel';
+import { MessagesService } from './messages.service';
+import { AccountModel } from '../models/AccountModel';
 
 
 @Injectable({
@@ -18,10 +20,25 @@ import { LinkModel } from '../models/LinkModel';
 export class PagesService {
   private apiUrl = `${environment.apiUrl}/pages`;
 
-  constructor(private http: HttpClient, private router: Router,
-    public loginService: LoginService, private snackBar: MatSnackBar) {
+  constructor(
+    private http: HttpClient, 
+    private router: Router,
+    public loginService: LoginService, 
+    private snackBar: MatSnackBar,
+    public messagesService: MessagesService, 
+
+  ) {
 
   }
+
+  getAccount(): Observable<AccountModel> {
+    return this.http.get<AccountModel>(this.apiUrl).pipe(
+      tap(account => {
+        this.updatePages(account.pages || []);
+      })
+    );
+  }
+
 
 
   findPage(pagePath: string): PageModel | null {
@@ -46,7 +63,7 @@ export class PagesService {
   }
 
   getPages(): Observable<PageModel[]> {
-    return this.http.get<PageModel[]>(this.apiUrl).pipe(
+    return this.http.get<PageModel[]>(this.apiUrl + '/all').pipe(
       tap((pages) => {
         this.updatePages(pages);
       })
@@ -77,7 +94,7 @@ export class PagesService {
             pages[index].caption = response.caption;
           }
           this.updatePages(pages);
-          this.showSuccess(`Page ${id === 0 ? 'added' : 'updated'}`);
+          this.messagesService.showSuccess(`Page ${id === 0 ? 'added' : 'updated'}`);
         }),
       );
   }
@@ -96,30 +113,11 @@ export class PagesService {
           const index = pages.findIndex((p: PageModel) => p.id === pageId);
           if (index !== -1) {
             pages.splice(index, 1);
-            this.showSuccess(`Page deleted`);
+            this.messagesService.showSuccess(`Page deleted`);
           }
         }),
       );
   }
-
-  showError(error: string): void {
-    this.snackBar.open(error, 'Close', {
-      duration: 5000,
-      panelClass: ['error-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
-  }
-
-  showSuccess(error: string): void {
-    this.snackBar.open(error, 'Close', {
-      duration: 5000,
-      panelClass: ['success-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
-  }
-
 
   addOrUpdateRow(page: PageModel, id: number, caption: string): Observable<LrowModel> {
     if (!this.loginService.isAuthenticated) {
@@ -142,7 +140,7 @@ export class PagesService {
             page.lrows[index].pageId = response.pageId;
             page.lrows[index].caption = response.caption;
           }
-          this.showSuccess(`Row ${id === 0 ? 'added' : 'updated'}`);
+          this.messagesService.showSuccess(`Row ${id === 0 ? 'added' : 'updated'}`);
         }),
       );
   }
@@ -163,7 +161,7 @@ export class PagesService {
             throw new Error('Row not found');
           }
           page.lrows!.splice(index, 1);
-          this.showSuccess(`Row deleted`);
+          this.messagesService.showSuccess(`Row deleted`);
         }),
       );
   }
@@ -202,7 +200,7 @@ export class PagesService {
             row.lcolumns[index].rowId = response.rowId;
             row.lcolumns[index].caption = response.caption;
           }
-          this.showSuccess(`Column ${id === 0 ? 'added' : 'updated'}`);
+          this.messagesService.showSuccess(`Column ${id === 0 ? 'added' : 'updated'}`);
         }),
       );
   }
@@ -219,7 +217,7 @@ export class PagesService {
             throw new Error('Column not found');
           }
           row.lcolumns!.splice(index, 1);
-          this.showSuccess(`Column deleted`);
+          this.messagesService.showSuccess(`Column deleted`);
         }),
       );
   }
@@ -246,7 +244,7 @@ export class PagesService {
             column.links[index].aUrl = response.aUrl;
             column.links[index].caption = response.caption;
           }
-          this.showSuccess(`Link ${id === 0 ? 'added' : 'updated'}`);
+          this.messagesService.showSuccess(`Link ${id === 0 ? 'added' : 'updated'}`);
         }),
       );
   }
@@ -263,7 +261,7 @@ export class PagesService {
             throw new Error('Link not found');
           }
           column.links!.splice(index, 1);
-          this.showSuccess(`Link deleted`);
+          this.messagesService.showSuccess(`Link deleted`);
         }),
       );
   }

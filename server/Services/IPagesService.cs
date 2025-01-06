@@ -4,6 +4,8 @@ namespace server.Services;
 
 public interface IPagesService
 {
+
+
     // pages
     Task<List<PageModel>> GetAllPagesAsync();
     Task<PageModel?> GetPageByIdAsync(int pageId);

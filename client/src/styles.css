@@ -12,18 +12,18 @@ body {
 }
 
 :root {
-    --mat-menu-container-color: #f7f6f6; 
-    --mat-menu-item-label-text-font: "Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    --mat-menu-container-color: #f7f6f6;
+    --mat-menu-item-label-text-font: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     --mat-menu-item-label-text-size: large;
     --mat-menu-item-label-text-weight: 400;
     --mdc-text-button-label-text-size: large;
     --mdc-text-button-label-text-color: #7c7c7c;
-    --mdc-text-button-label-text-font: "Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    --mdc-text-button-label-text-font: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     --mdc-text-button-label-text-weight: 400;
-    --mat-menu-item-label-text-color: #7c7c7c; 
+    --mat-menu-item-label-text-color: #7c7c7c;
     --mdc-outlined-card-container-color: #f7f6f6;
     --mdc-outlined-card-outline-width: 0;
-    --mat-icon-color: #7c7c7c; 
+    --mat-icon-color: #7c7c7c;
     --mat-sys-corner-extra-large: 0.5rem;
     --mdc-dialog-subhead-size: 0.9rem;
     --mdc-dialog-supporting-text-size: 1rem;
@@ -36,18 +36,18 @@ body {
     font-size: var(--mdc-text-button-label-text-size);
     font-weight: var(--mdc-text-button-label-text-weight);
     padding: 0.5rem 0rem 0.5rem 1rem;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .error-snackbar {
     --mat-sys-inverse-on-surface: white;
     --mat-sys-inverse-surface: #f44336;
     --mat-sys-inverse-primary: white
-  }
-  
-  .success-snackbar {
+}
+
+.success-snackbar {
     --mat-sys-inverse-on-surface: white;
     --mat-sys-inverse-surface: #4caf50;
     --mat-sys-inverse-primary: white
-  }
+}
 

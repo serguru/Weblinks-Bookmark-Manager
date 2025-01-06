@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from './services/login.service';
 import { LOGIN } from './common/constants';
 import { PageModel } from './models/PageModel';
+import { AccountModel } from './models/AccountModel';
 
 @Component({
   selector: 'app-root',
@@ -30,19 +31,23 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.pagesService.getPages().subscribe((pages: PageModel[]) => {
-      if (pages.length) {
-        const s = this.pagesService.activePage?.pagePath.toLowerCase();
-        const p = pages.find(x => x.pagePath.toLowerCase() === s);
-        if (p) {
-          this.pagesService.activePage = p;
+
+    if (this.loginService.isAuthenticated) {
+      this.pagesService.getAccount().subscribe((account: AccountModel) => {
+        const pages = account.pages || [];
+        if (pages.length) {
+          const s = this.pagesService.activePage?.pagePath.toLowerCase();
+          const p = pages.find(x => x.pagePath.toLowerCase() === s);
+          if (p) {
+            this.pagesService.activePage = p;
+            return;
+          }
+          this.pagesService.activePage = pages[0];
           return;
         }
-        this.pagesService.activePage = pages[0];
-        return;
-      }
-      this.pagesService.activePage = null;
-    });
+        this.pagesService.activePage = null;
+      });
+    }
 
     this.router.events.subscribe(event => {
       if (!(event instanceof NavigationEnd)) {

@@ -13,10 +13,6 @@ public partial class AccountModel
 
     public bool IsAdmin { get; set; }
 
-    public string HashedPassword { get; set; } = null!;
-
-    public string Salt { get; set; } = null!;
-
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }

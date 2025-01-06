@@ -1,17 +1,16 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using server.Data.Entities;
 using System.Data;
 
 namespace server.Data;
 
-public class AccountsRepository : IAccountsRepository
+public class AccountsRepository : BaseRepository, IAccountsRepository
 {
-    private readonly Links3dbContext _dbContext;
-
-    public AccountsRepository(Links3dbContext dbContext)
+    public AccountsRepository(Links3dbContext dbContext, IHttpContextAccessor httpContextAccessor)
+            : base(dbContext, httpContextAccessor)
     {
-        _dbContext = dbContext;
     }
 
     public async Task<Account?> GetAccountByEmailAsync(string userEmail)
@@ -35,8 +34,8 @@ public class AccountsRepository : IAccountsRepository
 
     public async Task AddAccountAsync(Account account)
     {
-        // initially account.HashedPassword is not hashed 
-        string message = PasswordValid(account.HashedPassword);
+        // while creating account a password passed in settings
+        string message = PasswordValid(account.Settings);
         if (!String.IsNullOrEmpty(message))
         {
             throw new ArgumentException(message);
@@ -59,12 +58,13 @@ public class AccountsRepository : IAccountsRepository
 
         parameters = new[]
         {
-            new SqlParameter("@password", account.HashedPassword),
+            new SqlParameter("@password", account.Settings),
             new SqlParameter("@salt", account.Salt),
             new SqlParameter("@hashedPassword", SqlDbType.NVarChar, 8000) { Direction = ParameterDirection.Output }
         };
         await _dbContext.Database.ExecuteSqlRawAsync("exec HashPassword @password, @salt, @hashedPassword output", parameters);
         account.HashedPassword = (string)parameters[2].Value;
+        account.Settings = String.Empty;
 
         _dbContext.Accounts.Add(account);
         await _dbContext.SaveChangesAsync();
@@ -118,7 +118,7 @@ public class AccountsRepository : IAccountsRepository
         return (string)parameters[3].Value;
     }
 
-    public string PasswordValid(string password)
+    public string PasswordValid(string? password)
     {
         if (string.IsNullOrEmpty(password))
         {
@@ -133,6 +133,16 @@ public class AccountsRepository : IAccountsRepository
         return "";
     }
 
+    public async Task<Account?> GetAccountAsync()
+    {
+        Account? account = await _dbContext.Accounts
+            .Include(x => x.Pages)
+            .ThenInclude(x => x.Lrows)
+            .ThenInclude(x => x.Lcolumns)
+            .ThenInclude(x => x.Links)
+            .FirstOrDefaultAsync(x => x.Id == accountId);
+        return account;
+    }
 }
 
 

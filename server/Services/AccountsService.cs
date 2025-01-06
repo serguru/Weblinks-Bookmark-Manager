@@ -76,4 +76,21 @@ public class AccountsService : IAccountsService
         AccountModel result = _mapper.Map<AccountModel>(account);
         return result;
     }
+
+    public async Task<AccountModel> GetAccountAsync()
+    {
+        Account? account = await _accountsRepository.GetAccountAsync();
+        if (account == null) 
+        {
+            throw new InvalidOperationException("Account does not exists");
+        }
+
+        AccountModel result = _mapper.Map<AccountModel>(account);
+        return result;
+    }
+
+    public Task<AccountModel> UpdateAccountAsync(AccountModel account)
+    {
+        throw new NotImplementedException();
+    }
 }

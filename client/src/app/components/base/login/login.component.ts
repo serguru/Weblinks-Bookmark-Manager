@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 import { LoginService } from '../../../services/login.service';
 import { PagesService } from '../../../services/pages.service';
+import { MessagesService } from '../../../services/messages.service';
 
 
 @Component({
@@ -23,7 +24,8 @@ import { PagesService } from '../../../services/pages.service';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    RouterModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -38,7 +40,9 @@ export class LoginComponent implements OnInit {
     public loginService: LoginService,
     private route: ActivatedRoute,
     private router: Router,
-    private pagesService: PagesService
+    private pagesService: PagesService,
+    private messagesService: MessagesService,
+    
 
   ) {
     this.loginForm = this.fb.group({
@@ -68,7 +72,7 @@ export class LoginComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.pagesService.getPages()
+          this.pagesService.getAccount()
             .subscribe(x => {
               this.router.navigate(['/']);
             });
@@ -76,9 +80,9 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           if (error.status === 401) {
-            this.pagesService.showError('Invalid email or password');
+            this.messagesService.showError('Invalid email or password');
           } else {
-            this.pagesService.showError('Unknowm error. Please try again later.');
+            this.messagesService.showError('Unknowm error. Please try again later.');
           }
         }
       });

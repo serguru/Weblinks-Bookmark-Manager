@@ -2,7 +2,7 @@
 
 
 <div *ngIf="!loginService.isAuthenticated" class="login-container">
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-header>
       <mat-card-title>Login</mat-card-title>
     </mat-card-header>
@@ -28,11 +28,18 @@
           </button>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading"
-          class="full-width">
-          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-          <span *ngIf="!isLoading">Login</span>
-        </button>
+
+        <div class="login-form-buttons">
+          <button mat-stroked-button type="submit" [disabled]="loginForm.invalid || isLoading">
+            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+            <span *ngIf="!isLoading">Login</span>
+          </button>
+
+          <button mat-stroked-button [routerLink]="'/register'" [disabled]="isLoading">
+            <span>Have no account? Register!</span>
+          </button>
+        </div>
+
       </form>
     </mat-card-content>
   </mat-card>

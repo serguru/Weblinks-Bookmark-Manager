@@ -93,6 +93,8 @@ namespace server
 
             app.MapControllers();
 
+            
+
             app.Run();
         }
     }
