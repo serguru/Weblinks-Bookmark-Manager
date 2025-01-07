@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule, KeyValue } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,7 @@ import { PagesService } from '../../../services/pages.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 import { MessagesService } from '../../../services/messages.service';
+import { ValidationErrorsComponent } from '../validation-errors/validation-errors.component';
 
 @Component({
   selector: 'app-register-account',
@@ -27,7 +28,8 @@ import { MessagesService } from '../../../services/messages.service';
     MatIconModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    RouterModule
+    RouterModule,
+    ValidationErrorsComponent
   ],
   templateUrl: './register-account.component.html',
   styleUrl: './register-account.component.css'
@@ -48,12 +50,79 @@ export class RegisterAccountComponent implements OnInit {
     this.registrationForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      userName: ['', [Validators.required]],
+      userName: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        Validators.pattern('^[a-zA-Z0-9-_]+$')
+      ]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['']
     }, { validator: this.passwordMatchValidator });
   }
+
+  firstNameMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "First Name is required"
+    },
+  ]
+
+  lastNameMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Last Name is required"
+    },
+  ]
+
+  userNameMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Username is required"
+    },
+    {
+      key: "minlength",
+      value: "Username must be at least 3 characters long"
+    },
+    {
+      key: "maxlength",
+      value: "Username path cannot be more than 50 characters long"
+    },
+    {
+      key: "pattern",
+      value: "Username path can only contain letters, numbers, hyphens, and underscores"
+    },
+  ]
+
+  emailMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Email is required"
+    },
+    {
+      key: "email",
+      value: "Please enter a valid email address"
+    },
+  ]
+
+  passwordMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Password is required"
+    },
+    {
+      key: "minlength",
+      value: "Password must be at least 8 characters long"
+    },
+  ]
+
+  confirmPasswordMessages: KeyValue<string, string>[] = [
+    {
+      key: "passwordMismatch",
+      value: "Passwords do not match"
+    },
+  ]
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -67,14 +136,14 @@ export class RegisterAccountComponent implements OnInit {
     const password = g.get('password')?.value;
     const confirmPassword = g.get('confirmPassword')?.value;
 
-    if (password && confirmPassword && password !== confirmPassword) {
+    //    if (password && confirmPassword && password !== confirmPassword) {
+    if (password !== confirmPassword) {
       g.get('confirmPassword')?.setErrors({ 'passwordMismatch': true });
     } else {
       g.get('confirmPassword')?.setErrors(null);
     }
     return null;
   }
-
   onSubmit() {
     if (!this.registrationForm.valid) {
       return;
@@ -99,7 +168,8 @@ export class RegisterAccountComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-            this.router.navigate(['/login']);
+          this.router.navigate(['/login']);
+          this.messagesService.showSuccess('Registration was successful! Now please log in.')
         },
         error: (error) => {
           if (error.status === 401) {

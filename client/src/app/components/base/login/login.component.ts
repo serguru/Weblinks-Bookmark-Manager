@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, KeyValue } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +12,7 @@ import { finalize } from 'rxjs';
 import { LoginService } from '../../../services/login.service';
 import { PagesService } from '../../../services/pages.service';
 import { MessagesService } from '../../../services/messages.service';
+import { ValidationErrorsComponent } from '../validation-errors/validation-errors.component';
 
 
 @Component({
@@ -25,7 +26,8 @@ import { MessagesService } from '../../../services/messages.service';
     MatIconModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    RouterModule
+    RouterModule,
+    ValidationErrorsComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -47,9 +49,28 @@ export class LoginComponent implements OnInit {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['']
+      password: ['',[Validators.required]]
     });
   }
+
+  emailMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Email is required"
+    },
+    {
+      key: "email",
+      value: "Please enter a valid email address"
+    },
+  ]
+  
+  passwordMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Password is required"
+    },
+  ]
+
 
   ngOnInit(): void { 
     this.route.params.subscribe(params => {

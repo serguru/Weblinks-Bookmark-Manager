@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .content {
+    text-align: center; 
+    font-family: var(--mdc-text-button-label-text-font);
+    color: var(--mdc-text-button-label-text-color);
+}
+
+button {
+    margin-top: 1rem;
+}

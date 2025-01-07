@@ -1,0 +1,7 @@
+<div [class]="errorShown ? 'container' : ''">
+    <ng-container *ngFor="let m of messages">
+        <div class="content" *ngIf="control?.touched && control?.hasError(m.key)">
+            {{m.value}}
+        </div>
+    </ng-container>
+</div>

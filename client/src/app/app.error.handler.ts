@@ -18,6 +18,7 @@ export class AppErrorHandler implements ErrorHandler {
         }
         const messagesService: MessagesService = this.injector.get(MessagesService);
         messagesService.showError(errorMessage);
+        console.error(errorMessage);
     }
   }
 

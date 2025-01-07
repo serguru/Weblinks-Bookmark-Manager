@@ -30,9 +30,10 @@
   }
 
   button {
-    width: 75%;
+    width: 150px;
   }
 
   mat-card {
     border-width: 1px;
   }
+

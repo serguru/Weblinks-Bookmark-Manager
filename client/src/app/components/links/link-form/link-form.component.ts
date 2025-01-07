@@ -82,6 +82,7 @@ export class LinkFormComponent implements OnInit {
       // link
       const linkId = params['linkId'];
       if (!linkId) {
+        this.form.get('aUrl')!.setValue("https://");
         return;
       }
       const l = c.links?.find(x => x.id === +linkId);
