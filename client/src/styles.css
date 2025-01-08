@@ -21,12 +21,15 @@ body {
     --mdc-text-button-label-text-font: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     --mdc-text-button-label-text-weight: 400;
     --mat-menu-item-label-text-color: #7c7c7c;
-    --mdc-outlined-card-container-color: #f7f6f6;
-    --mdc-outlined-card-outline-width: 0;
+    /* --mdc-outlined-card-container-color: #f7f6f6;
+    --mdc-outlined-card-outline-width: 0; */
     --mat-icon-color: #7c7c7c;
     --mat-sys-corner-extra-large: 0.5rem;
     --mdc-dialog-subhead-size: 0.9rem;
     --mdc-dialog-supporting-text-size: 1rem;
+    --mdc-elevated-card-container-color: #f7f6f6;
+    --mdc-outlined-card-container-color: #f7f6f6;
+    --mdc-outlined-card-outline-width: 0px;
 }
 
 
@@ -67,12 +70,34 @@ mat-card-title {
     color: var(--mdc-text-button-label-text-color);    
 }
 
-.toolbar-content {
-    background-color: #f7f6f6;
+.form-container {
     display: flex;
-    flex-wrap: wrap;
-    min-height: 4rem;
+    justify-content: center;
     align-items: center;
-    padding-right: 20px;
+    height: 100vh;
+    /* background-color: #f5f5f5; */
   }
   
+.form-container mat-card {
+    max-width: 400px;
+    width: 90%;
+    padding: 20px;
+  }
+  
+.form-container .full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+.form-container mat-card-header {
+    margin-bottom: 20px;
+  }
+
+.form-container button mat-spinner {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.form-container button[type="submit"] {
+    width: 150px;
+}

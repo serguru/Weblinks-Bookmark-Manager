@@ -10,6 +10,8 @@ import { LinkFormComponent } from './components/links/link-form/link-form.compon
 import { UserProfileComponent } from './components/account/user-profile/user-profile.component';
 import { RegisterAccountComponent } from './components/account/register-account/register-account.component';
 import { HelpComponent } from './components/account/help/help.component';
+import { AboutComponent } from './components/account/about/about.component';
+import { ContactUsComponent } from './components/account/contact-us/contact-us.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'page', pathMatch: 'full'},
@@ -27,5 +29,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterAccountComponent},
   { path: 'user-profile', component: UserProfileComponent, canActivate: [loginGuard]},
   { path: 'help', component: HelpComponent},
+  { path: 'about', component: AboutComponent},
+  { path: 'contact-us', component: ContactUsComponent, canActivate: [loginGuard]},
   { path: '**', component: NotFoundComponent}
 ];

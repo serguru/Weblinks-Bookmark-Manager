@@ -36,9 +36,6 @@ button {
   width: 40%;
 }
 
-mat-card {
-  border-width: 1px;
-}
 
 .validation-error {
   width: 100%;

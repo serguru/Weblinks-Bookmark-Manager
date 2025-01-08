@@ -6,6 +6,7 @@ export class AppErrorHandler implements ErrorHandler {
     constructor(private injector: Injector) {}
     handleError(error: any) {
         if (error.status == 401) {
+            console.error(error);
             return;
         }
         let errorMessage = 'An unexpected error occurred';

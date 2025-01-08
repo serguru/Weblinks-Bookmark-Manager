@@ -1,5 +1,5 @@
 <div class="registration-container">
-    <mat-card appearance="outlined">
+    <mat-card>
         <mat-card-header>
             <mat-card-title>Create Account</mat-card-title>
         </mat-card-header>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <button mat-raised-button type="submit" [disabled]="registrationForm.invalid || isLoading">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="registrationForm.invalid || isLoading">
                         <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
                         <span *ngIf="!isLoading">Register</span>
                     </button>

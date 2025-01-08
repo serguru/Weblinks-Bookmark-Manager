@@ -1,8 +1,8 @@
 <div *ngIf="loginService.isAuthenticated">Logged in as {{loginService.userName}}</div>
 
 
-<div *ngIf="!loginService.isAuthenticated" class="login-container">
-  <mat-card appearance="outlined">
+<div *ngIf="!loginService.isAuthenticated" class="form-container">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Login</mat-card-title>
     </mat-card-header>

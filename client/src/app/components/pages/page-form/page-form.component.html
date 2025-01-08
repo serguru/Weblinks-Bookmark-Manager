@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="form-container">
   <mat-card>
     <mat-card-header>
       <mat-card-title>{{formTitle}}</mat-card-title>
@@ -29,13 +29,14 @@
           <input matInput type="text" formControlName="caption" placeholder="Enter page caption">
         </mat-form-field>
 
+        <div class="form-field">
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading"
+            class="full-width">
+            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+            <span *ngIf="!isLoading">Submit</span>
+          </button>
+        </div>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading"
-          class="full-width"
-          >
-          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-          <span *ngIf="!isLoading">Submit</span>
-        </button>
       </form>
     </mat-card-content>
   </mat-card>

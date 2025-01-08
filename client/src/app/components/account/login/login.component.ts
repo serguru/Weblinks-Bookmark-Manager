@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener  } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule, KeyValue } from '@angular/common';
@@ -13,7 +13,8 @@ import { LoginService } from '../../../services/login.service';
 import { PagesService } from '../../../services/pages.service';
 import { MessagesService } from '../../../services/messages.service';
 import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
-
+import { environment } from '../../../../environments/environment';
+//import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -51,6 +52,18 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['',[Validators.required]]
     });
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (environment.production) {
+      return;
+    }
+    if (event.ctrlKey && event.shiftKey && event.key === 'L') {
+      event.preventDefault(); // Prevent default browser behavior
+      this.loginForm.get("email")?.setValue('bill.gates@gmail.com');
+      this.loginForm.get("password")?.setValue('BillGates');
+    }
   }
 
   emailMessages: KeyValue<string, string>[] = [

@@ -1,29 +1,14 @@
-<!-- <ng-container *ngIf="loginService.isAuthenticated"> 
-   <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-icon">
-      <mat-icon>menu</mat-icon>
-   </button>
-   <mat-menu #menu="matMenu">
-      <div>
-         <div class="link3-title">{{ loginService.accountClaims.userName }}</div>
-         <button *ngIf="!isPageRoute" mat-menu-item [routerLink]="'/page'">Pages</button>
-         <button mat-menu-item (click)="logOut()">Log out</button>
-      </div>
-   </mat-menu>
-</ng-container> -->
-
-
-
 <div class="toolbar-content">
    <div class="app-title">Links 3</div>
 
-   <div class="toolbar-content">
+   <div *ngIf="loginService.isAuthenticated">
       <button *ngIf="!pagesService.pages || pagesService.pages.length === 0" 
          mat-button [routerLink]="'/add-page'"
          >Add page
       </button>
 
       <a *ngFor="let page of pagesService.pages" mat-button
-         [class]="pagesService.activePage?.pagePath === page.pagePath ? 'active-link' : ''"
+         [class]="isRouteName('/page') && pagesService.activePage?.pagePath === page.pagePath ? 'active-link' : ''"
          [routerLink]="['/page/'+page.pagePath]"
          
          [cdkContextMenuTriggerFor]="context_menu"
@@ -39,12 +24,18 @@
    </button>
    <mat-menu #menu>
       <ng-container *ngIf="loginService.isAuthenticated">
-         <a *ngIf="!isPageRoute" mat-menu-item [routerLink]="'/page'">Pages</a>
-         <a mat-menu-item [routerLink]="'/user-profile'">User profile</a>
+         <a *ngIf="!isRouteName('/page')" mat-menu-item [routerLink]="'/page'">Pages</a>
+         <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">User Profile</a>
+         <a *ngIf="!isRouteName('/contact-us')" mat-menu-item [routerLink]="'/contact-us'">Contact Us</a>
       </ng-container>
-      <a mat-menu-item [routerLink]="'/help'">Help</a>
+      <a *ngIf="!isRouteName('/help')" mat-menu-item [routerLink]="'/help'">Help</a>
+      <a *ngIf="!isRouteName('/about')" mat-menu-item [routerLink]="'/about'">About</a>
       <ng-container *ngIf="loginService.isAuthenticated">
          <button mat-menu-item (click)="logOut()">Log out</button>
+      </ng-container>
+      <ng-container *ngIf="!loginService.isAuthenticated">
+         <a *ngIf="!isRouteName('/register')" mat-menu-item [routerLink]="'/register'">Register</a>
+         <a *ngIf="!isRouteName('/login')" mat-menu-item [routerLink]="'/login'">Login</a>
       </ng-container>
    </mat-menu>
 

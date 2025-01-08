@@ -32,7 +32,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 export class AppComponent implements OnInit {
   title = 'Links 3';
   popupPage: PageModel | null = null;
-  isPageRoute: boolean = false;
+  activeRoute: string = '';
 
   constructor(
     public pagesService: PagesService,
@@ -40,6 +40,10 @@ export class AppComponent implements OnInit {
     public loginService: LoginService,
     private dialog: MatDialog,
   ) { }
+
+  isRouteName(route: string): boolean {
+    return this.activeRoute.startsWith(route);
+  }
 
   ngOnInit(): void {
 
@@ -64,7 +68,7 @@ export class AppComponent implements OnInit {
       if (!(event instanceof NavigationEnd)) {
         return;
       }
-      this.isPageRoute = this.router.url?.toLowerCase().startsWith('/page');
+      this.activeRoute = this.router.url?.toLowerCase() || '';
     });
 
   }
@@ -74,7 +78,6 @@ export class AppComponent implements OnInit {
     this.pagesService.clearPages();
     this.router.navigate([LOGIN]);
   }
-
 
   onContextMenuOpened(page: PageModel): void {
     this.popupPage = page;
