@@ -5,7 +5,7 @@
         <app-column *ngFor="let column of row?.lcolumns" [row]="row" [column]="column"></app-column>
     </ng-container>
     <ng-template #new_column>
-        <button mat-button [routerLink]="'/add-column/'+row.id">Add column</button>
+        <a mat-button [routerLink]="'/add-column/'+row.id">Add column</a>
     </ng-template>
 </div>
 

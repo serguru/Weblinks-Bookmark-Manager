@@ -31,7 +31,8 @@
 
 
         <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading"
-          class="full-width">
+          class="full-width"
+          >
           <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
           <span *ngIf="!isLoading">Submit</span>
         </button>

@@ -66,3 +66,13 @@ body {
 mat-card-title {
     color: var(--mdc-text-button-label-text-color);    
 }
+
+.toolbar-content {
+    background-color: #f7f6f6;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 4rem;
+    align-items: center;
+    padding-right: 20px;
+  }
+  

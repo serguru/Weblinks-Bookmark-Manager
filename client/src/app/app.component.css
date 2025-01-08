@@ -4,3 +4,22 @@
   right: 16px;
   z-index: 1000;
 }
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+
+.app-title {
+  font-size: 20px;
+  font-family: var(--mdc-text-button-label-text-font, var(--mat-sys-label-large-font));
+  color: var(--mdc-text-button-label-text-color);
+  font-style: italic;
+  font-weight: bold;
+  margin: 0 2rem;
+}
+
+.active-link {
+  font-weight: bolder;
+}
+

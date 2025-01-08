@@ -24,7 +24,7 @@ import { PAGE } from '../../../common/constants';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   templateUrl: './page-form.component.html',
   styleUrl: './page-form.component.css'

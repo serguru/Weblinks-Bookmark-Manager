@@ -1,24 +1,9 @@
-<div class="toolbar-content">
-  <button *ngIf="!pagesService.pages || pagesService.pages.length === 0" mat-button [routerLink]="'/add-page'">Add
-    page</button>
-  <button *ngFor="let page of pagesService.pages" mat-button
-    [class]="pagesService.activePage?.pagePath === page.pagePath ? 'active-link' : ''"
-    (click)="navigateToPage(page.pagePath)" [cdkContextMenuTriggerFor]="context_menu"
-    (cdkContextMenuOpened)="onContextMenuOpened(page)"
-    >{{
-    page.caption || page.pagePath }}</button>
-</div>
 <div class="page-container" *ngIf="pagesService.activePage">
   <ng-container *ngIf="pagesService.activePage.lrows?.length; else new_row">
     <app-row *ngFor="let row of pagesService.activePage?.lrows" [row]="row"></app-row>
   </ng-container>
   <ng-template #new_row>
-    <button mat-button [routerLink]="'/add-row/'">Add row</button>
+    <a mat-button [routerLink]="'/add-row/'">Add row</a>
   </ng-template>
 </div>
 
-<ng-template #context_menu>
-  <app-context-menu [title]="'Page'" [addPath]="'/add-page'" [updatePath]="'/update-page'+this.popupPage?.pagePath"
-    [delete]="deletePopupPage.bind(this)" [disabled]="!this.popupPage">
-  </app-context-menu>
-</ng-template>

@@ -1,4 +1,4 @@
-<ng-container *ngIf="loginService.isAuthenticated"> 
+<!-- <ng-container *ngIf="loginService.isAuthenticated"> 
    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-icon">
       <mat-icon>menu</mat-icon>
    </button>
@@ -9,6 +9,52 @@
          <button mat-menu-item (click)="logOut()">Log out</button>
       </div>
    </mat-menu>
-</ng-container>
+</ng-container> -->
+
+
+
+<div class="toolbar-content">
+   <div class="app-title">Links 3</div>
+
+   <div class="toolbar-content">
+      <button *ngIf="!pagesService.pages || pagesService.pages.length === 0" 
+         mat-button [routerLink]="'/add-page'"
+         >Add page
+      </button>
+
+      <a *ngFor="let page of pagesService.pages" mat-button
+         [class]="pagesService.activePage?.pagePath === page.pagePath ? 'active-link' : ''"
+         [routerLink]="['/page/'+page.pagePath]"
+         
+         [cdkContextMenuTriggerFor]="context_menu"
+         (cdkContextMenuOpened)="onContextMenuOpened(page)"
+                  
+         >{{page.caption || page.pagePath }}</a>
+   </div>
+
+   <span class="spacer"></span>
+
+   <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+   </button>
+   <mat-menu #menu>
+      <ng-container *ngIf="loginService.isAuthenticated">
+         <a *ngIf="!isPageRoute" mat-menu-item [routerLink]="'/page'">Pages</a>
+         <a mat-menu-item [routerLink]="'/user-profile'">User profile</a>
+      </ng-container>
+      <a mat-menu-item [routerLink]="'/help'">Help</a>
+      <ng-container *ngIf="loginService.isAuthenticated">
+         <button mat-menu-item (click)="logOut()">Log out</button>
+      </ng-container>
+   </mat-menu>
+
+   <ng-template #context_menu>
+      <app-context-menu [title]="'Page'" [addPath]="'/add-page'" [updatePath]="'/update-page/'+this.popupPage?.pagePath"
+        [delete]="deletePopupPage.bind(this)" [disabled]="!this.popupPage">
+      </app-context-menu>
+    </ng-template>
+
+</div>
+
 
 <router-outlet />

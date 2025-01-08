@@ -5,7 +5,7 @@
             <app-link *ngFor="let link of column?.links" [row]="row" [column]="column" [link]="link"></app-link>
         </ng-container>
         <ng-template #new_link>
-            <button mat-button [routerLink]="'/add-link/'+row.id+'/'+column.id">Add link</button>
+            <a mat-button [routerLink]="'/add-link/'+row.id+'/'+column.id">Add link</a>
         </ng-template>
     </mat-card-content>
 </mat-card>

@@ -19,6 +19,8 @@ app-column {
     background-color:aliceblue; */
 }
 
-
+.row-title:hover {
+    background-color: rgb(252, 252, 252);
+}
 
 

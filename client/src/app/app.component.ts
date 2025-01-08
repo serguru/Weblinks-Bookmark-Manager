@@ -11,23 +11,34 @@ import { LoginService } from './services/login.service';
 import { LOGIN } from './common/constants';
 import { PageModel } from './models/PageModel';
 import { AccountModel } from './models/AccountModel';
+import { CdkContextMenuTrigger } from '@angular/cdk/menu';
+import { ContextMenuComponent } from './components/base/context-menu/context-menu.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from './components/base/confirm-dialog/confirm-dialog.component';
+import { finalize } from 'rxjs';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, CommonModule, RouterOutlet, RouterLink,
-    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, RouterModule],
+  imports: [FormsModule, CommonModule, RouterOutlet, 
+    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, RouterModule,
+    CdkContextMenuTrigger,
+    ContextMenuComponent,
+    MatTooltipModule
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   title = 'Links 3';
-
+  popupPage: PageModel | null = null;
   isPageRoute: boolean = false;
 
   constructor(
     public pagesService: PagesService,
     private router: Router,
-    public loginService: LoginService
+    public loginService: LoginService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -39,13 +50,13 @@ export class AppComponent implements OnInit {
           const s = this.pagesService.activePage?.pagePath.toLowerCase();
           const p = pages.find(x => x.pagePath.toLowerCase() === s);
           if (p) {
-            this.pagesService.activePage = p;
+            this.pagesService.updateActivePage(p);
             return;
           }
-          this.pagesService.activePage = pages[0];
+          this.pagesService.updateActivePage(pages[0]);
           return;
         }
-        this.pagesService.activePage = null;
+        this.pagesService.updateActivePage(null);
       });
     }
 
@@ -62,6 +73,43 @@ export class AppComponent implements OnInit {
     this.loginService.logout();
     this.pagesService.clearPages();
     this.router.navigate([LOGIN]);
+  }
+
+
+  onContextMenuOpened(page: PageModel): void {
+    this.popupPage = page;
+  }
+
+  deletePopupPage(): void {
+
+    if (!this.popupPage) {
+      throw new Error('popupPage is required');
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Page',
+        question: `Are you sure you want to delete page ${this.popupPage.caption || this.popupPage.pagePath}?`,
+        yes: 'Yes',
+        no: 'No'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        this.popupPage = null;
+        return;
+      }
+      this.pagesService.deletePage(this.popupPage!.id)
+        .pipe(
+          finalize(() => {
+            this.popupPage = null;
+          })
+        )
+        .subscribe(() => {
+          this.router.navigate(['/']);
+        });
+    });
   }
 
 

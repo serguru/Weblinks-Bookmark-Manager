@@ -13,7 +13,7 @@ import { PagesService } from '../../../services/pages.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 import { MessagesService } from '../../../services/messages.service';
-import { ValidationErrorsComponent } from '../validation-errors/validation-errors.component';
+import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
 
 @Component({
   selector: 'app-register-account',

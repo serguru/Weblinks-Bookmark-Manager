@@ -39,18 +39,25 @@ export class PagesService {
     );
   }
 
-
-
   findPage(pagePath: string): PageModel | null {
     return this.pages?.find(p => p.pagePath.toLowerCase() === pagePath.toLowerCase()) || null;
   }
 
-  private _activePage: PageModel | null = null;
-  get activePage(): PageModel | null {
-    return this._activePage;
+  // private _activePage: PageModel | null = null;
+  // get activePage(): PageModel | null {
+  //   return this._activePage;
+  // }
+  // set activePage(value: PageModel | null) {
+  //   this._activePage = value;
+  // }
+
+  private activePageSubject = new BehaviorSubject<any>(null);
+  public activePage$ = this.activePageSubject.asObservable();
+  updateActivePage(page: PageModel | null) {
+    this.activePageSubject.next(page);
   }
-  set activePage(value: PageModel | null) {
-    this._activePage = value;
+  get activePage(): PageModel | null {
+    return this.activePageSubject.getValue();
   }
 
   private pagesSubject = new BehaviorSubject<any>(null);

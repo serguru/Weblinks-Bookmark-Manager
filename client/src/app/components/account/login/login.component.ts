@@ -12,7 +12,7 @@ import { finalize } from 'rxjs';
 import { LoginService } from '../../../services/login.service';
 import { PagesService } from '../../../services/pages.service';
 import { MessagesService } from '../../../services/messages.service';
-import { ValidationErrorsComponent } from '../validation-errors/validation-errors.component';
+import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
 
 
 @Component({
