@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './components/base/confirm-dialog/confirm-dialog.component';
 import { finalize } from 'rxjs';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, RouterModule,
     CdkContextMenuTrigger,
     ContextMenuComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    DragDropModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -40,6 +42,12 @@ export class AppComponent implements OnInit {
     public loginService: LoginService,
     private dialog: MatDialog,
   ) { }
+
+  protected selectedTabIndex = 0;
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.pagesService.pages, event.previousIndex, event.currentIndex);
+  }
 
   isRouteName(route: string): boolean {
     return this.activeRoute.startsWith(route);

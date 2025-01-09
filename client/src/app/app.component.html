@@ -1,21 +1,20 @@
-<div class="toolbar-content">
+<div class="toolbar-content" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
    <div class="app-title">Links 3</div>
 
-   <div *ngIf="loginService.isAuthenticated">
-      <button *ngIf="!pagesService.pages || pagesService.pages.length === 0" 
-         mat-button [routerLink]="'/add-page'"
-         >Add page
+   <ng-container *ngIf="loginService.isAuthenticated">
+      <button *ngIf="!pagesService.pages || pagesService.pages.length === 0" mat-button [routerLink]="'/add-page'">
+         Add page
       </button>
 
-      <a *ngFor="let page of pagesService.pages" mat-button
+      @for (page of pagesService.pages; track page) {
+      <a mat-button
          [class]="isRouteName('/page') && pagesService.activePage?.pagePath === page.pagePath ? 'active-link' : ''"
-         [routerLink]="['/page/'+page.pagePath]"
-         
-         [cdkContextMenuTriggerFor]="context_menu"
-         (cdkContextMenuOpened)="onContextMenuOpened(page)"
-                  
-         >{{page.caption || page.pagePath }}</a>
-   </div>
+         [routerLink]="['/page/'+page.pagePath]" [cdkContextMenuTriggerFor]="context_menu"
+         (cdkContextMenuOpened)="onContextMenuOpened(page)" cdkDrag>{{page.caption || page.pagePath }}</a>
+      }
+
+   </ng-container>
+
 
    <span class="spacer"></span>
 
@@ -41,9 +40,9 @@
 
    <ng-template #context_menu>
       <app-context-menu [title]="'Page'" [addPath]="'/add-page'" [updatePath]="'/update-page/'+this.popupPage?.pagePath"
-        [delete]="deletePopupPage.bind(this)" [disabled]="!this.popupPage">
+         [delete]="deletePopupPage.bind(this)" [disabled]="!this.popupPage">
       </app-context-menu>
-    </ng-template>
+   </ng-template>
 
 </div>
 
