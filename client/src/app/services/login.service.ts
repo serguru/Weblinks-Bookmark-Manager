@@ -15,6 +15,10 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
+  saveConfig(config: string): Observable<any> {
+    return this.http.post(this.apiUrl + '/save-config', {value: config})
+  }
+
   register(account: any): Observable<any> {
     return this.http.post(this.apiUrl + '/register', account)
   }

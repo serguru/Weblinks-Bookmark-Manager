@@ -14,6 +14,8 @@ import {MatCardModule} from '@angular/material/card';
 import { LinkComponent } from '../../links/link/link.component';
 import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
 import { CdkMenuTrigger } from '@angular/cdk/menu';
+import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { LinkModel } from '../../../models/LinkModel';
 
 @Component({
   selector: 'app-column',
@@ -25,7 +27,8 @@ import { CdkMenuTrigger } from '@angular/cdk/menu';
     CdkContextMenuTrigger,
     MatCardModule,
     ContextMenuComponent,
-    CdkMenuTrigger
+    CdkMenuTrigger,
+    DragDropModule
   ],
   templateUrl: './column.component.html',
   styleUrl: './column.component.css'
@@ -36,6 +39,12 @@ export class ColumnComponent {
 
   constructor(public pagesService: PagesService, public loginService: LoginService,
     private router: Router, private dialog: MatDialog) { }
+
+    drop(event: CdkDragDrop<LinkModel[]>) {
+      moveItemInArray(this.column.links || [], event.previousIndex, event.currentIndex);
+      this.pagesService.saveConfig();
+    }
+  
 
 
   delete(): void {

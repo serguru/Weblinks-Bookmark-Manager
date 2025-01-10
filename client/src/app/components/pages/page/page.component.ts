@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { RowComponent } from '../../rows/row/row.component';
 import { PagesService } from '../../../services/pages.service';
 import { LoginService } from '../../../services/login.service';
+import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { LrowModel } from '../../../models/LrowModel';
 
 @Component({
   selector: 'app-page',
@@ -13,6 +15,7 @@ import { LoginService } from '../../../services/login.service';
     RouterModule,
     RowComponent,
     MatButtonModule,
+    DragDropModule
   ],
   templateUrl: './page.component.html',
   styleUrl: './page.component.css'
@@ -22,6 +25,11 @@ export class PageComponent implements OnInit {
   constructor(public pagesService: PagesService, public loginService: LoginService,
     private router: Router, 
     private route: ActivatedRoute) { }
+
+    drop(event: CdkDragDrop<LrowModel[]>) {
+      moveItemInArray(this.pagesService.activePage?.lrows || [], event.previousIndex, event.currentIndex);
+      this.pagesService.saveConfig();
+    }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

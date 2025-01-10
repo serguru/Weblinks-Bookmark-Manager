@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Configuration;
+using NuGet.Packaging;
 using server.Data;
 using server.Data.Entities;
 using server.Data.Models;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace server.Services;
 
@@ -77,20 +77,198 @@ public class AccountsService : IAccountsService
         return result;
     }
 
+
+    //private static void ProcessPageModel(PageModel page, SettingsPageModel settings)
+    //{
+    //    if (settings?.Lrows?.Count == 0 || page?.Lrows?.Count == 0)
+    //    {
+    //        return;
+    //    }
+
+    //    List<LrowModel> rawRows = page.Lrows;
+
+    //    page.Lrows = new List<LrowModel>();
+
+
+    //    foreach (var settingsRow in settings!.Lrows!)
+    //    {
+    //        LrowModel? row = rawRows.FirstOrDefault(x => x.Id == settingsRow.Id);
+
+    //        if (row != null)
+    //        {
+    //            //ProcessRow(row, settingsRow);
+    //            page.Lrows.Add(row);
+    //            rawRows.Remove(row);
+    //        }
+    //    }
+
+    //    page.Lrows.AddRange(rawRows);
+    //}
+
+
+    private static void ProcessColumnModel(LcolumnModel column, SettingsColumnModel settings)
+    {
+
+        ICollection<LinkModel> rawLinks = column.Links;
+
+        column.Links = new List<LinkModel>();
+
+
+        foreach (var settingsLink in settings!.Links!)
+        {
+            LinkModel? link = rawLinks.FirstOrDefault(x => x.Id == settingsLink.Id);
+
+            if (link != null)
+            {
+                column.Links.Add(link);
+                rawLinks.Remove(link);
+            }
+        }
+
+        column.Links.AddRange(rawLinks);
+    }
+
+    private static void ProcessRowModel(LrowModel row, SettingsRowModel settings)
+    {
+
+        ICollection<LcolumnModel> rawColumns = row.Lcolumns;
+
+        row.Lcolumns = new List<LcolumnModel>();
+
+
+        foreach (var settingsColumn in settings!.Lcolumns!)
+        {
+            LcolumnModel? column = rawColumns.FirstOrDefault(x => x.Id == settingsColumn.Id);
+
+            if (column != null)
+            {
+                if (column.Links != null && column.Links.Count > 0 &&
+                    settingsColumn.Links != null && settingsColumn.Links.Count > 0)
+                {
+                    ProcessColumnModel(column, settingsColumn);
+                }
+                row.Lcolumns.Add(column);
+                rawColumns.Remove(column);
+            }
+        }
+
+        row.Lcolumns.AddRange(rawColumns);
+    }
+
+
+    private static void ProcessPageModel(PageModel page, SettingsPageModel settings)
+    {
+
+        ICollection<LrowModel> rawRows = page.Lrows;
+
+        page.Lrows = new List<LrowModel>();
+
+
+        foreach (var settingsRow in settings!.Lrows!)
+        {
+            LrowModel? row = rawRows.FirstOrDefault(x => x.Id == settingsRow.Id);
+
+            if (row != null)
+            {
+                if (row.Lcolumns != null && row.Lcolumns.Count > 0 && 
+                    settingsRow.Lcolumns != null && settingsRow.Lcolumns.Count > 0)
+                {
+                    ProcessRowModel(row, settingsRow);
+                }
+                page.Lrows.Add(row);
+                rawRows.Remove(row);
+            }
+        }
+
+        page.Lrows.AddRange(rawRows);
+    }
+
+
+    private static void ProcessAccountModel(AccountModel account, SettingsModel settings)
+    {
+
+        ICollection<PageModel> rawPages = account.Pages;
+
+        account.Pages = new List<PageModel>();
+
+
+        foreach (var settingsPage in settings!.Pages!)
+        {
+            PageModel? page = rawPages.FirstOrDefault(x => x.Id == settingsPage.Id);
+
+            if (page != null)
+            {
+                if (page.Lrows != null && page.Lrows.Count > 0 && 
+                    settingsPage.Lrows != null && settingsPage.Lrows.Count > 0)
+                {
+                    ProcessPageModel(page, settingsPage);
+                }
+                account.Pages.Add(page);
+                rawPages.Remove(page);
+            }
+        }
+
+        account.Pages.AddRange(rawPages);
+    }
+
+
+
+    private static void ApplySettings(AccountModel accountModel)
+    {
+        
+        if (accountModel == null || accountModel.Pages == null || accountModel.Pages.Count == 0)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(accountModel.Settings))
+        {
+            return;
+        }
+
+        SettingsModel? settingsModel = JsonSerializer.Deserialize<SettingsModel>(accountModel.Settings);
+
+        if (settingsModel == null || settingsModel.Pages == null || settingsModel.Pages.Count == 0)
+        {
+            return;
+        }
+
+
+        if (accountModel.Id != settingsModel.Id)
+        {
+            throw new InvalidOperationException("Wrong account id in settings");
+        }
+
+        ProcessAccountModel(accountModel, settingsModel);
+
+    }
+
+
     public async Task<AccountModel> GetAccountAsync()
     {
         Account? account = await _accountsRepository.GetAccountAsync();
-        if (account == null) 
+        if (account == null)
         {
             throw new InvalidOperationException("Account does not exists");
         }
 
+
         AccountModel result = _mapper.Map<AccountModel>(account);
+
+        ApplySettings(result);
+
         return result;
     }
 
     public Task<AccountModel> UpdateAccountAsync(AccountModel account)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task SaveConfig(StringTransportModel model)
+    {
+        Account? account = await _accountsRepository.GetAccountAsync() ?? throw new InvalidOperationException("Account does not exists");
+        account.Settings = model.Value;
+        await _accountsRepository.UpdateAccountAsync(account);
     }
 }

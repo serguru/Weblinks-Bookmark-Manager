@@ -37,4 +37,12 @@ public class AccountController : ControllerBase
         string token = _accountsService.GenerateToken(account);
         return Ok(new {token});
     }
+
+    [HttpPost("save-config")]
+    public async Task<IActionResult> SaveConfig([FromBody] StringTransportModel model)
+    {
+        await _accountsService.SaveConfig(model);
+        return Ok();
+    }
+
 }

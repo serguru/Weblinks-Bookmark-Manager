@@ -19,21 +19,24 @@ import { AccountModel } from '../models/AccountModel';
 })
 export class PagesService {
   private apiUrl = `${environment.apiUrl}/pages`;
+  private account: AccountModel | null = null;
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
-    public loginService: LoginService, 
+    public loginService: LoginService,
     private snackBar: MatSnackBar,
-    public messagesService: MessagesService, 
-
+    public messagesService: MessagesService,
   ) {
 
   }
 
+
+
   getAccount(): Observable<AccountModel> {
     return this.http.get<AccountModel>(this.apiUrl).pipe(
       tap(account => {
+        this.account = account;
         this.updatePages(account.pages || []);
       })
     );
@@ -190,7 +193,7 @@ export class PagesService {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
-    
+
     return this.http.post(this.apiUrl + '/add-update-column', { id: id, rowId: row.id, caption: caption })
       .pipe(
         tap((response: any) => {
@@ -233,7 +236,7 @@ export class PagesService {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
-    
+
     return this.http.post(this.apiUrl + '/add-update-link', { id: id, columnId: column.id, aUrl: aUrl, caption: caption })
       .pipe(
         tap((response: any) => {
@@ -272,4 +275,54 @@ export class PagesService {
         }),
       );
   }
+
+  generateConfigStr(): string {
+    const a = this.account;
+    if (!a) {
+      throw new Error("Account does not exist");
+    }
+    let o: any = {
+      id: a.id
+    }
+    // pages
+    if (a.pages?.length) {
+      o.pages = [];
+      a.pages.forEach((x: any) => {
+        const p: any = { id: x.id };
+        // rows
+        if (x.lrows?.length) {
+          p.lrows = [];
+          x.lrows.forEach((y: any) => {
+            const r: any = { id: y.id };
+            // columns
+            if (y.lcolumns?.length) {
+              r.lcolumns = [];
+              y.lcolumns.forEach((z: any) => {
+                const c: any = { id: z.id };
+                //links
+                if (z.links?.length) {
+                  c.links = z.links.map((n: any) => ({ id: n.id }));
+                }
+                r.lcolumns.push(c);
+              })
+            }
+            p.lrows.push(r);
+          })
+        }
+        o.pages.push(p);
+      });
+    }
+
+    const result = JSON.stringify(o);
+    return result;
+  }
+
+  saveConfig() {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+    const config = this.generateConfigStr();
+    this.loginService.saveConfig(config).subscribe() ;
+  }
+
 }

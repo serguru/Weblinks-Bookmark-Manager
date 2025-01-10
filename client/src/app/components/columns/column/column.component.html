@@ -1,8 +1,10 @@
 <mat-card appearance="outlined" class="column">
     <mat-card-header class="link3-title" [cdkContextMenuTriggerFor]="context_menu" [cdkMenuTriggerFor]="context_menu">{{column.caption}}</mat-card-header>
-    <mat-card-content>
+    <mat-card-content cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
         <ng-container *ngIf="column.links?.length; else new_link">
-            <app-link *ngFor="let link of column?.links" [row]="row" [column]="column" [link]="link"></app-link>
+            @for (link of column.links; track link) {
+                <app-link [row]="row" [column]="column" [link]="link" cdkDrag></app-link>
+            }
         </ng-container>
         <ng-template #new_link>
             <a mat-button [routerLink]="'/add-link/'+row.id+'/'+column.id">Add link</a>

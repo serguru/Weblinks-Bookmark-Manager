@@ -47,6 +47,7 @@ export class AppComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.pagesService.pages, event.previousIndex, event.currentIndex);
+    this.pagesService.saveConfig();
   }
 
   isRouteName(route: string): boolean {

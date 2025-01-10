@@ -12,6 +12,9 @@ import { finalize } from 'rxjs';
 import { ColumnComponent } from '../../columns/column/column.component';
 import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
 import { CdkMenuTrigger } from '@angular/cdk/menu';
+import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { LcolumnModel } from '../../../models/LcolumnModel';
+
 
 @Component({
   selector: 'app-row',
@@ -23,6 +26,7 @@ import { CdkMenuTrigger } from '@angular/cdk/menu';
     CdkContextMenuTrigger,
     ContextMenuComponent,
     CdkMenuTrigger,
+    DragDropModule
   ],
   templateUrl: './row.component.html',
   styleUrl: './row.component.css'
@@ -34,6 +38,12 @@ export class RowComponent {
     private router: Router, private dialog: MatDialog) { }
 
   @ViewChild('menuTrigger') menuTrigger!: CdkMenuTrigger;
+
+  drop(event: CdkDragDrop<LcolumnModel[]>) {
+    moveItemInArray(this.row.lcolumns || [], event.previousIndex, event.currentIndex);
+    this.pagesService.saveConfig();
+  }
+
 
   openMenu() {
     this.menuTrigger.open();

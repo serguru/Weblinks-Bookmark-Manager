@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using server.Data.Entities;
+using server.Data.Models;
 using System.Data;
+using System.Text.Json;
 
 namespace server.Data;
 
@@ -16,7 +18,7 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
     public async Task<Account?> GetAccountByEmailAsync(string userEmail)
     {
         string s = userEmail.ToLower();
-        Account? account  = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.UserEmail.ToLower() == s);
+        Account? account = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.UserEmail.ToLower() == s);
         return account;
     }
 
@@ -114,7 +116,7 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
             new SqlParameter("@message", SqlDbType.VarChar, 1000) { Direction = ParameterDirection.Output }
         };
         await _dbContext.Database.ExecuteSqlRawAsync("EXEC dbo.ValidateNewAccount @userName, @userEmail, @existingAccountId, @message OUTPUT", parameters);
-        
+
         return (string)parameters[3].Value;
     }
 
@@ -141,6 +143,7 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
             .ThenInclude(x => x.Lcolumns)
             .ThenInclude(x => x.Links)
             .FirstOrDefaultAsync(x => x.Id == accountId);
+
         return account;
     }
 }
