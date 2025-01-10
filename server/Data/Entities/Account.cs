@@ -24,4 +24,6 @@ public partial class Account
     public string? Settings { get; set; }
 
     public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
+
+    public virtual ICollection<UserMessage> UserMessages { get; set; } = new List<UserMessage>();
 }

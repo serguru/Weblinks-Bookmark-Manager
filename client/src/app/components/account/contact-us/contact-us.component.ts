@@ -1,11 +1,98 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { CommonModule, KeyValue } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { finalize } from 'rxjs';
+import { LoginService } from '../../../services/login.service';
+import { PagesService } from '../../../services/pages.service';
+import { MessagesService } from '../../../services/messages.service';
+import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
+import { environment } from '../../../../environments/environment';
+import { UserMessageModel } from '../../../models/UserMessageModel';
 
 @Component({
   selector: 'app-contact-us',
-  imports: [],
+  imports: [
+    FormsModule,
+    CommonModule,
+    MatCardModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    RouterModule,
+    ValidationErrorsComponent
+  ],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.css'
 })
-export class ContactUsComponent {
+export class ContactUsComponent implements OnInit {
+  form: FormGroup;
+  isLoading = false;
+
+  constructor(
+    private fb: FormBuilder,
+    public loginService: LoginService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private pagesService: PagesService,
+    private messagesService: MessagesService,
+
+
+  ) {
+    this.form = this.fb.group({
+      asubject: ['', [Validators.required]],
+      amessage: ['', [Validators.required]]
+    });
+  }
+
+  asubjectMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Subject is required"
+    },
+  ]
+
+  amessageMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Message is required"
+    },
+  ]
+
+  ngOnInit(): void {
+  }
+
+  onSubmit(): void {
+    if (!this.form.valid) {
+      return;
+    }
+    this.isLoading = true;
+
+    const mess: UserMessageModel = {
+      id: 0,
+      asubject: this.form.get("asubject")!.value,
+      amessage: this.form.get("amessage")!.value
+    }
+
+    this.loginService.sendUserMessage(mess)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe(() => {
+        this.messagesService.showSuccess('Message sent');
+        this.router.navigate(["/page"]);
+      });
+  }
+
 
 }

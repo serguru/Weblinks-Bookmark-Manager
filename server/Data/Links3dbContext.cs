@@ -26,6 +26,8 @@ public partial class Links3dbContext : DbContext
 
     public virtual DbSet<Page> Pages { get; set; }
 
+    public virtual DbSet<UserMessage> UserMessages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -85,9 +87,7 @@ public partial class Links3dbContext : DbContext
             entity.ToTable("links");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AUrl)
-                .IsUnicode(false)
-                .HasColumnName("aUrl");
+            entity.Property(e => e.AUrl).HasColumnName("aUrl");
             entity.Property(e => e.Caption)
                 .HasMaxLength(50)
                 .HasColumnName("caption");
@@ -136,6 +136,25 @@ public partial class Links3dbContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.Pages)
                 .HasForeignKey(d => d.AccountId)
                 .HasConstraintName("fk_pages_account_id");
+        });
+
+        modelBuilder.Entity<UserMessage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_userMessages_id");
+
+            entity.ToTable("userMessages");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AccountId).HasColumnName("accountId");
+            entity.Property(e => e.Amessage).HasColumnName("amessage");
+            entity.Property(e => e.Asubject).HasColumnName("asubject");
+            entity.Property(e => e.UtcDate)
+                .HasDefaultValueSql("((sysdatetimeoffset() AT TIME ZONE 'UTC'))")
+                .HasColumnName("utcDate");
+
+            entity.HasOne(d => d.Account).WithMany(p => p.UserMessages)
+                .HasForeignKey(d => d.AccountId)
+                .HasConstraintName("fk_userMessages_accountId");
         });
 
         OnModelCreatingPartial(modelBuilder);

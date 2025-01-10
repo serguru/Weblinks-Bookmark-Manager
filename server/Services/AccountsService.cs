@@ -7,6 +7,7 @@ using server.Data.Entities;
 using server.Data.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 
@@ -270,5 +271,13 @@ public class AccountsService : IAccountsService
         Account? account = await _accountsRepository.GetAccountAsync() ?? throw new InvalidOperationException("Account does not exists");
         account.Settings = model.Value;
         await _accountsRepository.UpdateAccountAsync(account);
+    }
+
+    public async Task<UserMessageModel> AddUserMessageAsync(UserMessageModel newMessage)
+    {
+        UserMessage message = _mapper.Map<UserMessage>(newMessage);
+        await _accountsRepository.AddUserMessageAsync(message);
+        UserMessageModel result = _mapper.Map<UserMessageModel>(message);
+        return result;
     }
 }

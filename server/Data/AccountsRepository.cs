@@ -4,6 +4,7 @@ using Microsoft.Identity.Client;
 using server.Data.Entities;
 using server.Data.Models;
 using System.Data;
+using System.Security.Principal;
 using System.Text.Json;
 
 namespace server.Data;
@@ -74,6 +75,10 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
 
     public async Task UpdateAccountAsync(Account account)
     {
+        if (account.Id != accountId)
+        {
+            throw new ArgumentException("Account not found");
+        }
         _dbContext.Accounts.Update(account);
         await _dbContext.SaveChangesAsync();
     }
@@ -145,6 +150,14 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
             .FirstOrDefaultAsync(x => x.Id == accountId);
 
         return account;
+    }
+
+    public async Task AddUserMessageAsync(UserMessage message)
+    {
+        message.Id = 0;
+        message.AccountId = accountId;
+        _dbContext.UserMessages.Add(message);
+        await _dbContext.SaveChangesAsync();
     }
 }
 

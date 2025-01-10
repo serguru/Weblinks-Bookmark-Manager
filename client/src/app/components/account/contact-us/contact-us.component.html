@@ -1,1 +1,35 @@
-<p>contact-us works!</p>
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Send Message</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="asubject" placeholder="Enter subject">
+          </mat-form-field>
+          <app-validation-errors [control]="form.get('asubject')" [messages]="asubjectMessages"></app-validation-errors>
+        </div>
+
+        <div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Message</mat-label>
+            <textarea matInput formControlName="amessage"></textarea>
+          </mat-form-field>
+          <app-validation-errors [control]="form.get('amessage')" [messages]="amessageMessages"></app-validation-errors>
+        </div>
+
+        <div class="form-field">
+          <button mat-raised-button type="submit" [disabled]="form.invalid || isLoading">
+            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+            <span *ngIf="!isLoading">Submit</span>
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

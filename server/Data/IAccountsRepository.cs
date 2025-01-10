@@ -16,4 +16,5 @@ public interface IAccountsRepository
     Task DeleteAccountAsync(int accountId);
     Task<bool> VerifyPasswordAsync(string providedPassword, string hashedStoredPassword, string salt);
     Task<string> ValidateNewAccountAsync(Account account);
+    Task AddUserMessageAsync(UserMessage message);
 }

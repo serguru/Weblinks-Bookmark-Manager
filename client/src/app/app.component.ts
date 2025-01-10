@@ -16,12 +16,13 @@ import { ContextMenuComponent } from './components/base/context-menu/context-men
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './components/base/confirm-dialog/confirm-dialog.component';
 import { finalize } from 'rxjs';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, CommonModule, RouterOutlet, 
+  imports: [FormsModule, CommonModule, RouterOutlet,
     MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, RouterModule,
     CdkContextMenuTrigger,
     ContextMenuComponent,
@@ -41,6 +42,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     public loginService: LoginService,
     private dialog: MatDialog,
+    private cookieService: CookieService
+     
   ) { }
 
   protected selectedTabIndex = 0;
@@ -56,10 +59,26 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.cookieService.deleteAll();
+
     if (this.loginService.isAuthenticated) {
       this.pagesService.getAccount().subscribe((account: AccountModel) => {
         const pages = account.pages || [];
         if (pages.length) {
+
+          if (this.isRouteName('/page/')) {
+            const path = this.activeRoute.substring(6);
+            if (path?.length) {
+              const p = pages.find(x => x.pagePath.toLowerCase() === path);
+              if (!p) {
+                this.router.navigate(['/page']);
+                return;
+              }
+              this.pagesService.updateActivePage(p);
+              return;
+            }
+          }
+
           const s = this.pagesService.activePage?.pagePath.toLowerCase();
           const p = pages.find(x => x.pagePath.toLowerCase() === s);
           if (p) {
@@ -123,6 +142,8 @@ export class AppComponent implements OnInit {
         });
     });
   }
+
+  
 
 
 }

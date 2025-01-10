@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
 import { AccountModel } from '../models/AccountModel';
+import { UserMessageModel } from '../models/UserMessageModel';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +17,15 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   saveConfig(config: string): Observable<any> {
-    return this.http.post(this.apiUrl + '/save-config', {value: config})
+    return this.http.post(this.apiUrl + '/save-config', {value: config});
   }
 
   register(account: any): Observable<any> {
-    return this.http.post(this.apiUrl + '/register', account)
+    return this.http.post(this.apiUrl + '/register', account);
+  }
+
+  sendUserMessage(message: UserMessageModel): Observable<any> {
+    return this.http.post(this.apiUrl + '/add-user-message', message);
   }
 
   login(email: string, password: string): Observable<any> {

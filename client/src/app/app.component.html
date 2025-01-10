@@ -2,7 +2,8 @@
    <div class="app-title">Links 3</div>
 
    <ng-container *ngIf="loginService.isAuthenticated">
-      <button *ngIf="!pagesService.pages || pagesService.pages.length === 0" mat-button [routerLink]="'/add-page'">
+      <button *ngIf="!pagesService.loadingPages && (!pagesService.pages || 
+         pagesService.pages.length === 0)" mat-button [routerLink]="'/add-page'">
          Add page
       </button>
 
@@ -23,12 +24,13 @@
    </button>
    <mat-menu #menu>
       <ng-container *ngIf="loginService.isAuthenticated">
-         <a *ngIf="!isRouteName('/page')" mat-menu-item [routerLink]="'/page'">Pages</a>
          <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">User Profile</a>
          <a *ngIf="!isRouteName('/contact-us')" mat-menu-item [routerLink]="'/contact-us'">Contact Us</a>
       </ng-container>
       <a *ngIf="!isRouteName('/help')" mat-menu-item [routerLink]="'/help'">Help</a>
       <a *ngIf="!isRouteName('/about')" mat-menu-item [routerLink]="'/about'">About</a>
+      <a *ngIf="!isRouteName('/terms')" mat-menu-item [routerLink]="'/terms'">Terms of Usage</a>
+      <a *ngIf="!isRouteName('/policy')" mat-menu-item [routerLink]="'/policy'">Privacy Policy</a>
       <ng-container *ngIf="loginService.isAuthenticated">
          <button mat-menu-item (click)="logOut()">Log out</button>
       </ng-container>
@@ -48,3 +50,4 @@
 
 
 <router-outlet />
+

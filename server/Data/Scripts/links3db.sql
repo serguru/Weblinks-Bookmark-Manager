@@ -1,6 +1,12 @@
 use links3db
 go
 
+if object_id('userMessages', 'U') is not null
+begin
+    drop table userMessages;
+end;
+go
+
 if object_id('links', 'U') is not null
 begin
     drop table links;
@@ -196,6 +202,17 @@ create table links (
     caption nvarchar(50) not null,
     constraint pk_links_id primary key (id),
     constraint fk_links_column_id foreign key (columnId) references lcolumns(id) on delete cascade,
+); 
+go
+
+create table userMessages (
+    id int identity(1,1) not null,
+    accountId int not null,
+    asubject nvarchar(max) not null,
+    amessage nvarchar(max) not null,
+    utcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
+    constraint pk_userMessages_id primary key (id),
+    constraint fk_userMessages_accountId foreign key (accountId) references accounts(id) on delete cascade,
 ); 
 go
 

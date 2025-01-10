@@ -51,10 +51,10 @@ export class PageComponent implements OnInit {
       const page = this.pagesService.findPage(path);
       if (!page) {
         this.pagesService.updateActivePage(null);
-        this.router.navigate(['/not-found']);
         return;
       }
 
+      // setTimeout is used here to avoid "... cahnged after checked ... " error
       setTimeout(() => {
         this.pagesService.updateActivePage(page);
       })

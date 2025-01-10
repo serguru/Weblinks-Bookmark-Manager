@@ -45,4 +45,10 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
+    [HttpPost("add-user-message")]
+    public async Task<IActionResult> AddUserMessage([FromBody] UserMessageModel model)
+    {
+        await _accountsService.AddUserMessageAsync(model);
+        return Ok(new { model });
+    }
 }

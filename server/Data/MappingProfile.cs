@@ -23,5 +23,8 @@ public class MappingProfile: Profile
         CreateMap<AccountModel, Account>();
         CreateMap<Account, AccountModel>();
 
+        CreateMap<UserMessageModel, UserMessage>();
+        CreateMap<UserMessage, UserMessageModel>();
+
     }
 }

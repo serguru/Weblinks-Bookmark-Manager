@@ -12,4 +12,5 @@ public interface IAccountsService
     Task<AccountModel> AddAccountAsync(AccountModel newAccount);
     Task<AccountModel> UpdateAccountAsync(AccountModel account);
     Task SaveConfig(StringTransportModel model);
+    Task<UserMessageModel> AddUserMessageAsync(UserMessageModel newMessage);
 }

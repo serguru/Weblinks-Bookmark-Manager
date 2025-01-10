@@ -365,6 +365,6 @@ $RECYCLE.BIN/
 
 appsettings.*
 
-documents/
+client/documents
 
 populate.sql

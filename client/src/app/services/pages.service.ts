@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, filter, find, Observable, of, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, finalize, find, Observable, of, tap, throwError } from 'rxjs';
 import { PageModel } from '../models/PageModel';
 import { NavigationEnd, Router } from '@angular/router';
 import { LOGIN, PAGE } from '../common/constants';
@@ -31,15 +31,19 @@ export class PagesService {
 
   }
 
+  loadingPages: boolean = false;
 
 
   getAccount(): Observable<AccountModel> {
+    this.loadingPages = true;
     return this.http.get<AccountModel>(this.apiUrl).pipe(
       tap(account => {
         this.account = account;
         this.updatePages(account.pages || []);
-      })
-    );
+      }),
+      finalize(() => {
+        this.loadingPages = false;
+      }));
   }
 
   findPage(pagePath: string): PageModel | null {
@@ -322,7 +326,7 @@ export class PagesService {
       throw new Error('Unauthorized');
     }
     const config = this.generateConfigStr();
-    this.loginService.saveConfig(config).subscribe() ;
+    this.loginService.saveConfig(config).subscribe();
   }
 
 }
