@@ -35,6 +35,7 @@ export class RowFormComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
 
+  pageModel: PageModel | null = null;
   rowModel: LrowModel | null = null;
 
   constructor(
@@ -63,16 +64,31 @@ export class RowFormComponent implements OnInit {
         if (!params) {
           return;
         }
+        
+        // add row
+        const pageId = params['pageId'];
+        if (pageId) {
+          const p = this.pagesService.getPageById(+pageId);
+          if (!p) {
+            this.router.navigate(['/not-found']);
+            throw new Error('Page not found');
+          }
+          this.pageModel = p;
+          return;
+        }
+
+        // update row
         const rowId = params['rowId'];
         if (!rowId) {
           return;
         }
-        const r = this.pagesService.gePageByRow(+rowId);
+        const r = this.pagesService.getRowById(+rowId);
         if (!r) {
           this.router.navigate(['/not-found']);
           throw new Error('Row not found');
         }
         this.rowModel = r;
+        this.pageModel = this.pagesService.getPageById(r!.pageId)!;
         this.form.get('caption')!.setValue(this.rowModel.caption);
       })
   }
@@ -88,8 +104,7 @@ export class RowFormComponent implements OnInit {
     this.isLoading = true;
     const caption = this.form.get("caption")!.value;
     const id = this.rowModel?.id || 0;
-    const page = this.pagesService.activePage!;
-    this.pagesService.addOrUpdateRow(page, id, caption)
+    this.pagesService.addOrUpdateRow(this.pageModel!, id, caption)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -97,7 +112,7 @@ export class RowFormComponent implements OnInit {
       )
       .subscribe(
         () => {
-          this.router.navigate(['/page']);
+          this.router.navigate(['/page/'+this.pageModel!.pagePath]);
         }
       );
   }

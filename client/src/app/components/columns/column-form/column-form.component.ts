@@ -69,7 +69,7 @@ export class ColumnFormComponent implements OnInit {
           this.router.navigate(['not-found']);
           throw new Error('Row not found');
         }
-        const r = this.pagesService.gePageByRow(+rowId);
+        const r = this.pagesService.getRowById(+rowId);
         if (!r) {
           this.router.navigate(['not-found']);
           throw new Error('Active Page Row is required');

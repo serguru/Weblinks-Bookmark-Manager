@@ -44,7 +44,6 @@ export class RowComponent {
     this.pagesService.saveConfig();
   }
 
-
   openMenu() {
     this.menuTrigger.open();
   }

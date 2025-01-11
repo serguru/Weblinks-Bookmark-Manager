@@ -12,7 +12,7 @@
 </div>
 
 <ng-template #context_menu>
-    <app-context-menu [title]="'Row'" [addPath]="'/add-row/'" [updatePath]="'/update-row/'+row.id"
+    <app-context-menu [title]="'Row'" [addPath]="'/add-row/'+row.pageId" [updatePath]="'/update-row/'+row.id"
         [delete]="delete.bind(this)" [disabled]="false">
     </app-context-menu>
 </ng-template>

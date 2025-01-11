@@ -22,7 +22,7 @@ export const routes: Routes = [
   {path: 'login', component: LoginComponent},
   { path: 'add-page', component: PageFormComponent, canActivate: [loginGuard]},
   { path: 'update-page/:path', component: PageFormComponent, canActivate: [loginGuard]},
-  { path: 'add-row', component: RowFormComponent, canActivate: [loginGuard]},
+  { path: 'add-row/:pageId', component: RowFormComponent, canActivate: [loginGuard]},
   { path: 'update-row/:rowId', component: RowFormComponent, canActivate: [loginGuard]},
   { path: 'add-column/:rowId', component: ColumnFormComponent, canActivate: [loginGuard]},
   { path: 'update-column/:rowId/:columnId', component: ColumnFormComponent, canActivate: [loginGuard]},

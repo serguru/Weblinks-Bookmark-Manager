@@ -178,7 +178,7 @@ export class PagesService {
     return pages.find((p: PageModel) => p.id === pageId);
   }
 
-  gePageByRow(rowId: number): LrowModel | null {
+  getRowById(rowId: number): LrowModel | null {
     if (!this.pages) {
       return null;
     }

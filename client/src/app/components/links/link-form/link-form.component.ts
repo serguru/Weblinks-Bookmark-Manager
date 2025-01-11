@@ -77,7 +77,7 @@ export class LinkFormComponent implements OnInit {
           this.router.navigate(['not-found']);
           throw new Error('Row Id is required');
         }
-        const r = this.pagesService.gePageByRow(+rowId);
+        const r = this.pagesService.getRowById(+rowId);
         if (!r) {
           this.router.navigate(['not-found']);
           throw new Error('Active Page Row is required');

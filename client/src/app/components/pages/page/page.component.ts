@@ -54,7 +54,7 @@ export class PageComponent implements OnInit {
         return;
       }
 
-      // setTimeout is used here to avoid "... cahnged after checked ... " error
+      // setTimeout is used here to avoid "... changed after checked ... " error
       setTimeout(() => {
         this.pagesService.updateActivePage(page);
       })
