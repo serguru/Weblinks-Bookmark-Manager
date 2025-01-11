@@ -33,7 +33,6 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  title = 'Links 3';
   popupPage: PageModel | null = null;
   activeRoute: string = '';
 
@@ -103,8 +102,6 @@ export class AppComponent implements OnInit {
 
   logOut(): void {
     this.loginService.logout();
-    this.pagesService.clearPages();
-    this.router.navigate([LOGIN]);
   }
 
   onContextMenuOpened(page: PageModel): void {

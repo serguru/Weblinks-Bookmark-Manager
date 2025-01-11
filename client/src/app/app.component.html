@@ -1,7 +1,7 @@
 <div class="toolbar-content" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
-   <div class="app-title">Links 3</div>
+   <div class="app-title">weblinks</div>
 
-   <ng-container *ngIf="loginService.isAuthenticated">
+   <div *ngIf="loginService.isAuthenticated" class="links">
       <button *ngIf="!pagesService.loadingPages && (!pagesService.pages || 
          pagesService.pages.length === 0)" mat-button [routerLink]="'/add-page'">
          Add page
@@ -13,9 +13,7 @@
          [routerLink]="['/page/'+page.pagePath]" [cdkContextMenuTriggerFor]="context_menu"
          (cdkContextMenuOpened)="onContextMenuOpened(page)" cdkDrag>{{page.caption || page.pagePath }}</a>
       }
-
-   </ng-container>
-
+   </div>
 
    <span class="spacer"></span>
 

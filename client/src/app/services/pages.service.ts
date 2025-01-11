@@ -19,7 +19,6 @@ import { AccountModel } from '../models/AccountModel';
 })
 export class PagesService {
   private apiUrl = `${environment.apiUrl}/pages`;
-  private account: AccountModel | null = null;
 
   constructor(
     private http: HttpClient,
@@ -28,18 +27,29 @@ export class PagesService {
     private snackBar: MatSnackBar,
     public messagesService: MessagesService,
   ) {
-
+    this.loginService.userLoggedOut.subscribe(() => {
+      this.updateAccount(null);
+      this.router.navigate(["/login"]);
+    })
   }
 
   loadingPages: boolean = false;
 
-
+  
+  private accountSubject = new BehaviorSubject<any>(null);
+  public account$ = this.accountSubject.asObservable();
+  updateAccount(account: AccountModel | null) {
+    this.accountSubject.next(account);
+  }
+  get account(): AccountModel | null {
+    return this.accountSubject.getValue();
+  }
+  
   getAccount(): Observable<AccountModel> {
     this.loadingPages = true;
     return this.http.get<AccountModel>(this.apiUrl).pipe(
       tap(account => {
-        this.account = account;
-        this.updatePages(account.pages || []);
+        this.updateAccount(account);
       }),
       finalize(() => {
         this.loadingPages = false;
@@ -67,25 +77,8 @@ export class PagesService {
     return this.activePageSubject.getValue();
   }
 
-  private pagesSubject = new BehaviorSubject<any>(null);
-  public pages$ = this.pagesSubject.asObservable();
-  updatePages(pages: PageModel[]) {
-    this.pagesSubject.next(pages);
-  }
   get pages(): PageModel[] {
-    return this.pagesSubject.getValue();
-  }
-
-  getPages(): Observable<PageModel[]> {
-    return this.http.get<PageModel[]>(this.apiUrl + '/all').pipe(
-      tap((pages) => {
-        this.updatePages(pages);
-      })
-    );
-  }
-
-  clearPages(): void {
-    this.updatePages([]);
+    return this.account?.pages || [];
   }
 
   addOrUpdatePage(id: number, pagePath: string, caption: string): Observable<PageModel> {
@@ -96,7 +89,7 @@ export class PagesService {
     return this.http.post(this.apiUrl + '/add-update-page', { id: id, pagePath: pagePath, caption: caption })
       .pipe(
         tap((response: any) => {
-          const pages = this.pages || [];
+          const pages = this.pages;
           if (id === 0) {
             pages.push(response);
           } else {
@@ -107,7 +100,7 @@ export class PagesService {
             pages[index].pagePath = response.pagePath;
             pages[index].caption = response.caption;
           }
-          this.updatePages(pages);
+          this.account!.pages = pages;
           this.messagesService.showSuccess(`Page ${id === 0 ? 'added' : 'updated'}`);
         }),
       );

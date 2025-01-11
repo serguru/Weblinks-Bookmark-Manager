@@ -19,6 +19,6 @@ public partial class AccountModel
 
     public string? Settings { get; set; }
 
-    public virtual ICollection<PageModel> Pages { get; set; } = new List<PageModel>();
+    public virtual ICollection<PageModel>? Pages { get; set; } = new List<PageModel>();
 
 }

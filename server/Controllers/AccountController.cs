@@ -25,6 +25,13 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("update")]
+    public async Task<IActionResult> Update([FromBody] AccountModel model)
+    {
+        AccountModel result = await _accountsService.UpdateAccountAsync(model);
+        return Ok(result);
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {

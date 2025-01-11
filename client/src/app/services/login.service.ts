@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
@@ -16,12 +16,18 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
+  public userLoggedOut = new Subject<void>();
+
   saveConfig(config: string): Observable<any> {
     return this.http.post(this.apiUrl + '/save-config', {value: config});
   }
 
-  register(account: any): Observable<any> {
+  register(account: AccountModel): Observable<any> {
     return this.http.post(this.apiUrl + '/register', account);
+  }
+
+  update(account: AccountModel): Observable<any> {
+    return this.http.post(this.apiUrl + '/update', account);
   }
 
   sendUserMessage(message: UserMessageModel): Observable<any> {
@@ -39,6 +45,7 @@ export class LoginService {
 
   logout(): void {
     localStorage.removeItem('token');
+    this.userLoggedOut.next();
   }
 
   get isAuthenticated(): boolean {
@@ -64,6 +71,13 @@ export class LoginService {
       return '';
     }
     return this.accountClaims.userName;
+  }
+
+  get accountId(): string {
+    if (!this.isAuthenticated) {
+      return '';
+    }
+    return this.accountClaims.id;
   }
 
 }

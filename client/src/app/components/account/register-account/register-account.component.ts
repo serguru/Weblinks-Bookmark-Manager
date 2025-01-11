@@ -56,7 +56,7 @@ export class RegisterAccountComponent implements OnInit {
         Validators.maxLength(50),
         Validators.pattern('^[a-zA-Z0-9-_]+$')
       ]],
-      email: ['', [Validators.required, Validators.email]],
+      userEmail: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['']
     }, { validator: this.passwordMatchValidator });
@@ -101,7 +101,7 @@ export class RegisterAccountComponent implements OnInit {
       value: "Email is required"
     },
     {
-      key: "email",
+      key: "userEmail",
       value: "Please enter a valid email address"
     },
   ]
@@ -153,7 +153,7 @@ export class RegisterAccountComponent implements OnInit {
     const account = {
       id: 0,
       userName: this.registrationForm.get("userName")!.value,
-      userEmail: this.registrationForm.get("email")!.value,
+      userEmail: this.registrationForm.get("userEmail")!.value,
       firstName: this.registrationForm.get("firstName")!.value,
       lastName: this.registrationForm.get("lastName")!.value,
       settings: this.registrationForm.get("password")!.value,

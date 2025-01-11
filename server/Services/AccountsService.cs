@@ -261,9 +261,18 @@ public class AccountsService : IAccountsService
         return result;
     }
 
-    public Task<AccountModel> UpdateAccountAsync(AccountModel account)
+    public async Task<AccountModel> UpdateAccountAsync(AccountModel accountModel)
     {
-        throw new NotImplementedException();
+        Account? account = await _accountsRepository.GetAccountAsync() ?? throw new InvalidOperationException("Account does not exists");
+
+        account.FirstName = accountModel.FirstName;
+        account.LastName = accountModel.LastName;
+        account.UserName = accountModel.UserName;
+        account.UserEmail = accountModel.UserEmail;
+
+        await _accountsRepository.UpdateAccountAsync(account);
+        AccountModel result = _mapper.Map<AccountModel>(account);
+        return result;
     }
 
     public async Task SaveConfig(StringTransportModel model)

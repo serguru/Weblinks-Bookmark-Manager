@@ -36,9 +36,9 @@
                     <div class="full-width">
                         <mat-form-field appearance="outline" class="full-width">
                             <mat-label>Email</mat-label>
-                            <input matInput formControlName="email" placeholder="Enter your email" type="email">
+                            <input matInput formControlName="userEmail" placeholder="Enter your email" type="email">
                         </mat-form-field>
-                        <app-validation-errors [control]="registrationForm.get('email')"
+                        <app-validation-errors [control]="registrationForm.get('userEmail')"
                             [messages]="emailMessages"></app-validation-errors>
                     </div>
                 </div>

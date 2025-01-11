@@ -1,34 +1,32 @@
-.menu-icon {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 1000;
+.toolbar-content {
+  background-color: #f7f6f6;
+  display: flex;
+  padding: 0.5rem 2rem;
+  align-items: center;
+  max-height: 150px;
+  overflow: auto;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.app-title {
+  font-size: 25px;
+  color: var(--mdc-text-button-label-text-color);
+  font-style: italic;
+  font-weight: bold;
+  padding-right: 2rem;
 }
 
 .spacer {
   flex: 1 1 auto;
 }
 
-.app-title {
-  font-size: 20px;
-  font-family: var(--mdc-text-button-label-text-font, var(--mat-sys-label-large-font));
-  color: var(--mdc-text-button-label-text-color);
-  font-style: italic;
-  font-weight: bold;
-  margin: 0 2rem;
-}
-
 .active-link {
   font-weight: bolder;
-}
-
-.toolbar-content {
-  background-color: #f7f6f6;
-  display: flex;
-  flex-wrap: wrap;
-  min-height: 4rem;
-  align-items: center;
-  padding-right: 20px;
 }
 
 .cdk-drag-preview {
