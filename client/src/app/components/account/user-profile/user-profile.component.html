@@ -1,3 +1,9 @@
 <div class="container" *ngIf="pagesService.account">
-    <app-update-account></app-update-account>
+    <div class="content">
+        <app-update-account></app-update-account>
+        <app-change-password></app-change-password>
+        <div class="form-row">
+            <button mat-button>Delete account</button>
+        </div>
+    </div>
 </div>

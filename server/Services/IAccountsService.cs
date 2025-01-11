@@ -1,4 +1,5 @@
-﻿using server.Data.Entities;
+﻿using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using server.Data.Entities;
 using server.Data.Models;
 
 namespace server.Services;
@@ -13,4 +14,6 @@ public interface IAccountsService
     Task<AccountModel> UpdateAccountAsync(AccountModel account);
     Task SaveConfig(StringTransportModel model);
     Task<UserMessageModel> AddUserMessageAsync(UserMessageModel newMessage);
+    Task ChangePasswordAsync(ChangePasswordModel model);
+    
 }

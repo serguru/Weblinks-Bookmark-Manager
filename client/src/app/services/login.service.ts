@@ -6,6 +6,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
 import { AccountModel } from '../models/AccountModel';
 import { UserMessageModel } from '../models/UserMessageModel';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,11 @@ export class LoginService {
   }
 
   update(account: AccountModel): Observable<any> {
-    return this.http.post(this.apiUrl + '/update', account);
+    return this.http.put(this.apiUrl + '/update', account);
+  }
+
+  changePassword(passwords: any): Observable<any> {
+    return this.http.put(this.apiUrl + '/change-password', passwords);
   }
 
   sendUserMessage(message: UserMessageModel): Observable<any> {
@@ -79,5 +84,19 @@ export class LoginService {
     }
     return this.accountClaims.id;
   }
+
+  passwordMatchValidator(g: FormGroup) {
+    const password = g.get('password')?.value;
+    const confirmPassword = g.get('confirmPassword')?.value;
+
+    //    if (password && confirmPassword && password !== confirmPassword) {
+    if (password !== confirmPassword) {
+      g.get('confirmPassword')?.setErrors({ 'passwordMismatch': true });
+    } else {
+      g.get('confirmPassword')?.setErrors(null);
+    }
+    return null;
+  }
+
 
 }

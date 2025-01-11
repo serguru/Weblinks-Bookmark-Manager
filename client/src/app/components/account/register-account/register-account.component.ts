@@ -59,7 +59,7 @@ export class RegisterAccountComponent implements OnInit {
       userEmail: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['']
-    }, { validator: this.passwordMatchValidator });
+    }, { validator: this.loginService.passwordMatchValidator });
   }
 
   firstNameMessages: KeyValue<string, string>[] = [
@@ -132,18 +132,6 @@ export class RegisterAccountComponent implements OnInit {
     });
   }
 
-  passwordMatchValidator(g: FormGroup) {
-    const password = g.get('password')?.value;
-    const confirmPassword = g.get('confirmPassword')?.value;
-
-    //    if (password && confirmPassword && password !== confirmPassword) {
-    if (password !== confirmPassword) {
-      g.get('confirmPassword')?.setErrors({ 'passwordMismatch': true });
-    } else {
-      g.get('confirmPassword')?.setErrors(null);
-    }
-    return null;
-  }
   onSubmit() {
     if (!this.registrationForm.valid) {
       return;

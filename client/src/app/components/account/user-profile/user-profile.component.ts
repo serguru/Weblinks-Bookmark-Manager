@@ -13,6 +13,7 @@ import { PagesService } from '../../../services/pages.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MessagesService } from '../../../services/messages.service';
 import { UpdateAccountComponent } from "./update-account/update-account.component";
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -28,7 +29,8 @@ import { UpdateAccountComponent } from "./update-account/update-account.componen
     MatSnackBarModule,
     MatProgressSpinnerModule,
     RouterModule,
-    UpdateAccountComponent
+    UpdateAccountComponent,
+    ChangePasswordComponent
 ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'

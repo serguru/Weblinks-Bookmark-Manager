@@ -25,12 +25,21 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("update")]
+    [HttpPut("update")]
     public async Task<IActionResult> Update([FromBody] AccountModel model)
     {
         AccountModel result = await _accountsService.UpdateAccountAsync(model);
         return Ok(result);
     }
+
+    [HttpPut("change-password")]
+
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+    {
+        await _accountsService.ChangePasswordAsync(model);
+        return Ok();
+    }
+
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)

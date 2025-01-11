@@ -9,7 +9,6 @@ import { ColumnFormComponent } from './components/columns/column-form/column-for
 import { LinkFormComponent } from './components/links/link-form/link-form.component';
 import { UserProfileComponent } from './components/account/user-profile/user-profile.component';
 import { RegisterAccountComponent } from './components/account/register-account/register-account.component';
-import { AboutComponent } from './components/account/about/about.component';
 import { ContactUsComponent } from './components/account/contact-us/contact-us.component';
 import { HelpComponent } from './components/documents/help/help.component';
 import { TermsComponent } from './components/documents/terms/terms.component';
@@ -31,7 +30,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterAccountComponent},
   { path: 'user-profile', component: UserProfileComponent, canActivate: [loginGuard]},
   { path: 'help', component: HelpComponent},
-  { path: 'about', component: AboutComponent},
   { path: 'terms', component: TermsComponent},
   { path: 'policy', component: PolicyComponent},
   { path: 'contact-us', component: ContactUsComponent, canActivate: [loginGuard]},

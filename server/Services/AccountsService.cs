@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using server.Data;
@@ -288,5 +289,21 @@ public class AccountsService : IAccountsService
         await _accountsRepository.AddUserMessageAsync(message);
         UserMessageModel result = _mapper.Map<UserMessageModel>(message);
         return result;
+    }
+
+    public async Task ChangePasswordAsync(ChangePasswordModel model)
+    {
+        Account? account = await _accountsRepository.GetAccountAsync() ?? throw new InvalidOperationException("Account does not exists");
+
+        LoginModel lm = new LoginModel { UserEmail = account.UserEmail, UserPassword = model.OldPassword };
+
+        Account? verifiedAccount = await CheckPasswordAsync(lm);
+        if (verifiedAccount == null)
+        {
+            throw new UnauthorizedAccessException("Invalid old password");
+        }
+
+        account.HashedPassword = await _accountsRepository.HashPasswordAsync(model.Password, account.Salt);
+        await _accountsRepository.UpdateAccountAsync(account);
     }
 }

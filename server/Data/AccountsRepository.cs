@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using Mono.TextTemplating;
 using server.Data.Entities;
 using server.Data.Models;
 using System.Data;
@@ -35,6 +36,20 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
         return account;
     }
 
+
+    public async Task<string> HashPasswordAsync(string password, string salt)
+    {
+        var parameters = new[]
+        {
+            new SqlParameter("@password", password),
+            new SqlParameter("@salt", salt),
+            new SqlParameter("@hashedPassword", SqlDbType.NVarChar, 8000) { Direction = ParameterDirection.Output }
+        };
+        await _dbContext.Database.ExecuteSqlRawAsync("exec HashPassword @password, @salt, @hashedPassword output", parameters);
+
+        return (string)parameters[2].Value;
+    }
+
     public async Task AddAccountAsync(Account account)
     {
         // while creating account a password passed in settings
@@ -59,14 +74,7 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
         await _dbContext.Database.ExecuteSqlRawAsync("exec GenerateSalt @salt output", parameters);
         account.Salt = (string)parameters[0].Value;
 
-        parameters = new[]
-        {
-            new SqlParameter("@password", account.Settings),
-            new SqlParameter("@salt", account.Salt),
-            new SqlParameter("@hashedPassword", SqlDbType.NVarChar, 8000) { Direction = ParameterDirection.Output }
-        };
-        await _dbContext.Database.ExecuteSqlRawAsync("exec HashPassword @password, @salt, @hashedPassword output", parameters);
-        account.HashedPassword = (string)parameters[2].Value;
+        account.HashedPassword = await HashPasswordAsync(account.Settings, account.Salt);
         account.Settings = String.Empty;
 
         _dbContext.Accounts.Add(account);
