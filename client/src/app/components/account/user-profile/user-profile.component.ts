@@ -11,7 +11,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
 import { PagesService } from '../../../services/pages.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { finalize } from 'rxjs';
+import { catchError, finalize, of } from 'rxjs';
 import { MessagesService } from '../../../services/messages.service';
 import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
 import { AccountModel } from '../../../models/AccountModel';
@@ -131,12 +131,12 @@ export class UserProfileComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.isLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: () => {
           this.messagesService.showSuccess('Update was successful')
-        },
+        }
       });
   }
 }

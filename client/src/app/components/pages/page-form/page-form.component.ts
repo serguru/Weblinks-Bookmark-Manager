@@ -8,11 +8,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { filter, finalize } from 'rxjs';
+import { concatMap, filter, finalize, of } from 'rxjs';
 import { PageModel } from '../../../models/PageModel';
 import { PagesService } from '../../../services/pages.service';
 import { LoginService } from '../../../services/login.service';
 import { PAGE } from '../../../common/constants';
+import { AccountModel } from '../../../models/AccountModel';
 
 @Component({
   selector: 'app-page-form',
@@ -54,20 +55,33 @@ export class PageFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const path = params['path'];
-      if (!path) {
-        return;
-      }
-      const pm = this.pagesService.findPage(path);
-      if (!pm) {
-        this.router.navigate(['/not-found']);
-        throw new Error('Page is required');
-      }
-      this.pageModel = pm;
-      this.form.get('pagePath')!.setValue(this.pageModel.pagePath);
-      this.form.get('caption')!.setValue(this.pageModel.caption);
-    });
+
+    this.pagesService.account$
+      .pipe(
+        concatMap(account => {
+          if (account) {
+            return this.route.params;
+          }
+          return of();
+        })
+      )
+      .subscribe(params => {
+        if (!params) {
+          return;
+        }
+        const path = params['path'];
+        if (!path) {
+          return;
+        }
+        const pm = this.pagesService.findPage(path);
+        if (!pm) {
+          this.router.navigate(['/not-found']);
+          throw new Error('Page not found');
+        }
+        this.pageModel = pm;
+        this.form.get('pagePath')!.setValue(this.pageModel.pagePath);
+        this.form.get('caption')!.setValue(this.pageModel.caption);
+      })
   }
 
   get formTitle(): string {

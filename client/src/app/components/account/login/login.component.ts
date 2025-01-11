@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener  } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule, KeyValue } from '@angular/common';
@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { finalize } from 'rxjs';
+import { catchError, finalize, of, throwError } from 'rxjs';
 import { LoginService } from '../../../services/login.service';
 import { PagesService } from '../../../services/pages.service';
 import { MessagesService } from '../../../services/messages.service';
@@ -45,12 +45,12 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private pagesService: PagesService,
     private messagesService: MessagesService,
-    
+
 
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['',[Validators.required]]
+      password: ['', [Validators.required]]
     });
   }
 
@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
       value: "Please enter a valid email address"
     },
   ]
-  
+
   passwordMessages: KeyValue<string, string>[] = [
     {
       key: "required",
@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
   ]
 
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.route.params.subscribe(params => {
       if (this.loginService.isAuthenticated) {
         this.router.navigate(['/']);
@@ -100,27 +100,24 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     this.loginService.login(this.loginForm.get("email")!.value, this.loginForm.get("password")!.value)
       .pipe(
+        catchError(error => {
+          if (error.status === 401) {
+            this.messagesService.showError('Invalid email or password');
+            return of();
+          };
+          return throwError(() => error);
+        }),
         finalize(() => {
           this.isLoading = false;
         })
       )
-      .subscribe({
-        next: () => {
+      .subscribe(
+        () => {
           this.pagesService.getAccount()
             .subscribe(x => {
               this.router.navigate(['/']);
             });
-
-        },
-        error: (error) => {
-          if (error.status === 401) {
-            this.messagesService.showError('Invalid email or password');
-          } else {
-            this.messagesService.showError('Unknowm error. Please try again later.');
-          }
         }
-      });
+      );
   }
-
-
 }

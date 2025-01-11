@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { finalize } from 'rxjs';
+import { concatMap, finalize, of } from 'rxjs';
 import { PagesService } from '../../../services/pages.service';
 import { LrowModel } from '../../../models/LrowModel';
 import { ActivatedRoute } from '@angular/router';
@@ -55,45 +55,60 @@ export class LinkFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      // row
-      const rowId = params['rowId'];
-      if (!rowId) {
-        this.router.navigate(['not-found']);
-        throw new Error('Row Id is required');
-      }
-      const r = this.pagesService.getActivePageRow(+rowId);
-      if (!r) {
-        this.router.navigate(['not-found']);
-        throw new Error('Active Page Row is required');
-      }
-      // column
-      const columnId = params['columnId'];
-      if (!columnId) {
-        this.router.navigate(['not-found']);
-        throw new Error('Column Id is required');
-      }
-      const c = r.lcolumns?.find(x => x.id === +columnId);
-      if (!c) {
-        this.router.navigate(['not-found']);
-        throw new Error('Column is required');
-      }
-      this.columnModel = c;
-      // link
-      const linkId = params['linkId'];
-      if (!linkId) {
-        this.form.get('aUrl')!.setValue("https://");
-        return;
-      }
-      const l = c.links?.find(x => x.id === +linkId);
-      if (!l) {
-        this.router.navigate(['not-found']);
-        throw new Error('Link is required');
-      }
-      this.linkModel = l;
-      this.form.get('aUrl')!.setValue(l.aUrl);
-      this.form.get('caption')!.setValue(l.caption);
-    });
+
+
+
+    this.pagesService.account$
+      .pipe(
+        concatMap(account => {
+          if (account) {
+            return this.route.params;
+          }
+          return of();
+        })
+      )
+      .subscribe(params => {
+        if (!params) {
+          return;
+        }
+        // row
+        const rowId = params['rowId'];
+        if (!rowId) {
+          this.router.navigate(['not-found']);
+          throw new Error('Row Id is required');
+        }
+        const r = this.pagesService.gePageByRow(+rowId);
+        if (!r) {
+          this.router.navigate(['not-found']);
+          throw new Error('Active Page Row is required');
+        }
+        // column
+        const columnId = params['columnId'];
+        if (!columnId) {
+          this.router.navigate(['not-found']);
+          throw new Error('Column Id is required');
+        }
+        const c = r.lcolumns?.find(x => x.id === +columnId);
+        if (!c) {
+          this.router.navigate(['not-found']);
+          throw new Error('Column is required');
+        }
+        this.columnModel = c;
+        // link
+        const linkId = params['linkId'];
+        if (!linkId) {
+          this.form.get('aUrl')!.setValue("https://");
+          return;
+        }
+        const l = c.links?.find(x => x.id === +linkId);
+        if (!l) {
+          this.router.navigate(['not-found']);
+          throw new Error('Link is required');
+        }
+        this.linkModel = l;
+        this.form.get('aUrl')!.setValue(l.aUrl);
+        this.form.get('caption')!.setValue(l.caption);
+      })
   }
 
   get formTitle(): string {

@@ -178,12 +178,13 @@ export class PagesService {
     return pages.find((p: PageModel) => p.id === pageId);
   }
 
-  getActivePageRow(rowId: number) {
-    if (!this.activePage) {
+  gePageByRow(rowId: number): LrowModel | null {
+    if (!this.pages) {
       return null;
     }
     rowId = +rowId;
-    return this.activePage.lrows?.find((r: LrowModel) => r.id === rowId) || null;
+    const page = this.pages.find(x => x.lrows?.find(y => y.id === rowId));
+    return page?.lrows?.find((r: LrowModel) => r.id === rowId) || null;
   }
 
   addOrUpdateColumn(row: LrowModel, id: number, caption: string): Observable<LcolumnModel> {

@@ -174,9 +174,9 @@ export class RegisterAccountComponent implements OnInit {
         error: (error) => {
           if (error.status === 401) {
             this.messagesService.showError('Invalid email or password');
-          } else {
-            this.messagesService.showError('Unknowm error. Please try again later.');
+            return;
           }
+          throw new Error(error);
         }
       });
 

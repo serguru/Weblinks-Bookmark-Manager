@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { finalize } from 'rxjs';
+import { concatMap, finalize, of } from 'rxjs';
 import { PagesService } from '../../../services/pages.service';
 import { PAGE } from '../../../common/constants';
 import { PageModel } from '../../../models/PageModel';
@@ -50,19 +50,31 @@ export class RowFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const rowId = params['rowId'];
-      if (!rowId) {
-        return;
-      }
-      const r = this.pagesService.getActivePageRow(+rowId);
-      if (!r) {
-        this.router.navigate(['/not-found']);
-        throw new Error('Row is required');
-      }
-      this.rowModel = r;
-      this.form.get('caption')!.setValue(this.rowModel.caption);
-    });
+    this.pagesService.account$
+      .pipe(
+        concatMap(account => {
+          if (account) {
+            return this.route.params;
+          }
+          return of();
+        })
+      )
+      .subscribe(params => {
+        if (!params) {
+          return;
+        }
+        const rowId = params['rowId'];
+        if (!rowId) {
+          return;
+        }
+        const r = this.pagesService.gePageByRow(+rowId);
+        if (!r) {
+          this.router.navigate(['/not-found']);
+          throw new Error('Row not found');
+        }
+        this.rowModel = r;
+        this.form.get('caption')!.setValue(this.rowModel.caption);
+      })
   }
 
   get formTitle(): string {
