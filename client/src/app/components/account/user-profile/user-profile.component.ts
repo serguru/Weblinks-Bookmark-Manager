@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, KeyValue } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +14,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MessagesService } from '../../../services/messages.service';
 import { UpdateAccountComponent } from "./update-account/update-account.component";
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { MatDialog } from '@angular/material/dialog';
+import { GoodbyeComponent } from '../goodbye/goodbye.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -36,6 +38,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent {
+  dialog = inject(MatDialog);
 
   constructor(
     private fb: FormBuilder,
@@ -45,5 +48,24 @@ export class UserProfileComponent {
     private router: Router,
     private messagesService: MessagesService
   ) {
+
+
   }
+
+ openDialog(): void {
+    const dialogRef = this.dialog.open(GoodbyeComponent, {
+      width: '300px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+      this.loginService.delete().subscribe(() => {
+        this.loginService.logout();
+      })
+    });
+  }
+
+
 }

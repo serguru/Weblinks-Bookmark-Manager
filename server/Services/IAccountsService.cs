@@ -15,5 +15,6 @@ public interface IAccountsService
     Task SaveConfig(StringTransportModel model);
     Task<UserMessageModel> AddUserMessageAsync(UserMessageModel newMessage);
     Task ChangePasswordAsync(ChangePasswordModel model);
-    
+    Task DeleteAccountAsync();
+
 }

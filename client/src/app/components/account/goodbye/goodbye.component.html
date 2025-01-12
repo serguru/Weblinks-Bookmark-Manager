@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Confirmation</h2>
+<mat-dialog-content>
+    <p>
+        Your account will be deleted. All your data will be irretrievably lost. We will be bad without you... Stay with us!
+    </p>
+    <p>
+        If you still want to delete your account, type "Goodbye" and click "Yes".        
+    </p>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Please type "Goodbye"</mat-label>
+    <input matInput [(ngModel)]="userInput">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">No</button>
+  <button mat-button color="primary" 
+          [disabled]="userInput?.toLowerCase() !== 'goodbye'"
+          (click)="onYesClick()">
+    Yes
+  </button>
+</mat-dialog-actions>

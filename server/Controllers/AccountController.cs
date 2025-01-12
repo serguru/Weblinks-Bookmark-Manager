@@ -40,7 +40,6 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
@@ -66,5 +65,12 @@ public class AccountController : ControllerBase
     {
         await _accountsService.AddUserMessageAsync(model);
         return Ok(new { model });
+    }
+
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteAccount()
+    {
+        await _accountsService.DeleteAccountAsync();
+        return Ok();
     }
 }

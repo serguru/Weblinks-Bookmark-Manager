@@ -91,14 +91,15 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAccountAsync(int accountId)
+    public async Task DeleteAccountAsync()
     {
-        Account? account = await GetAccountByIdAsync(accountId);
-        if (account != null)
+        Account? account = await GetAccountAsync();
+        if (account == null)
         {
-            _dbContext.Accounts.Remove(account);
-            await _dbContext.SaveChangesAsync();
+            throw new ArgumentException("Account not found");
         }
+        _dbContext.Accounts.Remove(account);
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<bool> VerifyPasswordAsync(string providedPassword, string hashedStoredPassword, string salt)
@@ -167,6 +168,7 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
         _dbContext.UserMessages.Add(message);
         await _dbContext.SaveChangesAsync();
     }
+
 }
 
 

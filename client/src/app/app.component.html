@@ -22,7 +22,7 @@
    </button>
    <mat-menu #menu>
       <ng-container *ngIf="loginService.isAuthenticated">
-         <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">User Profile</a>
+         <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">{{profileCaption}}</a>
          <a *ngIf="!isRouteName('/contact-us')" mat-menu-item [routerLink]="'/contact-us'">Contact Us</a>
       </ng-container>
       <a *ngIf="!isRouteName('/help')" mat-menu-item [routerLink]="'/help'">Help</a>

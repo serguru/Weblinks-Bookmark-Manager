@@ -140,7 +140,12 @@ export class AppComponent implements OnInit {
     });
   }
 
-  
+  get profileCaption(): string {
+    if (!this.pagesService.account) {
+      return "User Profile";
+    }
+    return this.pagesService.account.userName;
+  }
 
 
 }

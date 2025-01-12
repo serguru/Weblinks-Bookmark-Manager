@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-help',
@@ -6,6 +6,12 @@ import { Component } from '@angular/core';
   templateUrl: './help.component.html',
   styleUrl: './help.component.css'
 })
-export class HelpComponent {
+export class HelpComponent implements OnInit {
+
+  
+  constructor() { }
+
+  ngOnInit() {
+  }
 
 }

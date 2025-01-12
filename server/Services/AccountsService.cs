@@ -306,4 +306,9 @@ public class AccountsService : IAccountsService
         account.HashedPassword = await _accountsRepository.HashPasswordAsync(model.Password, account.Salt);
         await _accountsRepository.UpdateAccountAsync(account);
     }
+
+    public async Task DeleteAccountAsync()
+    {
+        await _accountsRepository.DeleteAccountAsync();
+    }
 }

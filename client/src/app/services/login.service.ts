@@ -31,6 +31,10 @@ export class LoginService {
     return this.http.put(this.apiUrl + '/update', account);
   }
 
+  delete(): Observable<any> {
+    return this.http.delete(this.apiUrl + '/delete');
+  }
+
   changePassword(passwords: any): Observable<any> {
     return this.http.put(this.apiUrl + '/change-password', passwords);
   }

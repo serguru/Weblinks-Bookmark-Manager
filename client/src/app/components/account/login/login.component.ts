@@ -61,8 +61,8 @@ export class LoginComponent implements OnInit {
     }
     if (event.ctrlKey && event.shiftKey && event.key === 'L') {
       event.preventDefault(); // Prevent default browser behavior
-      this.loginForm.get("email")?.setValue('bill.gates@gmail.com');
-      this.loginForm.get("password")?.setValue('BillGates');
+      this.loginForm.get("email")?.setValue('john.doe@gmail.com');
+      this.loginForm.get("password")?.setValue('JohnDoe');
     }
   }
 
