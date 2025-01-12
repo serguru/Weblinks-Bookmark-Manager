@@ -1,2 +1,117 @@
-<p>help works!</p>
-<img src="assets/weblinks_interface.png" alt="Weblinks interface">
+<div class="container">
+    <mat-card class="container">
+        <h2>Help</h2>
+        <mat-card-content>
+            <p>
+                Every Internet user sooner or later faces the problem: where to store
+                links to frequently visited web resources? Bookmarks provided by browsers can partly solve this problem.
+                But this functionality is limited and using bookmarks is inconvenient.
+                Our Weblinks site allows you to solve this problem once and for all.
+            </p>
+            <p class="container">
+                <img src="assets/weblinks_interface.png" alt="Weblinks interface">
+            </p>
+            <p>
+                After you register, you have the opportunity to create, store and use
+                conveniently and clearly organized links to web resources. Create your own pages,
+                rows within pages
+                and columns within rows, then insert links within columns. Context menus are used to add,
+                change or delete. To swap pages, rows, columns or links,
+                just drag them with the mouse and drop.
+                Make https://weblinks.click the default page in the browser in order to have convenient and quick
+                access to your own links.
+            </p>
+
+            <h3>
+                Pages
+            </h3>
+            <p>
+                At the top of the site there is a toolbar containing buttons with the titles of the pages you are
+                creating.
+                Clicking on a button will open the corresponding page.
+
+                When no pages have been created yet, the toolbar will have an "Add page" button. Click this button to
+                create your first page. In the form that appears, type in the path to the page and the page title and
+                click "Submit". The path
+                is used in the URL as a unique address for the page on our site. The title will be shown on the toolbar
+                button
+                representing the page.
+
+                To create a new page, edit or delete a page, right-click on the page button and use the context menu. To
+                swap pages, drag the button with the mouse and
+                drop it.
+            </p>
+
+            <h3>
+                Rows
+            </h3>
+            <p>
+                A page contains rows that are used to place columns.
+                If the page does not yet contain rows, the "Add row" button will be shown. Click on
+                this button to create the first row. In the form that appears, type an optional row title.
+                To create a new row, edit or delete a row, right-click on the row and use the context menu. To swap
+                rows, drag the row with the mouse and drop.
+            </p>
+            <h3>
+                Columns
+            </h3>
+            <p>
+                The row contains columns that are used to place links.
+                If the row does not yet contain columns, the "Add column" button will be displayed. Click on
+                this button to create the first column. In the form that appears, type an optional column title.
+                To create a new column, edit or delete a column, right-click on the column and use the context menu. To
+                swap columns, drag the columns with the mouse and
+                drop.
+            </p>
+
+            <h3>
+                Links
+            </h3>
+            <p>
+                The column contains your links to web resources. When you click on a link, the corresponding
+
+                page opens in a new browser tab.
+
+                If the column does not yet contain links, it will show the "Add link" button. Click on
+
+                this button to create the first link. In the form that appears, in the "Url" field, type
+                the Internet address of the page starting with the protocol, for example, https://google.com. To avoid
+                typing
+                the address manually, go to the page you are interested in in the browser, copy the address
+                from the address bar, and then return back to the form and paste the address into the "Url" field. In
+                the "Label" field,
+                type a string that will represent the link in the column.
+
+                To create a new, change or delete a link, right-click on the link and use the context menu. To swap
+                links, drag the link with the mouse and
+                drop it.
+            </p>
+
+            <h3>
+                Account
+            </h3>
+            <p>
+                To change your <a [routerLink]="'/user-profile'">account</a> details, change your password or delete your account,
+                click on your username in the site menu.
+            </p>
+
+            <h3>
+                Contact us
+            </h3>
+            <p>
+                To send a <a [routerLink]="'/contact-us'">message</a> to the site administration, click "Contact Us" and use the form. We will send a
+                response to the email specified in your account as soon as possible.
+            </p>
+
+            <h3>
+                Password recovery
+            </h3>
+            <p>
+                Currently, the site does not have an automatic password recovery function. If you
+                forgot your password, <a [routerLink]="'/contact-us'">send us</a> a message and we will send you a new password by email. Do not forget to
+                immediately
+                change the password we sent to another one using the password change form on the account page.
+            </p>
+        </mat-card-content>
+    </mat-card>
+</div>
