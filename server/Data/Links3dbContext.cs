@@ -18,6 +18,10 @@ public partial class Links3dbContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
+    public virtual DbSet<EventType> EventTypes { get; set; }
+
+    public virtual DbSet<History> Histories { get; set; }
+
     public virtual DbSet<Lcolumn> Lcolumns { get; set; }
 
     public virtual DbSet<Link> Links { get; set; }
@@ -61,6 +65,46 @@ public partial class Links3dbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("userName");
+        });
+
+        modelBuilder.Entity<EventType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_eventType_id");
+
+            entity.ToTable("eventType");
+
+            entity.HasIndex(e => e.TypeName, "uq_eventType_name").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.TypeName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("typeName");
+        });
+
+        modelBuilder.Entity<History>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_history_id");
+
+            entity.ToTable("history");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Comment).HasColumnName("comment");
+            entity.Property(e => e.EventTypeId).HasColumnName("eventTypeId");
+            entity.Property(e => e.UserEmail)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("userEmail");
+            entity.Property(e => e.UtcDate)
+                .HasDefaultValueSql("((sysdatetimeoffset() AT TIME ZONE 'UTC'))")
+                .HasColumnName("utcDate");
+
+            entity.HasOne(d => d.EventType).WithMany(p => p.Histories)
+                .HasForeignKey(d => d.EventTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_history_eventTypeId");
         });
 
         modelBuilder.Entity<Lcolumn>(entity =>

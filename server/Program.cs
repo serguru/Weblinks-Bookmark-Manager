@@ -49,14 +49,14 @@ namespace server
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200", "https://links3.azurewebsites.net") // Corrected frontend URL without trailing slash
+                    policy.WithOrigins("http://localhost:4200", "https://weblinks.click") // Corrected frontend URL without trailing slash
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
             });
 
 
-            builder.Services.AddCors();
+            //            builder.Services.AddCors();
 
             // Add services to the container.
             builder.Services.AddControllers();

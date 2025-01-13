@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using server.Common;
 using server.Data.Entities;
 using server.Data.Models;
 using server.Services;
@@ -24,6 +26,7 @@ public class PagesController : ControllerBase
     public async Task<ActionResult<AccountModel>> GetAccountAsync()
     {
         AccountModel account = await _accountsService.GetAccountAsync();
+        await _accountsService.AddHistoryEvent(HistoryEventType.User_retrieved_the_account, account.UserEmail);
         return Ok(account);
     }
 
@@ -43,6 +46,12 @@ public class PagesController : ControllerBase
         try
         {
             PageModel result = await _pagesService.AddOrUpdatePageAsync(model);
+            if (model.Id == 0)
+            {
+                var account = await _accountsService.GetAccountAsync();
+                await _accountsService.AddHistoryEvent(HistoryEventType.User_created_a_page, account.UserEmail);
+            }
+
             return Ok(result);
         }
         catch (InvalidOperationException ex)
@@ -59,6 +68,9 @@ public class PagesController : ControllerBase
     public async Task<IActionResult> DeletePage(int pageId)
     {
         await _pagesService.DeletePageAsync(pageId);
+        var account = await _accountsService.GetAccountAsync();
+        await _accountsService.AddHistoryEvent(HistoryEventType.User_deleted_a_page, account.UserEmail);
+
         return Ok();
     }
     #endregion
@@ -121,7 +133,14 @@ public class PagesController : ControllerBase
         await _pagesService.DeleteLinkAsync(linkId);
         return Ok();
     }
-
+    
     #endregion
+
+    [HttpGet("are-you-alive")]
+    [AllowAnonymous]
+    public IActionResult AreYouAlive()
+    {
+        return Ok("I am alive");
+    }
 
 }

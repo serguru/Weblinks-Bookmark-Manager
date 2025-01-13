@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using server.Data;
 using server.Data.Entities;
 using server.Data.Models;
 using server.Services;
-using System.Security.Claims;
+using server.Common;
 
 namespace server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class AccountController : ControllerBase
 {
     private IAccountsService _accountsService;
@@ -19,9 +21,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] AccountModel model)
     {
         AccountModel result = await _accountsService.AddAccountAsync(model);
+        await _accountsService.AddHistoryEvent(HistoryEventType.User_registered, model.UserEmail);
         return Ok(result);
     }
 
@@ -41,6 +45,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         Account? account = await _accountsService.CheckPasswordAsync(model);
@@ -50,7 +55,9 @@ public class AccountController : ControllerBase
             return Unauthorized();
         }
         string token = _accountsService.GenerateToken(account);
-        return Ok(new {token});
+        await _accountsService.AddHistoryEvent(HistoryEventType.User_logged_in, model.UserEmail);
+
+        return Ok(new { token });
     }
 
     [HttpPost("save-config")]
@@ -70,7 +77,17 @@ public class AccountController : ControllerBase
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteAccount()
     {
+        var account = await _accountsService.GetAccountAsync();
+        if (account == null)
+        {
+            return NotFound();
+        }
+
+        await _accountsService.AddHistoryEvent(HistoryEventType.User_deleted_the_account,
+            account.UserEmail);
+
         await _accountsService.DeleteAccountAsync();
+
         return Ok();
     }
 }

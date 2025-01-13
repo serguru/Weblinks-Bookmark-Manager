@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using server.Common;
 using server.Data.Entities;
 using server.Data.Models;
 
@@ -16,5 +17,5 @@ public interface IAccountsService
     Task<UserMessageModel> AddUserMessageAsync(UserMessageModel newMessage);
     Task ChangePasswordAsync(ChangePasswordModel model);
     Task DeleteAccountAsync();
-
+    Task AddHistoryEvent(HistoryEventType et, string userEmail, string? comment = null);
 }

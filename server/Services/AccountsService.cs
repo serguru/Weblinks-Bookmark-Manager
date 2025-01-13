@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using NuGet.Configuration;
 using NuGet.Packaging;
+using server.Common;
 using server.Data;
 using server.Data.Entities;
 using server.Data.Models;
@@ -79,35 +80,6 @@ public class AccountsService : IAccountsService
         return result;
     }
 
-
-    //private static void ProcessPageModel(PageModel page, SettingsPageModel settings)
-    //{
-    //    if (settings?.Lrows?.Count == 0 || page?.Lrows?.Count == 0)
-    //    {
-    //        return;
-    //    }
-
-    //    List<LrowModel> rawRows = page.Lrows;
-
-    //    page.Lrows = new List<LrowModel>();
-
-
-    //    foreach (var settingsRow in settings!.Lrows!)
-    //    {
-    //        LrowModel? row = rawRows.FirstOrDefault(x => x.Id == settingsRow.Id);
-
-    //        if (row != null)
-    //        {
-    //            //ProcessRow(row, settingsRow);
-    //            page.Lrows.Add(row);
-    //            rawRows.Remove(row);
-    //        }
-    //    }
-
-    //    page.Lrows.AddRange(rawRows);
-    //}
-
-
     private static void ProcessColumnModel(LcolumnModel column, SettingsColumnModel settings)
     {
 
@@ -157,7 +129,6 @@ public class AccountsService : IAccountsService
         row.Lcolumns.AddRange(rawColumns);
     }
 
-
     private static void ProcessPageModel(PageModel page, SettingsPageModel settings)
     {
 
@@ -172,7 +143,7 @@ public class AccountsService : IAccountsService
 
             if (row != null)
             {
-                if (row.Lcolumns != null && row.Lcolumns.Count > 0 && 
+                if (row.Lcolumns != null && row.Lcolumns.Count > 0 &&
                     settingsRow.Lcolumns != null && settingsRow.Lcolumns.Count > 0)
                 {
                     ProcessRowModel(row, settingsRow);
@@ -184,7 +155,6 @@ public class AccountsService : IAccountsService
 
         page.Lrows.AddRange(rawRows);
     }
-
 
     private static void ProcessAccountModel(AccountModel account, SettingsModel settings)
     {
@@ -200,7 +170,7 @@ public class AccountsService : IAccountsService
 
             if (page != null)
             {
-                if (page.Lrows != null && page.Lrows.Count > 0 && 
+                if (page.Lrows != null && page.Lrows.Count > 0 &&
                     settingsPage.Lrows != null && settingsPage.Lrows.Count > 0)
                 {
                     ProcessPageModel(page, settingsPage);
@@ -213,11 +183,9 @@ public class AccountsService : IAccountsService
         account.Pages.AddRange(rawPages);
     }
 
-
-
     private static void ApplySettings(AccountModel accountModel)
     {
-        
+
         if (accountModel == null || accountModel.Pages == null || accountModel.Pages.Count == 0)
         {
             return;
@@ -244,7 +212,6 @@ public class AccountsService : IAccountsService
         ProcessAccountModel(accountModel, settingsModel);
 
     }
-
 
     public async Task<AccountModel> GetAccountAsync()
     {
@@ -311,4 +278,19 @@ public class AccountsService : IAccountsService
     {
         await _accountsRepository.DeleteAccountAsync();
     }
+
+    public async Task AddHistoryEvent(HistoryEventType et, string userEmail, string? comment = null)
+    {
+        var e = new History()
+        {
+            Id = 0,
+            EventTypeId = (int)et,
+            UserEmail = userEmail,
+            Comment = comment
+        };
+        await _accountsRepository.AddHistoryEvent(e);
+    }
+
+
+
 }

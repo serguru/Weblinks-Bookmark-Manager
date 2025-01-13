@@ -18,5 +18,6 @@ public interface IAccountsRepository
     Task AddUserMessageAsync(UserMessage message);
     Task<string> HashPasswordAsync(string password, string salt);
     Task DeleteAccountAsync();
+    Task AddHistoryEvent(History e);
 
 }

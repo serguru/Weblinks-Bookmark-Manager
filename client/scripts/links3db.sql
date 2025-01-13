@@ -1,6 +1,18 @@
 use links3db
 go
 
+if object_id('history', 'U') is not null
+begin
+    drop table history;
+end;
+go
+
+if object_id('eventType', 'U') is not null
+begin
+    drop table eventType;
+end;
+go
+
 if object_id('userMessages', 'U') is not null
 begin
     drop table userMessages;
@@ -213,6 +225,25 @@ create table userMessages (
     utcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
     constraint pk_userMessages_id primary key (id),
     constraint fk_userMessages_accountId foreign key (accountId) references accounts(id) on delete cascade,
+); 
+go
+
+create table eventType (
+    id int not null,
+    typeName varchar(50) not null,
+    constraint pk_eventType_id primary key (id),
+    constraint uq_eventType_name unique (typeName)
+); 
+go
+
+create table history (
+    id int identity(1,1) not null,
+    eventTypeId int not null,
+    userEmail varchar(255) null,
+    utcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
+    comment nvarchar(max) null,
+    constraint pk_history_id primary key (id),
+    constraint fk_history_eventTypeId foreign key (eventTypeId) references eventType(id)
 ); 
 go
 

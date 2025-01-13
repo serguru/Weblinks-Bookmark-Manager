@@ -169,6 +169,11 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task AddHistoryEvent(History e)
+    {
+        _dbContext.Histories.Add(e);
+        await _dbContext.SaveChangesAsync();
+    }
 }
 
 
