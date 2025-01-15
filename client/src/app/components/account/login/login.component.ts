@@ -91,6 +91,10 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/']);
       }
     });
+    
+    // this.pagesService.checkAlive().subscribe(result => {
+    //   const a = result;
+    // })
   }
 
   onSubmit(): void {

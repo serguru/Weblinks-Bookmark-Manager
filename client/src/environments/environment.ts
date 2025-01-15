@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://weblinks.click/api'    
+    apiUrl: 'https://api.weblinks.click/api'    
 };

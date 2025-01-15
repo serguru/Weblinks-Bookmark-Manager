@@ -80,7 +80,7 @@ public class AccountController : ControllerBase
         var account = await _accountsService.GetAccountAsync();
         if (account == null)
         {
-            return NotFound();
+            return Unauthorized();
         }
 
         await _accountsService.AddHistoryEvent(HistoryEventType.User_deleted_the_account,

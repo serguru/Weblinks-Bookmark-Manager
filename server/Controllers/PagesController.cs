@@ -25,7 +25,12 @@ public class PagesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<AccountModel>> GetAccountAsync()
     {
-        AccountModel account = await _accountsService.GetAccountAsync();
+        AccountModel? account = await _accountsService.GetAccountAsync();
+        if (account == null)
+        {
+            return Unauthorized();
+        }
+
         await _accountsService.AddHistoryEvent(HistoryEventType.User_retrieved_the_account, account.UserEmail);
         return Ok(account);
     }
@@ -49,6 +54,13 @@ public class PagesController : ControllerBase
             if (model.Id == 0)
             {
                 var account = await _accountsService.GetAccountAsync();
+
+                if (account == null)
+                {
+                    return Unauthorized();
+                }
+
+
                 await _accountsService.AddHistoryEvent(HistoryEventType.User_created_a_page, account.UserEmail);
             }
 
@@ -69,6 +81,10 @@ public class PagesController : ControllerBase
     {
         await _pagesService.DeletePageAsync(pageId);
         var account = await _accountsService.GetAccountAsync();
+        if (account == null)
+        {
+            return Unauthorized();
+        }
         await _accountsService.AddHistoryEvent(HistoryEventType.User_deleted_a_page, account.UserEmail);
 
         return Ok();
@@ -136,11 +152,13 @@ public class PagesController : ControllerBase
     
     #endregion
 
-    [HttpGet("are-you-alive")]
+    [HttpGet("alive")]
     [AllowAnonymous]
-    public IActionResult AreYouAlive()
+    //[DisableCors]
+    public async Task<IActionResult> AreYouAlive()
     {
-        return Ok("I am alive");
+        bool dbAlive = await _pagesService.CheckDbAlive();
+        return Ok(new { message = $"API is alive. DB is{(dbAlive ? "" : " not")} alive." });
     }
 
 }

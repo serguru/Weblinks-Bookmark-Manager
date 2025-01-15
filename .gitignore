@@ -368,3 +368,5 @@ appsettings.*
 client/documents
 
 populate.sql
+
+wwwroot

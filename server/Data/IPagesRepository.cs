@@ -10,5 +10,6 @@ public interface IPagesRepository
     Task AddPageAsync(Page page);
     Task UpdatePageAsync(Page page);
     Task DeletePageAsync(int pageId);
+    Task<bool> CheckDbAlive();
 }
 

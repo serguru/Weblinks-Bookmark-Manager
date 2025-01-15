@@ -45,8 +45,11 @@ export class PagesService {
     return this.accountSubject.getValue();
   }
   
+  checkAlive(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + "/alive");
+  }
+
   getAccount(): Observable<AccountModel> {
-    this.loadingPages = true;
     return this.http.get<AccountModel>(this.apiUrl).pipe(
       tap(account => {
         this.updateAccount(account);
@@ -59,14 +62,6 @@ export class PagesService {
   findPage(pagePath: string): PageModel | null {
     return this.pages?.find(p => p.pagePath.toLowerCase() === pagePath.toLowerCase()) || null;
   }
-
-  // private _activePage: PageModel | null = null;
-  // get activePage(): PageModel | null {
-  //   return this._activePage;
-  // }
-  // set activePage(value: PageModel | null) {
-  //   this._activePage = value;
-  // }
 
   private activePageSubject = new BehaviorSubject<any>(null);
   public activePage$ = this.activePageSubject.asObservable();

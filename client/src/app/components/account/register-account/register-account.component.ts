@@ -159,17 +159,6 @@ export class RegisterAccountComponent implements OnInit {
           this.router.navigate(['/login']);
           this.messagesService.showSuccess('Registration was successful! Now please log in.')
         },
-        error: (error) => {
-          if (error.status === 401) {
-            this.messagesService.showError('Invalid email or password');
-            return;
-          }
-          throw new Error(error);
-        }
       });
-
-
-
-
   }
 }

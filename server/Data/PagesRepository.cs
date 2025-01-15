@@ -86,4 +86,19 @@ public class PagesRepository : BaseRepository, IPagesRepository
         _dbContext.Pages.Remove(page);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<bool> CheckDbAlive()
+    {
+        bool result = true;
+        try
+        {
+            History? h = await _dbContext.Histories.FirstOrDefaultAsync();
+        }
+        catch (Exception e)
+        {
+            result = false;
+        }
+
+        return result;
+    }
 }

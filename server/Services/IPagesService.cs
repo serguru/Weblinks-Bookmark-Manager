@@ -4,6 +4,7 @@ namespace server.Services;
 
 public interface IPagesService
 {
+    Task<bool> CheckDbAlive();
 
 
     // pages

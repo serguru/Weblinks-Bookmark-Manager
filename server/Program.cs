@@ -1,6 +1,5 @@
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using server.Data;
 using server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,6 +19,12 @@ namespace server
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
+                        var secretKey = builder.Configuration["JwtSettings:SecretKey"];
+                        if (string.IsNullOrEmpty(secretKey))
+                        {
+                            throw new InvalidOperationException("SecretKey is not configured");
+                        }
+
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateIssuer = true,
@@ -28,8 +33,7 @@ namespace server
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
                             ValidAudience = builder.Configuration["JwtSettings:Audience"],
-                            IssuerSigningKey = new SymmetricSecurityKey(
-                                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                         };
                     });
 
@@ -40,29 +44,22 @@ namespace server
                 provideroptions => provideroptions.EnableRetryOnFailure()
 
                 );
-                //options.EnableSensitiveDataLogging();
                 options.EnableDetailedErrors();
-
             });
 
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200", "https://weblinks.click") // Corrected frontend URL without trailing slash
+                    policy.AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
             });
 
-
-            //            builder.Services.AddCors();
-
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-
             builder.Services.AddScoped<ILinksRepository, LinksRepository>();
             builder.Services.AddScoped<IColumnsRepository, ColumnsRepository>();
             builder.Services.AddScoped<IRowsRepository, RowsRepository>();
@@ -77,9 +74,6 @@ namespace server
 
             var app = builder.Build();
 
-            app.UseCors("default");
-
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -89,11 +83,13 @@ namespace server
 
             app.UseHttpsRedirection();
 
+            app.UseCors("default");
+
+           // app.UseStaticFiles();
+
             app.UseAuthorization();
 
             app.MapControllers();
-
-            
 
             app.Run();
         }

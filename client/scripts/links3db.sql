@@ -1,5 +1,5 @@
-use links3db
-go
+-- use links3db
+-- go
 
 if object_id('history', 'U') is not null
 begin
@@ -167,9 +167,9 @@ create table accounts (
     constraint uq_accounts_name unique (userName),
     constraint uq_accounts_email unique (userEmail),
     constraint ch_accounts_name_min_length check (len(userName) >= 3),
-    constraint ch_accounts_name_characters check (dbo.ValidateLimitedString(userName) = 1),
+    constraint ch_accounts_name_characters check (weblinks.ValidateLimitedString(userName) = 1),
     constraint ch_accounts_email_max_length check(len(userEmail) <= 254),
-    constraint ch_accounts_email check (dbo.ValidateEmail(userEmail) = 1)
+    constraint ch_accounts_email check (weblinks.ValidateEmail(userEmail) = 1)
 );
 go
 
@@ -185,7 +185,7 @@ create table pages (
     constraint fk_pages_account_id foreign key (accountId) references accounts(id) on delete cascade,
     constraint uq_page_path unique (accountId, pagePath),
     constraint uq_page_path_len check(len(pagePath) >= 3),
-    constraint ch_pages_path_characters check (dbo.ValidateLimitedString(pagePath) = 1),
+    constraint ch_pages_path_characters check (weblinks.ValidateLimitedString(pagePath) = 1),
 ); 
 go
 
@@ -266,7 +266,7 @@ begin
     end else if len(@userName) < 3 or len(@userName) > 50
     begin
         set @message = 'Username length must be between 3 and 50 characters';
-    end else if dbo.ValidateLimitedString(@userName) = 0
+    end else if weblinks.ValidateLimitedString(@userName) = 0
     begin
         set @message = 'Username can only contain the characters a-z, A-Z and 0-1';
     end else if @userEmail is null or len(@userEmail) = 0
@@ -275,7 +275,7 @@ begin
     end else if len(@userEmail) < 6 or len(@userEmail) > 254
     begin
         set @message = 'Email length must be between 6 and 254 characters';
-    end else if dbo.ValidateEmail(@userEmail) = 0
+    end else if weblinks.ValidateEmail(@userEmail) = 0
     begin
         set @message = 'Invalid email';
     end else if exists (select null from accounts where userEmail = @userEmail and (@existingAccountId = 0 or id != @existingAccountId))

@@ -233,6 +233,11 @@ public class PagesService(
         await _linksRepository.DeleteLinkAsync(linkId);
     }
 
+    public async Task<bool> CheckDbAlive()
+    {
+        return await _pagesRepository.CheckDbAlive();
+    }
+
     #endregion
 
 }
