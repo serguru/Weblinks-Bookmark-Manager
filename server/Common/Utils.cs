@@ -1,8 +1,9 @@
-﻿namespace server.Common;
+﻿using System.Text.RegularExpressions;
+
+namespace server.Common;
 
 public static class Utils
 {
-
 }
 
 public enum HistoryEventType

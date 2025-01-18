@@ -1,12 +1,6 @@
 -- use links3db
 -- go
 
-if object_id('emailTemplates', 'U') is not null
-begin
-    drop table emailTemplates;
-end;
-go
-
 if object_id('archiveTasks', 'U') is not null
 begin
     drop table archiveTasks;
@@ -284,14 +278,94 @@ go
 create table taskType (
     id int not null,
     typeName varchar(50) not null,
+    emailTemplate nvarchar(max) null,
     constraint pk_taskType_id primary key (id),
     constraint uq_taskType_name unique (typeName)
 ); 
 go
 
+--#region email template
+declare @template nvarchar(max) = 
+'
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Welcome
+	</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+		}
+
+		.container {
+			width: 600px;
+			margin: 40px auto;
+			padding: 20px;
+			background-color: #fff;
+			border: 1px solid #ddd;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.header {
+			background-color: #333;
+			color: #fff;
+			padding: 10px;
+			text-align: center;
+		}
+
+		.content {
+			padding: 20px;
+			font-size: larger;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="header">
+			<h1>
+				Welcome to weblinks.click!
+			</h1>
+		</div>
+		<div class="content">
+			<p>
+				Dear {{Name}},
+			</p>
+			<p>
+				To get started, please
+				<a href="https://weblinks.click/help">
+					read our help
+				</a>
+				and learn how to create and use your own weblinks.
+			</p>
+			<p>
+				If you have any questions or need assistance, please 
+				<a href="https://weblinks.click/login">
+					login
+				</a>				
+				and then select "Contact Us" from the site menu. We are always here to support you.				
+			</p>
+			<p>
+				Best regards,
+			</p>
+			<p>
+				Admin
+			</p>
+		</div>
+	</div>
+</body>
+
+</html>
+'
+;
+--#endregion
+
 -- task types
-insert into taskType values (1, 'Send registration email');
-insert into taskType values (2, 'Send restore password email');
+insert into taskType values (1, 'Send registration email', @template);
+insert into taskType values (2, 'Send restore password email', null);
 go
 
 create table operTasks (
@@ -310,20 +384,14 @@ create table archiveTasks (
     taskTypeId int not null,
     completedUtcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
     comment nvarchar(max) null,
+    sentEmailSubject nvarchar(max) null,
+    sentEmailBody nvarchar(max) null,
     constraint pk_archiveTasks_id primary key (id),
     constraint fk_archiveTasks_taskTypeId foreign key (taskTypeId) references taskType(id),
     constraint fk_archiveTasks_historyId foreign key (historyId) references history(id)
 ); 
 go
 
-create table emailTemplates (
-    id int identity(1,1) not null,
-    templateName varchar(50) not null,
-    template nvarchar(max) null,
-    constraint pk_emailTemplates_id primary key (id),
-    constraint uq_emailTemplates_templateName unique (templateName)
-); 
-go
 
 if object_id('ValidateNewAccount') is not null
 begin
@@ -377,14 +445,16 @@ go
 
 create procedure ArchiveOperTask
     @operTaskId int,
-    @comment nvarchar(max)
+    @comment nvarchar(max),
+    @subject nvarchar(max),
+    @body nvarchar(max)
 as
 begin
     begin transaction;
 
     begin try
-        insert into archiveTasks (historyId, taskTypeId, comment)
-            select historyId, taskTypeId, @comment
+        insert into archiveTasks (historyId, taskTypeId, comment, sentEmailSubject, sentEmailBody)
+            select historyId, taskTypeId, @comment, @subject, @body
             from operTasks
             where   
                 id = @operTaskId;

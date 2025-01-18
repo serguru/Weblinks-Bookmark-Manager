@@ -20,8 +20,6 @@ public partial class Links3dbContext : DbContext
 
     public virtual DbSet<ArchiveTask> ArchiveTasks { get; set; }
 
-    public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
-
     public virtual DbSet<EventType> EventTypes { get; set; }
 
     public virtual DbSet<History> Histories { get; set; }
@@ -39,10 +37,6 @@ public partial class Links3dbContext : DbContext
     public virtual DbSet<TaskType> TaskTypes { get; set; }
 
     public virtual DbSet<UserMessage> UserMessages { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-UH69GVA4;Initial Catalog=links3db;Integrated Security=SSPI; MultipleActiveResultSets=true;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -91,6 +85,8 @@ public partial class Links3dbContext : DbContext
                 .HasDefaultValueSql("((sysdatetimeoffset() AT TIME ZONE 'UTC'))")
                 .HasColumnName("completedUtcDate");
             entity.Property(e => e.HistoryId).HasColumnName("historyId");
+            entity.Property(e => e.SentEmailBody).HasColumnName("sentEmailBody");
+            entity.Property(e => e.SentEmailSubject).HasColumnName("sentEmailSubject");
             entity.Property(e => e.TaskTypeId).HasColumnName("taskTypeId");
 
             entity.HasOne(d => d.History).WithMany(p => p.ArchiveTasks)
@@ -102,22 +98,6 @@ public partial class Links3dbContext : DbContext
                 .HasForeignKey(d => d.TaskTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_archiveTasks_taskTypeId");
-        });
-
-        modelBuilder.Entity<EmailTemplate>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("pk_emailTemplates_id");
-
-            entity.ToTable("emailTemplates");
-
-            entity.HasIndex(e => e.TemplateName, "uq_emailTemplates_templateName").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Template).HasColumnName("template");
-            entity.Property(e => e.TemplateName)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("templateName");
         });
 
         modelBuilder.Entity<EventType>(entity =>
@@ -267,6 +247,7 @@ public partial class Links3dbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.EmailTemplate).HasColumnName("emailTemplate");
             entity.Property(e => e.TypeName)
                 .HasMaxLength(50)
                 .IsUnicode(false)

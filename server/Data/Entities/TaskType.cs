@@ -9,6 +9,8 @@ public partial class TaskType
 
     public string TypeName { get; set; } = null!;
 
+    public string? EmailTemplate { get; set; }
+
     public virtual ICollection<ArchiveTask> ArchiveTasks { get; set; } = new List<ArchiveTask>();
 
     public virtual ICollection<OperTask> OperTasks { get; set; } = new List<OperTask>();

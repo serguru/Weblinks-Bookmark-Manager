@@ -15,6 +15,10 @@ public partial class ArchiveTask
 
     public string? Comment { get; set; }
 
+    public string? SentEmailSubject { get; set; }
+
+    public string? SentEmailBody { get; set; }
+
     public virtual History History { get; set; } = null!;
 
     public virtual TaskType TaskType { get; set; } = null!;
