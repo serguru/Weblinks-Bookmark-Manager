@@ -38,7 +38,6 @@ export class RegisterAccountComponent implements OnInit {
   registrationForm: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
-  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -136,7 +135,6 @@ export class RegisterAccountComponent implements OnInit {
     if (!this.registrationForm.valid) {
       return;
     }
-    this.isLoading = true;
 
     const account = {
       id: 0,
@@ -151,7 +149,6 @@ export class RegisterAccountComponent implements OnInit {
     this.loginService.register(account)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         })
       )
       .subscribe({

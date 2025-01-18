@@ -1,7 +1,7 @@
 <div class="registration-container">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Create Account</mat-card-title>
+            <mat-card-title>Register</mat-card-title>
         </mat-card-header>
 
         <mat-card-content>
@@ -10,7 +10,7 @@
                     <div class="full-width">
                         <mat-form-field appearance="outline" class="full-width">
                             <mat-label>First Name</mat-label>
-                            <input matInput formControlName="firstName" placeholder="Enter your first name">
+                            <input matInput formControlName="firstName" placeholder="Enter your first name" >
                         </mat-form-field>
                         <app-validation-errors [control]="registrationForm.get('firstName')"
                             [messages]="firstNameMessages"></app-validation-errors>
@@ -72,9 +72,8 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <button mat-raised-button color="primary" type="submit" [disabled]="registrationForm.invalid || isLoading">
-                        <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-                        <span *ngIf="!isLoading">Register</span>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="registrationForm.invalid">
+                        <span>Register</span>
                     </button>
                 </div>
                

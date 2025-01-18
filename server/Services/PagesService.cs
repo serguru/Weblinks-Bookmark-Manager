@@ -10,8 +10,6 @@ public class PagesService(
     IRowsRepository rowsRepository,
     IColumnsRepository columnsRepository,
     ILinksRepository linksRepository,
-
-
     IMapper mapper) : IPagesService
 {
     private readonly IPagesRepository _pagesRepository = pagesRepository;

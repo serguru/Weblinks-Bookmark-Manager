@@ -9,7 +9,7 @@
                 <div class="full-width">
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>First Name</mat-label>
-                        <input matInput formControlName="firstName" placeholder="Enter your first name">
+                        <input matInput formControlName="firstName" placeholder="Enter your first name" >
                     </mat-form-field>
                     <app-validation-errors [control]="form.get('firstName')"
                         [messages]="firstNameMessages"></app-validation-errors>
@@ -43,9 +43,8 @@
             </div>
 
             <div class="form-row">
-                <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading">
-                    <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-                    <span *ngIf="!isLoading">Update</span>
+                <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+                    <span>Update</span>
                 </button>
             </div>
     </form>

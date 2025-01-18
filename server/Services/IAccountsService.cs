@@ -17,5 +17,6 @@ public interface IAccountsService
     Task<UserMessageModel> AddUserMessageAsync(UserMessageModel newMessage);
     Task ChangePasswordAsync(ChangePasswordModel model);
     Task DeleteAccountAsync();
-    Task AddHistoryEvent(HistoryEventType et, string userEmail, string? comment = null);
+    Task<History> AddHistoryEvent(HistoryEventType et, string userEmail, string? comment = null);
+    Task<AccountModel> RegisterAccountAsync(AccountModel accountModel);
 }

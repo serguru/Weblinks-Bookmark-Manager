@@ -1,6 +1,30 @@
 -- use links3db
 -- go
 
+if object_id('emailTemplates', 'U') is not null
+begin
+    drop table emailTemplates;
+end;
+go
+
+if object_id('archiveTasks', 'U') is not null
+begin
+    drop table archiveTasks;
+end;
+go
+
+if object_id('operTasks', 'U') is not null
+begin
+    drop table operTasks;
+end;
+go
+
+if object_id('taskType', 'U') is not null
+begin
+    drop table taskType;
+end;
+go
+
 if object_id('history', 'U') is not null
 begin
     drop table history;
@@ -236,6 +260,16 @@ create table eventType (
 ); 
 go
 
+-- event types
+insert into eventType values (1, 'User registered');
+insert into eventType values (2, 'User logged in');
+insert into eventType values (3, 'User retrieved the account');
+insert into eventType values (4, 'User deleted the account');
+insert into eventType values (5, 'User created a page');
+insert into eventType values (6, 'User deleted a page');
+go
+
+
 create table history (
     id int identity(1,1) not null,
     eventTypeId int not null,
@@ -244,6 +278,50 @@ create table history (
     comment nvarchar(max) null,
     constraint pk_history_id primary key (id),
     constraint fk_history_eventTypeId foreign key (eventTypeId) references eventType(id)
+); 
+go
+
+create table taskType (
+    id int not null,
+    typeName varchar(50) not null,
+    constraint pk_taskType_id primary key (id),
+    constraint uq_taskType_name unique (typeName)
+); 
+go
+
+-- task types
+insert into taskType values (1, 'Send registration email');
+insert into taskType values (2, 'Send restore password email');
+go
+
+create table operTasks (
+    id int identity(1,1) not null,
+    historyId int not null,
+    taskTypeId int not null,
+    constraint pk_operTasks_id primary key (id),
+    constraint fk_operTasks_taskTypeId foreign key (taskTypeId) references taskType(id),
+    constraint fk_operTasks_historyId foreign key (historyId) references history(id)
+); 
+go
+
+create table archiveTasks (
+    id int identity(1,1) not null,
+    historyId int not null,
+    taskTypeId int not null,
+    completedUtcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
+    comment nvarchar(max) null,
+    constraint pk_archiveTasks_id primary key (id),
+    constraint fk_archiveTasks_taskTypeId foreign key (taskTypeId) references taskType(id),
+    constraint fk_archiveTasks_historyId foreign key (historyId) references history(id)
+); 
+go
+
+create table emailTemplates (
+    id int identity(1,1) not null,
+    templateName varchar(50) not null,
+    template nvarchar(max) null,
+    constraint pk_emailTemplates_id primary key (id),
+    constraint uq_emailTemplates_templateName unique (templateName)
 ); 
 go
 
@@ -290,4 +368,43 @@ begin
     end;
 end
 go
+
+if object_id('ArchiveOperTask') is not null
+begin
+    drop procedure ArchiveOperTask;
+end;
+go
+
+create procedure ArchiveOperTask
+    @operTaskId int,
+    @comment nvarchar(max)
+as
+begin
+    begin transaction;
+
+    begin try
+        insert into archiveTasks (historyId, taskTypeId, comment)
+            select historyId, taskTypeId, @comment
+            from operTasks
+            where   
+                id = @operTaskId;
+
+        delete from operTasks
+        where
+            id = @operTaskId;
+
+        commit transaction;
+    end try
+    begin catch
+        rollback transaction;
+
+        declare @ErrorMessage nvarchar(4000) = error_message();
+        declare @ErrorSeverity int = error_severity();
+        declare @ErrorState int = error_state();
+
+        raiserror(@ErrorMessage, @ErrorSeverity, @ErrorState);
+    end catch;
+end
+go
+
 

@@ -9,7 +9,8 @@
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Url</mat-label>
-                    <input matInput type="text" formControlName="aUrl" placeholder="Enter link url">
+                    <input matInput type="text" formControlName="aUrl" 
+                    placeholder="Enter link url" #highlight>
                     <mat-error *ngIf="form.get('aUrl')?.hasError('required')">
                         Url is required
                     </mat-error>
@@ -27,10 +28,9 @@
                 </mat-form-field>
 
                 <div class="form-field">
-                    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading"
+                    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid"
                         class="full-width">
-                        <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-                        <span *ngIf="!isLoading">Submit</span>
+                        <span>Submit</span>
                     </button>
                 </div>
             </form>

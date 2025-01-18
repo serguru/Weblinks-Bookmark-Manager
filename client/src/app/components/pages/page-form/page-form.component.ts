@@ -32,7 +32,6 @@ import { AccountModel } from '../../../models/AccountModel';
 })
 export class PageFormComponent implements OnInit {
   form: FormGroup;
-  isLoading = false;
 
   pageModel!: PageModel;
 
@@ -92,14 +91,12 @@ export class PageFormComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.isLoading = true;
     const pagePath = this.form.get("pagePath")!.value;
     const caption = this.form.get("caption")!.value;
     const id = this.pageModel?.id || 0;
     this.pagesService.addOrUpdatePage(id, pagePath, caption)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         })
       )
       .subscribe({

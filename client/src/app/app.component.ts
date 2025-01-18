@@ -19,6 +19,8 @@ import { finalize } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CookieService } from 'ngx-cookie-service';
+import { LoadingSpinnerComponent } from './components/base/loading-spinner/loading-spinner.component';
+import { LoadingService } from './services/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +29,9 @@ import { CookieService } from 'ngx-cookie-service';
     CdkContextMenuTrigger,
     ContextMenuComponent,
     MatTooltipModule,
-    DragDropModule
+    DragDropModule,
+    LoadingSpinnerComponent
+
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -41,7 +45,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     public loginService: LoginService,
     private dialog: MatDialog,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    public loadingService: LoadingService
      
   ) { }
 

@@ -101,3 +101,7 @@ mat-card-title {
 .form-container button[type="submit"] {
     width: 150px;
 }
+
+.mat-mdc-form-field-infix {
+    width: unset !important;
+}

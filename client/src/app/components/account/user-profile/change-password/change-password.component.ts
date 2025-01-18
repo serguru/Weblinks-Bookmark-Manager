@@ -40,7 +40,6 @@ export class ChangePasswordComponent implements OnInit {
   hideOldPassword = true;
   hidePassword = true;
   hideConfirmPassword = true;
-  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -89,8 +88,6 @@ export class ChangePasswordComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.isLoading = true;
-
     const passwords = {
       oldPassword: this.form.get("oldPassword")!.value,
       password: this.form.get("password")!.value,
@@ -99,7 +96,6 @@ export class ChangePasswordComponent implements OnInit {
     this.loginService.changePassword(passwords)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         })
       )
       .subscribe(

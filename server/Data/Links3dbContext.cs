@@ -18,6 +18,10 @@ public partial class Links3dbContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
+    public virtual DbSet<ArchiveTask> ArchiveTasks { get; set; }
+
+    public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
+
     public virtual DbSet<EventType> EventTypes { get; set; }
 
     public virtual DbSet<History> Histories { get; set; }
@@ -28,9 +32,17 @@ public partial class Links3dbContext : DbContext
 
     public virtual DbSet<Lrow> Lrows { get; set; }
 
+    public virtual DbSet<OperTask> OperTasks { get; set; }
+
     public virtual DbSet<Page> Pages { get; set; }
 
+    public virtual DbSet<TaskType> TaskTypes { get; set; }
+
     public virtual DbSet<UserMessage> UserMessages { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-UH69GVA4;Initial Catalog=links3db;Integrated Security=SSPI; MultipleActiveResultSets=true;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -65,6 +77,47 @@ public partial class Links3dbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("userName");
+        });
+
+        modelBuilder.Entity<ArchiveTask>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_archiveTasks_id");
+
+            entity.ToTable("archiveTasks");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Comment).HasColumnName("comment");
+            entity.Property(e => e.CompletedUtcDate)
+                .HasDefaultValueSql("((sysdatetimeoffset() AT TIME ZONE 'UTC'))")
+                .HasColumnName("completedUtcDate");
+            entity.Property(e => e.HistoryId).HasColumnName("historyId");
+            entity.Property(e => e.TaskTypeId).HasColumnName("taskTypeId");
+
+            entity.HasOne(d => d.History).WithMany(p => p.ArchiveTasks)
+                .HasForeignKey(d => d.HistoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_archiveTasks_historyId");
+
+            entity.HasOne(d => d.TaskType).WithMany(p => p.ArchiveTasks)
+                .HasForeignKey(d => d.TaskTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_archiveTasks_taskTypeId");
+        });
+
+        modelBuilder.Entity<EmailTemplate>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_emailTemplates_id");
+
+            entity.ToTable("emailTemplates");
+
+            entity.HasIndex(e => e.TemplateName, "uq_emailTemplates_templateName").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Template).HasColumnName("template");
+            entity.Property(e => e.TemplateName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("templateName");
         });
 
         modelBuilder.Entity<EventType>(entity =>
@@ -159,6 +212,27 @@ public partial class Links3dbContext : DbContext
                 .HasConstraintName("fk_lrows_page_id");
         });
 
+        modelBuilder.Entity<OperTask>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_operTasks_id");
+
+            entity.ToTable("operTasks");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.HistoryId).HasColumnName("historyId");
+            entity.Property(e => e.TaskTypeId).HasColumnName("taskTypeId");
+
+            entity.HasOne(d => d.History).WithMany(p => p.OperTasks)
+                .HasForeignKey(d => d.HistoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_operTasks_historyId");
+
+            entity.HasOne(d => d.TaskType).WithMany(p => p.OperTasks)
+                .HasForeignKey(d => d.TaskTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_operTasks_taskTypeId");
+        });
+
         modelBuilder.Entity<Page>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk_pages_id");
@@ -180,6 +254,23 @@ public partial class Links3dbContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.Pages)
                 .HasForeignKey(d => d.AccountId)
                 .HasConstraintName("fk_pages_account_id");
+        });
+
+        modelBuilder.Entity<TaskType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_taskType_id");
+
+            entity.ToTable("taskType");
+
+            entity.HasIndex(e => e.TypeName, "uq_taskType_name").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.TypeName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("typeName");
         });
 
         modelBuilder.Entity<UserMessage>(entity =>

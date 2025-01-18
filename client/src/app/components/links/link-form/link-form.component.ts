@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
@@ -31,9 +31,8 @@ import { LinkModel } from '../../../models/LinkModel';
   templateUrl: './link-form.component.html',
   styleUrl: './link-form.component.css'
 })
-export class LinkFormComponent implements OnInit {
+export class LinkFormComponent implements OnInit, AfterViewInit {
   form: FormGroup;
-  isLoading = false;
 
   columnModel!: LcolumnModel;
   linkModel: LinkModel | null = null;
@@ -54,10 +53,17 @@ export class LinkFormComponent implements OnInit {
     });
   }
 
+  @ViewChild('highlight') myInput!: ElementRef;
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.myInput.nativeElement.focus();
+      this.myInput.nativeElement.select(); 
+  
+    })
+  }
+
   ngOnInit(): void {
-
-
-
     this.pagesService.account$
       .pipe(
         concatMap(account => {
@@ -119,14 +125,12 @@ export class LinkFormComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.isLoading = true;
     const aUrl = this.form.get("aUrl")!.value;
     const caption = this.form.get("caption")!.value;
     const id = this.linkModel?.id || 0;
     this.pagesService.addOrUpdateLink(this.columnModel, id, aUrl, caption)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         })
       )
       .subscribe(

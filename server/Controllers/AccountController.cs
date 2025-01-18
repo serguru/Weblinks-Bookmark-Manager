@@ -24,8 +24,7 @@ public class AccountController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] AccountModel model)
     {
-        AccountModel result = await _accountsService.AddAccountAsync(model);
-        await _accountsService.AddHistoryEvent(HistoryEventType.User_registered, model.UserEmail);
+        AccountModel result = await _accountsService.RegisterAccountAsync(model);
         return Ok(result);
     }
 

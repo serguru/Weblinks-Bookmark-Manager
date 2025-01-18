@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using NuGet.Configuration;
@@ -17,15 +18,22 @@ namespace server.Services;
 
 public class AccountsService : IAccountsService
 {
+    protected readonly Links3dbContext _dbContext;
     private readonly IConfiguration _configuration;
     private readonly IAccountsRepository _accountsRepository;
     private readonly IMapper _mapper;
+    private readonly ITasksRepository _tasksRepository;
 
-    public AccountsService(IConfiguration configuration, IAccountsRepository accountsRepository, IMapper mapper)
+    public AccountsService(Links3dbContext dbContext, IConfiguration configuration, 
+        IAccountsRepository accountsRepository,
+        ITasksRepository tasksRepository,
+        IMapper mapper)
     {
         _configuration = configuration;
         _accountsRepository = accountsRepository;
         _mapper = mapper;
+        _dbContext = dbContext;
+        _tasksRepository = tasksRepository;
     }
 
     public async Task<Account?> GetAccountByEmailAsync(string userEmail)
@@ -276,18 +284,49 @@ public class AccountsService : IAccountsService
         await _accountsRepository.DeleteAccountAsync();
     }
 
-    public async Task AddHistoryEvent(HistoryEventType et, string userEmail, string? comment = null)
+    public async Task<History> AddHistoryEvent(HistoryEventType et, string userEmail, string? comment = null)
     {
-        var e = new History()
+        var history = new History()
         {
             Id = 0,
             EventTypeId = (int)et,
             UserEmail = userEmail,
             Comment = comment
         };
-        await _accountsRepository.AddHistoryEvent(e);
+        await _accountsRepository.AddHistoryEvent(history);
+        return history;
     }
 
+    public async Task<AccountModel> RegisterAccountAsync(AccountModel accountModel)
+    {
+        return await _dbContext.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            using var transaction = _dbContext.Database.BeginTransaction();
+
+            try
+            {
+                AccountModel result = await AddAccountAsync(accountModel);
+                History history = await AddHistoryEvent(HistoryEventType.User_registered, accountModel.UserEmail);
+                OperTask operTask = new()
+                {
+                    Id = 0,
+                    HistoryId = history.Id,
+                    TaskTypeId = (int)WeblinksTaskType.Send_reg_email
+                };
+                await _tasksRepository.AddOperTaskAsync(operTask);
+                transaction.Commit();
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        });
 
 
+
+
+    }
 }

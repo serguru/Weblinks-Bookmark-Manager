@@ -5,6 +5,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { loggingInterceptor } from './interceptors/logging.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AppErrorHandler } from './app.error.handler';
+import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +17,7 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),        // Enable route transitions
     ),
     provideHttpClient(
-      withInterceptors([loggingInterceptor]),      
+      withInterceptors([loggingInterceptor, loadingInterceptor]),      
     ), provideAnimationsAsync(),
   ]
 };

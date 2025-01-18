@@ -4,7 +4,8 @@ import { throwError } from "rxjs";
 
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
-    constructor(private injector: Injector) {}
+    constructor(private injector: Injector) { }
+    maxLength = 300;
     handleError(error: any) {
         let errorMessage = 'An unexpected error occurred';
         if (typeof error === 'string') {
@@ -14,10 +15,14 @@ export class AppErrorHandler implements ErrorHandler {
         } else if (typeof error?.message === 'string') {
             errorMessage = error.message;
         }
+        if (errorMessage.length > this.maxLength) {
+            errorMessage = errorMessage.substring(0, this.maxLength - 3) + "...";
+        }
         const messagesService: MessagesService = this.injector.get(MessagesService);
         messagesService.showError(errorMessage);
-        console.error('Weblinks error: ', error);
+        //console.error('Weblinks error: ', error);
+        throwError(() => error);
     }
-  }
+}
 
 

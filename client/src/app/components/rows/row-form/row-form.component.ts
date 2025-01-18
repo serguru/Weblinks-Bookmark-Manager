@@ -26,14 +26,12 @@ import { ActivatedRoute } from '@angular/router';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule
   ],
   templateUrl: './row-form.component.html',
   styleUrl: './row-form.component.css'
 })
 export class RowFormComponent implements OnInit {
   form: FormGroup;
-  isLoading = false;
 
   pageModel: PageModel | null = null;
   rowModel: LrowModel | null = null;
@@ -101,13 +99,11 @@ export class RowFormComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.isLoading = true;
     const caption = this.form.get("caption")!.value;
     const id = this.rowModel?.id || 0;
     this.pagesService.addOrUpdateRow(this.pageModel!, id, caption)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         })
       )
       .subscribe(

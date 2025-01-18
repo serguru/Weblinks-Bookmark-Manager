@@ -37,7 +37,6 @@ import { AccountModel } from '../../../../models/AccountModel';
 })
 export class UpdateAccountComponent implements OnInit {
   form: FormGroup;
-  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -117,7 +116,6 @@ export class UpdateAccountComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.isLoading = true;
 
     const account = {
       id: +this.loginService.accountId,
@@ -130,7 +128,6 @@ export class UpdateAccountComponent implements OnInit {
     this.loginService.update(account)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         }),
       )
       .subscribe({

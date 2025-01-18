@@ -10,3 +10,7 @@ mat-card {
     align-items: center;
     color: #333333;
 }
+
+img {
+    width: 100%;
+}

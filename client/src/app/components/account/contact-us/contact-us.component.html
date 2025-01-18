@@ -9,7 +9,7 @@
         <div>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Subject</mat-label>
-            <input matInput formControlName="asubject" placeholder="Enter subject">
+            <input matInput formControlName="asubject" placeholder="Enter subject" >
           </mat-form-field>
           <app-validation-errors [control]="form.get('asubject')" [messages]="asubjectMessages"></app-validation-errors>
         </div>
@@ -23,9 +23,8 @@
         </div>
 
         <div class="form-field">
-          <button mat-raised-button type="submit" [disabled]="form.invalid || isLoading">
-            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-            <span *ngIf="!isLoading">Submit</span>
+          <button mat-raised-button type="submit" [disabled]="form.invalid">
+            <span>Submit</span>
           </button>
         </div>
 

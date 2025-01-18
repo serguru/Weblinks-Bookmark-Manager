@@ -4,5 +4,6 @@
         ".vscode{,/**}"
     ],
     "appService.defaultWebAppToDeploy": "/subscriptions/24261572-bf25-4e1c-a077-70ebce9fc8f6/resourceGroups/links3_group/providers/Microsoft.Web/sites/links3",
-    "appService.deploySubpath": "."
+    "appService.deploySubpath": ".",
+    "terminal.integrated.confirmOnKill": "editor"
 }

@@ -36,7 +36,6 @@ import { environment } from '../../../../environments/environment';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   hidePassword = true;
-  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -101,7 +100,6 @@ export class LoginComponent implements OnInit {
     if (!this.loginForm.valid) {
       return;
     }
-    this.isLoading = true;
     this.loginService.login(this.loginForm.get("email")!.value, this.loginForm.get("password")!.value)
       .pipe(
         catchError(error => {
@@ -112,7 +110,6 @@ export class LoginComponent implements OnInit {
           return throwError(() => error);
         }),
         finalize(() => {
-          this.isLoading = false;
         })
       )
       .subscribe(

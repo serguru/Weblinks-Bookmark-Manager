@@ -1,9 +1,11 @@
+<app-loading-spinner />
 <div class="toolbar-content" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
    <div class="app-title">weblinks</div>
 
+   @if (!this.loadingService.isLoading()) {
    <div *ngIf="loginService.isAuthenticated" class="links">
       <button *ngIf="!pagesService.loadingPages && (!pagesService.pages || 
-         pagesService.pages.length === 0)" mat-button [routerLink]="'/add-page'">
+            pagesService.pages.length === 0)" mat-button [routerLink]="'/add-page'">
          Add page
       </button>
 
@@ -43,8 +45,10 @@
       </app-context-menu>
    </ng-template>
 
+   }
+
+
 </div>
 
 
 <router-outlet />
-

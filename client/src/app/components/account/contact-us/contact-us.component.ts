@@ -35,7 +35,6 @@ import { UserMessageModel } from '../../../models/UserMessageModel';
 })
 export class ContactUsComponent implements OnInit {
   form: FormGroup;
-  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -74,7 +73,6 @@ export class ContactUsComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.isLoading = true;
 
     const mess: UserMessageModel = {
       id: 0,
@@ -85,7 +83,6 @@ export class ContactUsComponent implements OnInit {
     this.loginService.sendUserMessage(mess)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         })
       )
       .subscribe(() => {

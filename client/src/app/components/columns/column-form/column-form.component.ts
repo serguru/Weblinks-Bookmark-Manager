@@ -32,7 +32,6 @@ import { LcolumnModel } from '../../../models/LcolumnModel';
 })
 export class ColumnFormComponent implements OnInit {
   form: FormGroup;
-  isLoading = false;
 
   rowModel!: LrowModel;
   columnModel: LcolumnModel | null = null;
@@ -97,13 +96,11 @@ export class ColumnFormComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.isLoading = true;
     const caption = this.form.get("caption")!.value;
     const id = this.columnModel?.id || 0;
     this.pagesService.addOrUpdateColumn(this.rowModel, id, caption)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         })
       )
       .subscribe(

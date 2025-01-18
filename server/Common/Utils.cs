@@ -14,3 +14,9 @@ public enum HistoryEventType
     User_created_a_page = 5,
     User_deleted_a_page = 6
 };
+
+public enum WeblinksTaskType
+{
+    Send_reg_email = 1,
+    Send_pass_restore_email = 2,
+};

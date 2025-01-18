@@ -9,7 +9,7 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Page path</mat-label>
-          <input matInput type="text" formControlName="pagePath" placeholder="Enter page path">
+          <input matInput type="text" formControlName="pagePath" placeholder="Enter page path" >
           <mat-error *ngIf="form.get('pagePath')?.hasError('required')">
             Page path is required
           </mat-error>
@@ -30,10 +30,9 @@
         </mat-form-field>
 
         <div class="form-field">
-          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading"
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid"
             class="full-width">
-            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-            <span *ngIf="!isLoading">Submit</span>
+            <span>Submit</span>
           </button>
         </div>
 

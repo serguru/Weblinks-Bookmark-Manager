@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Mono.TextTemplating;
+using server.Common;
 using server.Data.Entities;
 using server.Data.Models;
 using System.Data;
@@ -114,7 +115,7 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
 
         await _dbContext.Database
             .ExecuteSqlRawAsync(
-                "EXEC dbo.VerifyPassword @providedPassword, @storedHash, @salt, @isValid OUTPUT",
+                "EXEC VerifyPassword @providedPassword, @storedHash, @salt, @isValid OUTPUT",
                 parameters);
 
         return (bool)parameters[3].Value;
@@ -129,7 +130,7 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
             new SqlParameter("@existingAccountId", account.Id),
             new SqlParameter("@message", SqlDbType.VarChar, 1000) { Direction = ParameterDirection.Output }
         };
-        await _dbContext.Database.ExecuteSqlRawAsync("EXEC dbo.ValidateNewAccount @userName, @userEmail, @existingAccountId, @message OUTPUT", parameters);
+        await _dbContext.Database.ExecuteSqlRawAsync("EXEC ValidateNewAccount @userName, @userEmail, @existingAccountId, @message OUTPUT", parameters);
 
         return (string)parameters[3].Value;
     }
@@ -174,6 +175,7 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
         _dbContext.Histories.Add(e);
         await _dbContext.SaveChangesAsync();
     }
+
 }
 
 
