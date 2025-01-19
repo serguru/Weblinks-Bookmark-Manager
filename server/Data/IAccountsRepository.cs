@@ -13,6 +13,7 @@ public interface IAccountsRepository
     Task<Account?> GetAccountByEmailAsync(string userEmail);
     Task AddAccountAsync(Account account);
     Task UpdateAccountAsync(Account account);
+    Task UpdateLoggedAccountAsync(Account account);
     Task<bool> VerifyPasswordAsync(string providedPassword, string hashedStoredPassword, string salt);
     Task<string> ValidateNewAccountAsync(Account account);
     Task AddUserMessageAsync(UserMessage message);

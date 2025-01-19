@@ -39,12 +39,25 @@ export class LoginService {
     return this.http.put(this.apiUrl + '/change-password', passwords);
   }
 
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.http.post(this.apiUrl + '/reset-password', {
+      token: token,
+      newPassword: password
+    });
+  }
+
   sendUserMessage(message: UserMessageModel): Observable<any> {
     return this.http.post(this.apiUrl + '/add-user-message', message);
   }
 
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(this.apiUrl + '/forgot-password', 
+      {userEmail: email, userPassword: '?'});
+  }
+
   login(email: string, password: string): Observable<any> {
-    return this.http.post(this.apiUrl + '/login', { userEmail: email, userPassword: password })
+    return this.http.post(this.apiUrl + '/login', 
+      { userEmail: email, userPassword: password })
       .pipe(
         tap((response: any) => {
           localStorage.setItem('token', response.token);
@@ -58,7 +71,6 @@ export class LoginService {
   }
 
   get isAuthenticated(): boolean {
-    //const token = localStorage.getItem('token');
     const token = this.token;
     return !this.jwtHelper.isTokenExpired(token);
   }

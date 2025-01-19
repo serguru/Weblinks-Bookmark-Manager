@@ -82,12 +82,17 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAccountAsync(Account account)
+    public async Task UpdateLoggedAccountAsync(Account account)
     {
         if (account.Id != accountId)
         {
             throw new ArgumentException("Account not found");
         }
+        await UpdateAccountAsync(account);
+    }
+
+    public async Task UpdateAccountAsync(Account account)
+    {
         _dbContext.Accounts.Update(account);
         await _dbContext.SaveChangesAsync();
     }

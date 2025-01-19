@@ -97,7 +97,7 @@ namespace server
             builder.Services.AddScoped<IPagesService, PagesService>();
             builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();
             builder.Services.AddScoped<IAccountsService, AccountsService>();
-
+            builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.Configure<MailKitSettings>(builder.Configuration.GetSection("MailKit"));
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddHostedService<TasksService>();

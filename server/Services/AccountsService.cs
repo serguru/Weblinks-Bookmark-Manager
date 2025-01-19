@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Newtonsoft.Json.Linq;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using server.Common;
@@ -23,17 +25,22 @@ public class AccountsService : IAccountsService
     private readonly IAccountsRepository _accountsRepository;
     private readonly IMapper _mapper;
     private readonly ITasksRepository _tasksRepository;
+    private readonly ITokenService _tokenService;
 
-    public AccountsService(Links3dbContext dbContext, IConfiguration configuration, 
+
+    public AccountsService(Links3dbContext dbContext, IConfiguration configuration,
         IAccountsRepository accountsRepository,
         ITasksRepository tasksRepository,
-        IMapper mapper)
+        IMapper mapper,
+        ITokenService tokenService
+        )
     {
         _configuration = configuration;
         _accountsRepository = accountsRepository;
         _mapper = mapper;
         _dbContext = dbContext;
         _tasksRepository = tasksRepository;
+        _tokenService = tokenService;
     }
 
     public async Task<Account?> GetAccountByEmailAsync(string userEmail)
@@ -57,28 +64,6 @@ public class AccountsService : IAccountsService
         return account;
     }
 
-    public string GenerateToken(Account account)
-    {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var claims = new[]
-        {
-            new Claim("id", account.Id.ToString()),
-            new Claim("userName", account.UserName),
-            new Claim("userEmail", account.UserEmail),
-        };
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["JwtSettings:Issuer"],
-            audience: _configuration["JwtSettings:Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["JwtSettings:ExpirationInMinutes"])),
-            signingCredentials: credentials
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
 
     public async Task<AccountModel> AddAccountAsync(AccountModel newAccount)
     {
@@ -243,7 +228,7 @@ public class AccountsService : IAccountsService
         account.UserName = accountModel.UserName;
         account.UserEmail = accountModel.UserEmail;
 
-        await _accountsRepository.UpdateAccountAsync(account);
+        await _accountsRepository.UpdateLoggedAccountAsync(account);
         AccountModel result = _mapper.Map<AccountModel>(account);
         return result;
     }
@@ -252,7 +237,7 @@ public class AccountsService : IAccountsService
     {
         Account? account = await _accountsRepository.GetAccountAsync() ?? throw new InvalidOperationException("Account does not exists");
         account.Settings = model.Value;
-        await _accountsRepository.UpdateAccountAsync(account);
+        await _accountsRepository.UpdateLoggedAccountAsync(account);
     }
 
     public async Task<UserMessageModel> AddUserMessageAsync(UserMessageModel newMessage)
@@ -276,7 +261,7 @@ public class AccountsService : IAccountsService
         }
 
         account.HashedPassword = await _accountsRepository.HashPasswordAsync(model.Password, account.Salt);
-        await _accountsRepository.UpdateAccountAsync(account);
+        await _accountsRepository.UpdateLoggedAccountAsync(account);
     }
 
     public async Task DeleteAccountAsync()
@@ -311,7 +296,7 @@ public class AccountsService : IAccountsService
                 {
                     Id = 0,
                     HistoryId = history.Id,
-                    TaskTypeId = (int)WeblinksTaskType.Send_reg_email
+                    TaskTypeId = (int)WeblinksTaskType.Send_register_email
                 };
                 await _tasksRepository.AddOperTaskAsync(operTask);
                 transaction.Commit();
@@ -324,9 +309,63 @@ public class AccountsService : IAccountsService
                 throw;
             }
         });
+    }
+
+    public async Task ForgotPasswordAsync(string userEmail)
+    {
+        await _dbContext.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
+            {
+                Account? account = await _accountsRepository.GetAccountByEmailAsync(userEmail) ?? throw new InvalidOperationException("Account does not exists");
+
+                History history = await AddHistoryEvent(HistoryEventType.User_forgot_password, userEmail);
+                OperTask operTask = new()
+                {
+                    Id = 0,
+                    HistoryId = history.Id,
+                    TaskTypeId = (int)WeblinksTaskType.Send_forgot_email
+                };
+                await _tasksRepository.AddOperTaskAsync(operTask);
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        });
 
 
+    }
 
+    public async Task<string?> ResetPasswordAsync(ResetPasswordModel model)
+    {
+        string? message = _tokenService.ValidateToken(model.Token);
+        if (message != null)
+        {
+            return message;
+        }
 
+        JwtSecurityToken decoded = _tokenService.DecodeToken(model.Token);
+
+        string? email = decoded.Claims.FirstOrDefault(x => x.Type == "userEmail")?.Value;
+
+        if (email == null)
+        {
+            return "Email not found in the token";
+        }
+
+        Account? account = await _accountsRepository.GetAccountByEmailAsync(email);
+        if (account == null)
+        {
+            return "Account not found";
+        }
+
+        account.HashedPassword = await _accountsRepository.HashPasswordAsync(model.NewPassword, account.Salt);
+        await _accountsRepository.UpdateAccountAsync(account);
+
+        return null;
     }
 }

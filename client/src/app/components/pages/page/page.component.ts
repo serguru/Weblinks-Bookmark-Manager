@@ -22,9 +22,12 @@ import { LrowModel } from '../../../models/LrowModel';
 })
 export class PageComponent implements OnInit {
 
-  constructor(public pagesService: PagesService, public loginService: LoginService,
+  constructor(public pagesService: PagesService, 
+    public loginService: LoginService,
     private router: Router, 
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute
+  
+  ) { }
 
     drop(event: CdkDragDrop<LrowModel[]>) {
       moveItemInArray(this.pagesService.activePage?.lrows || [], event.previousIndex, event.currentIndex);

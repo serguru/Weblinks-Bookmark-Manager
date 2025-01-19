@@ -16,10 +16,8 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         int interval = Convert.ToInt32(_configuration["TasksService:IntervalInMinutes"]);
-        _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(interval));
+        _timer = new Timer(DoWork!, null, TimeSpan.Zero, TimeSpan.FromMinutes(interval));
     }
-
-
 
     private async void DoWork(object state)
     {
@@ -27,9 +25,9 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
         var tasksRepository = scope.ServiceProvider.GetRequiredService<ITasksRepository>();
         var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
         var accountRepository = scope.ServiceProvider.GetRequiredService<IAccountsRepository>();
+        var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
 
-        var operTasks = await tasksRepository
-            .OperTasksAsync(WeblinksTaskType.Send_reg_email);
+        var operTasks = await tasksRepository.OperTasksAsync();
 
         foreach (var task in operTasks)
         {
@@ -54,11 +52,16 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
                         new KeyValuePair<string, string>("Name", toName)
                     ];
 
+                if (task.TaskTypeId == (int)WeblinksTaskType.Send_forgot_email) 
+                {
+                    string origin = _configuration["JwtSettings:Issuer"]!;
+                    var token = tokenService.GenerateToken(account, 60);
+                    string link = $"{origin}/reset-password/{token}";
+                    fields.Add(new KeyValuePair<string, string>("ResetPasswordLink", link));
+                }
+
                 body = emailService.PrepareTemplateForSending(fields, task.TaskType.EmailTemplate!);
-
-                subject = "User registered";
-
-
+                subject = task.TaskType.EmailSubject!;
                 await tasksRepository.ArchiveOperTask(task.Id, "", subject, body);
                 taskArchived = true;
             }

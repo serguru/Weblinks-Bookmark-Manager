@@ -247,6 +247,7 @@ public partial class Links3dbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.EmailSubject).HasColumnName("emailSubject");
             entity.Property(e => e.EmailTemplate).HasColumnName("emailTemplate");
             entity.Property(e => e.TypeName)
                 .HasMaxLength(50)

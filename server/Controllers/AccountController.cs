@@ -11,14 +11,10 @@ namespace server.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class AccountController : ControllerBase
+public class AccountController(IAccountsService accountsService, ITokenService tokenService) : ControllerBase
 {
-    private IAccountsService _accountsService;
-
-    public AccountController(IAccountsService accountsService)
-    {
-        _accountsService = accountsService;
-    }
+    private IAccountsService _accountsService = accountsService;
+    private ITokenService _tokenService = tokenService;
 
     [HttpPost("register")]
     [AllowAnonymous]
@@ -53,7 +49,7 @@ public class AccountController : ControllerBase
         {
             return Unauthorized();
         }
-        string token = _accountsService.GenerateToken(account);
+        string token = _tokenService.GenerateToken(account);
         await _accountsService.AddHistoryEvent(HistoryEventType.User_logged_in, model.UserEmail);
 
         return Ok(new { token });
@@ -87,6 +83,34 @@ public class AccountController : ControllerBase
 
         await _accountsService.DeleteAccountAsync();
 
+        return Ok();
+    }
+
+    [HttpPost("forgot-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForgotPassword([FromBody] LoginModel model)
+    {
+
+        Account? account = await _accountsService.GetAccountByEmailAsync(model.UserEmail);
+
+        if (account == null)
+        {
+            return NotFound("Account with this email was not found");
+        }
+
+        await _accountsService.ForgotPasswordAsync(model.UserEmail);
+        return Ok();
+    }
+
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+    {
+        string? result = await _accountsService.ResetPasswordAsync(model);
+        if (result != null) 
+        { 
+            return BadRequest(result);
+        }
         return Ok();
     }
 }

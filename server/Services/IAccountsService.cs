@@ -7,7 +7,6 @@ namespace server.Services;
 
 public interface IAccountsService
 {
-    string GenerateToken(Account account);
     Task<Account?> CheckPasswordAsync(LoginModel login);
     Task<Account?> GetAccountByEmailAsync(string userEmail);
     Task<AccountModel> GetAccountAsync();
@@ -19,4 +18,9 @@ public interface IAccountsService
     Task DeleteAccountAsync();
     Task<History> AddHistoryEvent(HistoryEventType et, string userEmail, string? comment = null);
     Task<AccountModel> RegisterAccountAsync(AccountModel accountModel);
+
+    Task ForgotPasswordAsync(string userEmail);
+
+    Task<string?> ResetPasswordAsync(ResetPasswordModel model);
+
 }

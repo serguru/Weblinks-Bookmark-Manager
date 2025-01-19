@@ -261,8 +261,8 @@ insert into eventType values (3, 'User retrieved the account');
 insert into eventType values (4, 'User deleted the account');
 insert into eventType values (5, 'User created a page');
 insert into eventType values (6, 'User deleted a page');
+insert into eventType values (7, 'User forgot password');
 go
-
 
 create table history (
     id int identity(1,1) not null,
@@ -278,13 +278,14 @@ go
 create table taskType (
     id int not null,
     typeName varchar(50) not null,
+    emailSubject nvarchar(max) null,
     emailTemplate nvarchar(max) null,
     constraint pk_taskType_id primary key (id),
     constraint uq_taskType_name unique (typeName)
 ); 
 go
 
---#region email template
+--#region email templates
 declare @template nvarchar(max) = 
 '
 <!DOCTYPE html>
@@ -361,12 +362,80 @@ declare @template nvarchar(max) =
 </html>
 '
 ;
---#endregion
+insert into taskType values (1, 'Send registration email', 'User registered', @template);
 
--- task types
-insert into taskType values (1, 'Send registration email', @template);
-insert into taskType values (2, 'Send restore password email', null);
+set @template = 
+'
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Forgot Password Request</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+		}
+		
+		.container {
+			width: 80%;
+			margin: 40px auto;
+			background-color: #fff;
+			padding: 20px;
+			border: 1px solid #ddd;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0,0,0,0.1);
+		}
+		
+		.header {
+			background-color: #333;
+			color: #fff;
+			padding: 10px;
+			border-bottom: 1px solid #333;
+		}
+		
+		.content {
+			padding: 20px;
+			font-size: larger;
+		}
+		
+		.button {
+			background-color: #4CAF50;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		
+		.button:hover {
+			background-color: #3e8e41;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h2>Forgot Password Request</h2>
+		</div>
+		<div class="content">
+			<p>Dear {{Name}},</p>
+			<p>We received a request to reset your password. If you did not make this request, please ignore this email.</p>
+			<p>To reset your password, click on the button below:</p>
+			<a href="{{ResetPasswordLink}}"><button class="button">Reset Password</button></a>
+			<p>If you have any issues, please <a href="https://weblinks.click/contact-us">
+				contact us
+			</a>.</p>
+			<p>Best regards,</p>
+			<p>Admin</p>
+		</div>
+	</div>
+</body>
+</html>
+'
+insert into taskType values (2, 'Send forgot password email', 'Forgot passwod', @template);
 go
+
+--#endregion
 
 create table operTasks (
     id int identity(1,1) not null,

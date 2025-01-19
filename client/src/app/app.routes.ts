@@ -13,6 +13,8 @@ import { ContactUsComponent } from './components/account/contact-us/contact-us.c
 import { HelpComponent } from './components/documents/help/help.component';
 import { TermsComponent } from './components/documents/terms/terms.component';
 import { PolicyComponent } from './components/documents/policy/policy.component';
+import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'page', pathMatch: 'full'},
@@ -33,5 +35,7 @@ export const routes: Routes = [
   { path: 'terms', component: TermsComponent},
   { path: 'policy', component: PolicyComponent},
   { path: 'contact-us', component: ContactUsComponent, canActivate: [loginGuard]},
+  { path: 'forgot-password', component: ForgotPasswordComponent},
+  { path: 'reset-password/:token', component: ResetPasswordComponent},
   { path: '**', component: NotFoundComponent}
 ];
