@@ -36,6 +36,6 @@ export const routes: Routes = [
   { path: 'policy', component: PolicyComponent},
   { path: 'contact-us', component: ContactUsComponent, canActivate: [loginGuard]},
   { path: 'forgot-password', component: ForgotPasswordComponent},
-  { path: 'reset-password/:token', component: ResetPasswordComponent},
+  { path: 'reset-password', component: ResetPasswordComponent},
   { path: '**', component: NotFoundComponent}
 ];

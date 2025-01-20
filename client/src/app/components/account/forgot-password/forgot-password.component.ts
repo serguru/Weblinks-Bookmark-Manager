@@ -52,7 +52,6 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-
   emailMessages: KeyValue<string, string>[] = [
     {
       key: "required",

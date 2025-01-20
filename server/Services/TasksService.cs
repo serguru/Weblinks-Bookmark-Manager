@@ -1,8 +1,12 @@
-﻿using server.Common;
+﻿using Newtonsoft.Json.Linq;
+using server.Common;
 using server.Data;
 using server.Data.Entities;
+using server.Data.Models;
 using System.Configuration;
+using System.Net;
 using System.Text.Json;
+using System.Web;
 using System.Xml.Linq;
 
 namespace server.Services;
@@ -55,8 +59,16 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
                 if (task.TaskTypeId == (int)WeblinksTaskType.Send_forgot_email) 
                 {
                     string origin = _configuration["JwtSettings:Issuer"]!;
-                    var token = tokenService.GenerateToken(account, 60);
-                    string link = $"{origin}/reset-password/{token}";
+                    var f = new ForgotPasswordModel()
+                    {
+                        Email = account.UserEmail,
+                        UtcTimeIssued = DateTime.UtcNow,
+                        ExpiresInMinutes = 60
+                    };
+                    var token = JsonSerializer.Serialize(f);
+                    token = tokenService.EncryptString(token);
+                    token = WebUtility.UrlEncode(token);
+                    string link = $"{origin}/reset-password?t={token}";
                     fields.Add(new KeyValuePair<string, string>("ResetPasswordLink", link));
                 }
 

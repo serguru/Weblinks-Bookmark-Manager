@@ -5,6 +5,7 @@ using server.Data.Entities;
 using server.Data.Models;
 using server.Services;
 using server.Common;
+using System.Net;
 
 namespace server.Controllers;
 
@@ -106,6 +107,7 @@ public class AccountController(IAccountsService accountsService, ITokenService t
     [AllowAnonymous]
     public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
     {
+
         string? result = await _accountsService.ResetPasswordAsync(model);
         if (result != null) 
         { 

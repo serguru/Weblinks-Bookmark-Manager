@@ -11,4 +11,7 @@ public interface ITokenService
     string GenerateToken(Account account, int? expirationInMinutes = null);
     string? ValidateToken(string token);
     JwtSecurityToken DecodeToken(string token);
+
+    string EncryptString(string inputString);
+    string DecryptString(string encryptedString);
 }

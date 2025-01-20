@@ -35,13 +35,10 @@ import { ValidationErrorsComponent } from '../../base/validation-errors/validati
   styleUrl: './reset-password.component.css'
 })
 export class ResetPasswordComponent implements OnInit {
-
   token!: string; 
-
   form!: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
-
 
   constructor(
     private fb: FormBuilder,
@@ -75,8 +72,8 @@ export class ResetPasswordComponent implements OnInit {
   ]
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.token = params['token'];
+    this.route.queryParams.subscribe(params => {
+      this.token = params['t'];
     });
   }
 

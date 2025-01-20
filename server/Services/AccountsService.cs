@@ -342,15 +342,28 @@ public class AccountsService : IAccountsService
 
     public async Task<string?> ResetPasswordAsync(ResetPasswordModel model)
     {
-        string? message = _tokenService.ValidateToken(model.Token);
-        if (message != null)
+        string token;
+        ForgotPasswordModel m = null!;
+        try
         {
-            return message;
+            token = _tokenService.DecryptString(model.Token);
+            m = JsonSerializer.Deserialize<ForgotPasswordModel>(token);
+        }
+        catch 
+        {
+            return "Invalid forgot password token";
+
         }
 
-        JwtSecurityToken decoded = _tokenService.DecodeToken(model.Token);
+        TimeSpan differenceInMinutes = DateTime.UtcNow - m!.UtcTimeIssued;
+        double diff = differenceInMinutes.TotalMinutes;
 
-        string? email = decoded.Claims.FirstOrDefault(x => x.Type == "userEmail")?.Value;
+        if (diff > m.ExpiresInMinutes)
+        {
+            return "Forgot password token expired";
+        }
+
+        string? email = m.Email;
 
         if (email == null)
         {
