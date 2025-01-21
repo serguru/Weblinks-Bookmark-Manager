@@ -1,5 +1,5 @@
-﻿//let siteUrl = "https://api.weblinks.click/api/";
-let siteUrl = "https://localhost:7215/api/";
+﻿let siteUrl = "https://api.weblinks.click/api/";
+//let siteUrl = "https://localhost:7215/api/";
 
 let $loginForm;
 let $loginInput;
