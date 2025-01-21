@@ -167,6 +167,22 @@ public class AccountsRepository : BaseRepository, IAccountsRepository
         return account;
     }
 
+    public async Task<Account?> GetAccountHavingColumnsAsync()
+    {
+        var account = await GetAccountAsync();
+
+        if (account == null)
+        {
+            return null;
+        }
+
+        account.Pages = account.Pages
+            .Where(p => p.Lrows.Any(c => c.Lcolumns.Any()))
+            .ToList();
+
+        return account;
+    }
+
     public async Task AddUserMessageAsync(UserMessage message)
     {
         message.Id = 0;

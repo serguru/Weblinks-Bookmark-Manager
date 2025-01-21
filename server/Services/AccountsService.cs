@@ -219,6 +219,21 @@ public class AccountsService : IAccountsService
         return result;
     }
 
+    public async Task<AccountModel?> GetAccountHavingColumnsAsync()
+    {
+        Account? account = await _accountsRepository.GetAccountHavingColumnsAsync();
+        if (account == null)
+        {
+            // throw new InvalidOperationException("Account does not exists");
+            return null;
+        }
+        AccountModel result = _mapper.Map<AccountModel>(account);
+        ApplySettings(result);
+        return result;
+    }
+
+    
+
     public async Task<AccountModel> UpdateAccountAsync(AccountModel accountModel)
     {
         Account? account = await _accountsRepository.GetAccountAsync() ?? throw new InvalidOperationException("Account does not exists");

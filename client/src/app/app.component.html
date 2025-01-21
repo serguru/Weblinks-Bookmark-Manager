@@ -24,18 +24,34 @@
    </button>
    <mat-menu #menu>
       <ng-container *ngIf="loginService.isAuthenticated">
-         <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">{{profileCaption}}</a>
-         <a *ngIf="!isRouteName('/contact-us')" mat-menu-item [routerLink]="'/contact-us'">Contact Us</a>
+         <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">
+            <mat-icon>person</mat-icon>
+            {{profileCaption}}</a>
+         <a *ngIf="!isRouteName('/contact-us')" mat-menu-item [routerLink]="'/contact-us'">
+            <mat-icon>outgoing_mail</mat-icon>
+            Contact Us</a>
       </ng-container>
-      <a *ngIf="!isRouteName('/help')" mat-menu-item [routerLink]="'/help'">Help</a>
-      <a *ngIf="!isRouteName('/terms')" mat-menu-item [routerLink]="'/terms'">Terms of Usage</a>
-      <a *ngIf="!isRouteName('/policy')" mat-menu-item [routerLink]="'/policy'">Privacy Policy</a>
+      <a *ngIf="!isRouteName('/help')" mat-menu-item [routerLink]="'/help'">
+         <mat-icon>help</mat-icon>
+         Help</a>
+      <a *ngIf="!isRouteName('/terms')" mat-menu-item [routerLink]="'/terms'">
+         <mat-icon>article</mat-icon>
+         Terms of Usage</a>
+      <a *ngIf="!isRouteName('/policy')" mat-menu-item [routerLink]="'/policy'">
+         <mat-icon>shield</mat-icon>
+         Privacy Policy</a>
       <ng-container *ngIf="loginService.isAuthenticated">
-         <button mat-menu-item (click)="logOut()">Log out</button>
+         <button mat-menu-item (click)="logOut()">
+            <mat-icon>logout</mat-icon>
+            Log out</button>
       </ng-container>
       <ng-container *ngIf="!loginService.isAuthenticated">
-         <a *ngIf="!isRouteName('/register')" mat-menu-item [routerLink]="'/register'">Register</a>
-         <a *ngIf="!isRouteName('/login')" mat-menu-item [routerLink]="'/login'">Login</a>
+         <a *ngIf="!isRouteName('/register')" mat-menu-item [routerLink]="'/register'">
+            <mat-icon>how_to_reg</mat-icon>
+            Register</a>
+         <a *ngIf="!isRouteName('/login')" mat-menu-item [routerLink]="'/login'">
+            <mat-icon>login</mat-icon>
+            Login</a>
       </ng-container>
    </mat-menu>
 

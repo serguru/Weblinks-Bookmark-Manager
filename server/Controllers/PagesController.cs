@@ -30,7 +30,18 @@ public class PagesController : ControllerBase
         {
             return Unauthorized();
         }
+        await _accountsService.AddHistoryEvent(HistoryEventType.User_retrieved_the_account, account.UserEmail);
+        return Ok(account);
+    }
 
+    [HttpGet("having-columns")]
+    public async Task<ActionResult<AccountModel>> GetAccountHavingColumnsAsync()
+    {
+        AccountModel? account = await _accountsService.GetAccountHavingColumnsAsync();
+        if (account == null)
+        {
+            return Unauthorized();
+        }
         await _accountsService.AddHistoryEvent(HistoryEventType.User_retrieved_the_account, account.UserEmail);
         return Ok(account);
     }

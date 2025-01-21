@@ -10,6 +10,7 @@ public interface IAccountsService
     Task<Account?> CheckPasswordAsync(LoginModel login);
     Task<Account?> GetAccountByEmailAsync(string userEmail);
     Task<AccountModel> GetAccountAsync();
+    Task<AccountModel> GetAccountHavingColumnsAsync();
     Task<AccountModel> AddAccountAsync(AccountModel newAccount);
     Task<AccountModel> UpdateAccountAsync(AccountModel account);
     Task SaveConfig(StringTransportModel model);

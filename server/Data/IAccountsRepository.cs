@@ -8,6 +8,7 @@ namespace server.Data;
 public interface IAccountsRepository
 {
     Task<List<Account>> GetAllAccountsAsync();
+    Task<Account?> GetAccountHavingColumnsAsync();
     Task<Account?> GetAccountAsync();
     Task<Account?> GetAccountByIdAsync(int accountId);
     Task<Account?> GetAccountByEmailAsync(string userEmail);
