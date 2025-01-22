@@ -21,8 +21,15 @@ public class AccountController(IAccountsService accountsService, ITokenService t
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] AccountModel model)
     {
-        AccountModel result = await _accountsService.RegisterAccountAsync(model);
-        return Ok(result);
+        try
+        {
+            AccountModel result = await _accountsService.RegisterAccountAsync(model);
+            return Ok(result);
+        }
+        catch (Exception ex) 
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPut("update")]
