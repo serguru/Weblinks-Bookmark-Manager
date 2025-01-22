@@ -9,19 +9,25 @@
                 Our Weblinks site allows you to solve this problem once and for all.
             </p>
             <p>
-                <img src="assets/weblinks_interface.png" alt="Weblinks interface">
+                <img class="main-img" src="assets/weblinks_interface.png" alt="Weblinks interface">
             </p>
             <p>
                 After you register, you have the opportunity to create, store and use
                 conveniently and clearly organized links to web resources. Create your own pages,
                 rows within pages
-                and columns within rows, then insert links within columns. Context menus are used to add,
-                change or delete. To swap pages, rows, columns or links,
-                just drag them with the mouse and drop.
-                Make https://weblinks.click the default page in the browser in order to have convenient and quick
-                access to your own links.
+                and columns within rows, then insert links within columns. Context menus like this
             </p>
 
+            <p style="text-align: center">
+                <img class="menu-img" src="assets/context_menu.png" alt="Context menu">
+            <p>
+                are used to add, change or delete them. To swap pages, rows, columns or links,
+                just drag them with the mouse and drop.
+            </p>
+            <p>
+                Make https://weblinks.click the default page in your desktop browser or create
+                a shortcut on your phone's home screen for quick access to your own links.
+            </p>
             <h3>
                 Pages
             </h3>
@@ -87,22 +93,60 @@
                 drop it.
             </p>
 
-            <h3>
-                Account
-            </h3>
+            <div style="display: flex; align-items: center; gap: 1rem">
+                <h3>
+                    Main menu
+                </h3>
+                <img class="menu-img" src="assets/menu_icon.png" alt="Main menu icon">
+            </div>
             <p>
-                To change your <a [routerLink]="'/user-profile'">account</a> details, change your password or delete
-                your account,
-                click on your username in the site menu.
+                Click this icon to open the main site menu.
             </p>
+            <div style="display: flex; gap: 1rem">
+                <div>
+                    <h3>
+                        Account
+                    </h3>
+                    <p>
+                        To change your <a [routerLink]="'/user-profile'">account</a> details, change your password or
+                        delete
+                        your account,
+                        click on your username.
+                    </p>
 
+                    <h3>
+                        Contact us
+                    </h3>
+                    <p>
+                        To send a <a [routerLink]="'/contact-us'">message</a> to the site administration, click "Contact
+                        Us" and
+                        use the form. We will send a
+                        response to the email specified in your account as soon as possible.
+                    </p>
+
+                    <h3>
+                        Terms of usage
+                    </h3>
+                    <p>
+                        Our legally binding agreement between the website and users.
+                    </p>
+                    <h3>
+                        Privacy Policy
+                    </h3>
+                    <p>
+                        Our legal document that explains how the website collects, uses,
+                        and manages the personal data of its visitors.
+                    </p>
+                </div>
+                <div style="padding-top: 1rem;">
+                    <img class="float-left menu-img" src="assets/main_menu.png" alt="Main menu">
+                </div>
+            </div>
             <h3>
-                Contact us
+                Register and Login
             </h3>
             <p>
-                To send a <a [routerLink]="'/contact-us'">message</a> to the site administration, click "Contact Us" and
-                use the form. We will send a
-                response to the email specified in your account as soon as possible.
+                If you are logged out, the Register and Login forms will be available to you.
             </p>
 
             <h3>

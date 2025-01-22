@@ -11,6 +11,11 @@ mat-card {
     color: #333333;
 }
 
-img {
+.main-img {
     width: 100%;
 }
+
+.menu-img {
+    border: #333333 solid 1px;
+}
+

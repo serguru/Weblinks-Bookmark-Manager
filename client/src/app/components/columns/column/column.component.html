@@ -1,20 +1,22 @@
 <mat-card appearance="outlined" class="column">
-    <mat-card-header class="link3-title" [cdkContextMenuTriggerFor]="context_menu" [cdkMenuTriggerFor]="context_menu">{{column.caption}}</mat-card-header>
+    <mat-card-header class="link3-title" [cdkContextMenuTriggerFor]="context_menu"
+        [cdkMenuTriggerFor]="context_menu">{{column.caption}}</mat-card-header>
     <mat-card-content cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
         <ng-container *ngIf="column.links?.length; else new_link">
             @for (link of column.links; track link) {
-                <app-link [row]="row" [column]="column" [link]="link" cdkDrag></app-link>
+            <app-link [row]="row" [column]="column" [link]="link" cdkDrag></app-link>
             }
         </ng-container>
         <ng-template #new_link>
-            <a mat-button [routerLink]="'/add-link/'+row.id+'/'+column.id">Add link</a>
+            <a mat-button [routerLink]="'/add-link/'+row.id+'/'+column.id">
+                <mat-icon>add_circle</mat-icon>
+                Add link</a>
         </ng-template>
     </mat-card-content>
 </mat-card>
 
 <ng-template #context_menu>
-    <app-context-menu [title]="'Column'" [addPath]="'/add-column/'+row.id" [updatePath]="'/update-column/'+row.id+'/'+column.id"
-        [delete]="delete.bind(this)" [disabled]="false">
+    <app-context-menu [title]="'Column'" [addPath]="'/add-column/'+row.id"
+        [updatePath]="'/update-column/'+row.id+'/'+column.id" [delete]="delete.bind(this)" [disabled]="false">
     </app-context-menu>
-
 </ng-template>

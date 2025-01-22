@@ -12,8 +12,9 @@ import { finalize } from 'rxjs';
 import { ColumnComponent } from '../../columns/column/column.component';
 import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
 import { CdkMenuTrigger } from '@angular/cdk/menu';
-import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LcolumnModel } from '../../../models/LcolumnModel';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
@@ -26,7 +27,8 @@ import { LcolumnModel } from '../../../models/LcolumnModel';
     CdkContextMenuTrigger,
     ContextMenuComponent,
     CdkMenuTrigger,
-    DragDropModule
+    DragDropModule,
+    MatIconModule
   ],
   templateUrl: './row.component.html',
   styleUrl: './row.component.css'

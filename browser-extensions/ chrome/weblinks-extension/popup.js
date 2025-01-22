@@ -1,4 +1,7 @@
-﻿let siteUrl = "https://api.weblinks.click/api/";
+﻿// Chrome dashboard
+// https://chrome.google.com/webstore/devconsole/49cc84d7-6307-47a6-9f46-ed446d7e5d0e
+
+let siteUrl = "https://api.weblinks.click/api/";
 //let siteUrl = "https://localhost:7215/api/";
 
 let $loginForm;
@@ -88,7 +91,7 @@ function showAddLinkForm() {
     $generalMessageDiv.hide();
     populatePagesSelect();
 
-    chrome.tabs.query({ active: true }, function (tab) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
         if (tab.length === 0) {
             return;
         }

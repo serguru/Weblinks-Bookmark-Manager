@@ -10,17 +10,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../base/confirm-dialog/confirm-dialog.component';
 import { finalize } from 'rxjs';
 import { LcolumnModel } from '../../../models/LcolumnModel';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { LinkComponent } from '../../links/link/link.component';
 import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
 import { CdkMenuTrigger } from '@angular/cdk/menu';
-import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LinkModel } from '../../../models/LinkModel';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-column',
   imports: [
-    CommonModule, 
+    CommonModule,
     LinkComponent,
     RouterModule,
     MatButtonModule,
@@ -28,7 +29,8 @@ import { LinkModel } from '../../../models/LinkModel';
     MatCardModule,
     ContextMenuComponent,
     CdkMenuTrigger,
-    DragDropModule
+    DragDropModule,
+    MatIconModule
   ],
   templateUrl: './column.component.html',
   styleUrl: './column.component.css'
@@ -40,12 +42,10 @@ export class ColumnComponent {
   constructor(public pagesService: PagesService, public loginService: LoginService,
     private router: Router, private dialog: MatDialog) { }
 
-    drop(event: CdkDragDrop<LinkModel[]>) {
-      moveItemInArray(this.column.links || [], event.previousIndex, event.currentIndex);
-      this.pagesService.saveConfig();
-    }
-  
-
+  drop(event: CdkDragDrop<LinkModel[]>) {
+    moveItemInArray(this.column.links || [], event.previousIndex, event.currentIndex);
+    this.pagesService.saveConfig();
+  }
 
   delete(): void {
 
@@ -63,12 +63,12 @@ export class ColumnComponent {
         return;
       }
       this.pagesService.deleteColumn(this.row, this.column)
-      .pipe(
-        finalize(() => {
-        })
-      )
-      .subscribe(() => {
-      });
+        .pipe(
+          finalize(() => {
+          })
+        )
+        .subscribe(() => {
+        });
     });
   }
 

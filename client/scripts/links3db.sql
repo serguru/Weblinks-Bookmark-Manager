@@ -1,5 +1,5 @@
--- use links3db
--- go
+use links3db
+go
 
 if object_id('archiveTasks', 'U') is not null
 begin

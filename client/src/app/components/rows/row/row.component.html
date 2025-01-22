@@ -7,7 +7,9 @@
         }
     </ng-container>
     <ng-template #new_column>
-        <a mat-button [routerLink]="'/add-column/'+row.id">Add column</a>
+        <a mat-button [routerLink]="'/add-column/'+row.id">
+            <mat-icon>add_circle</mat-icon>
+            Add column</a>
     </ng-template>
 </div>
 

@@ -38,3 +38,7 @@
 .menu-title {
     background-color: #f7f6f6;
 }
+
+mat-icon {
+    margin-right: 1rem;
+}

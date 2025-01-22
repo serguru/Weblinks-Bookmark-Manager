@@ -1,9 +1,15 @@
 <div class="menu-container">
     <div class="link3-title menu-title">{{title}}</div>
     <div class="menu" cdkMenu>
-        <button class="link3-title menu-item" cdkMenuItem [routerLink]="addPath">Add...</button>
+        <button class="link3-title menu-item" cdkMenuItem [routerLink]="addPath">
+            <mat-icon>add_circle</mat-icon>
+            Add...</button>
         <button class="link3-title menu-item" cdkMenuItem [disabled]="disabled"
-            [routerLink]="updatePath">Update...</button>
-        <button class="link3-title menu-item" [disabled]="disabled" (click)="delete()" cdkMenuItem>Delete...</button>
+            [routerLink]="updatePath">
+            <mat-icon>edit</mat-icon>
+            Update...</button>
+        <button class="link3-title menu-item" [disabled]="disabled" (click)="delete()" cdkMenuItem>
+            <mat-icon>delete</mat-icon>
+            Delete...</button>
     </div>
 </div>

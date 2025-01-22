@@ -7,7 +7,9 @@
   </ng-container>
   <ng-template #new_row>
     <div class="add-row-button">
-      <a mat-button [routerLink]="'/add-row/'+pagesService.activePage.id">Add row</a>
+      <a mat-button [routerLink]="'/add-row/'+pagesService.activePage.id">
+        <mat-icon>add_circle</mat-icon>
+        Add row</a>
     </div>
   </ng-template>
 </div>

@@ -4,6 +4,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-context-menu',
@@ -14,6 +15,7 @@ import { CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
     RouterModule,
     CdkMenu,
     CdkMenuItem,
+    MatIconModule
   ],
   templateUrl: './context-menu.component.html',
   styleUrl: './context-menu.component.css'

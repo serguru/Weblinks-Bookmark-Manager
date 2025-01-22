@@ -7,6 +7,7 @@ import { PagesService } from '../../../services/pages.service';
 import { LoginService } from '../../../services/login.service';
 import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 import { LrowModel } from '../../../models/LrowModel';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-page',
@@ -15,7 +16,8 @@ import { LrowModel } from '../../../models/LrowModel';
     RouterModule,
     RowComponent,
     MatButtonModule,
-    DragDropModule
+    DragDropModule,
+    MatIconModule
   ],
   templateUrl: './page.component.html',
   styleUrl: './page.component.css'
