@@ -6,7 +6,7 @@ import { LoginService } from "./services/login.service";
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
     constructor(private injector: Injector) { }
-    maxLength = 300;
+    maxLength = 500;
     handleError(error: any) {
         if (error.status === 401) {
             var loginService = this.injector.get(LoginService);
@@ -19,6 +19,8 @@ export class AppErrorHandler implements ErrorHandler {
             errorMessage = error;
         } else if (typeof error?.error === 'string') {
             errorMessage = error.error;
+        } else if (typeof error?.error?.message === 'string') {
+            errorMessage = error.error.message;
         } else if (typeof error?.message === 'string') {
             errorMessage = error.message;
         }

@@ -351,7 +351,7 @@ public class AccountsService : IAccountsService
 
     }
 
-    public async Task<string?> ResetPasswordAsync(ResetPasswordModel model)
+    public async Task ResetPasswordAsync(ResetPasswordModel model)
     {
         string token;
         ForgotPasswordModel m = null!;
@@ -362,8 +362,7 @@ public class AccountsService : IAccountsService
         }
         catch 
         {
-            return "Invalid forgot password token";
-
+            throw new ArgumentException("Invalid forgot password token");
         }
 
         TimeSpan differenceInMinutes = DateTime.UtcNow - m!.UtcTimeIssued;
@@ -371,25 +370,23 @@ public class AccountsService : IAccountsService
 
         if (diff > m.ExpiresInMinutes)
         {
-            return "Forgot password token expired";
+            throw new ArgumentException("Forgot password token expired");
         }
 
         string? email = m.Email;
 
         if (email == null)
         {
-            return "Email not found in the token";
+            throw new ArgumentException("Email not found in the token");
         }
 
         Account? account = await _accountsRepository.GetAccountByEmailAsync(email);
         if (account == null)
         {
-            return "Account not found";
+            throw new ArgumentException("Account not found");
         }
 
         account.HashedPassword = await _accountsRepository.HashPasswordAsync(model.NewPassword, account.Salt);
         await _accountsRepository.UpdateAccountAsync(account);
-
-        return null;
     }
 }

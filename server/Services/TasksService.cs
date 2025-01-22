@@ -56,7 +56,7 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
                         new KeyValuePair<string, string>("Name", toName)
                     ];
 
-                if (task.TaskTypeId == (int)WeblinksTaskType.Send_forgot_email) 
+                if (task.TaskTypeId == (int)WeblinksTaskType.Send_forgot_email)
                 {
                     string origin = _configuration["JwtSettings:Issuer"]!;
                     var f = new ForgotPasswordModel()
@@ -79,7 +79,8 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
             }
             catch (Exception ex)
             {
-
+                await emailService.SendEmailToAdminAsync("Task exception", 
+                    JsonSerializer.Serialize(ex));
             }
 
             if (!taskArchived)
@@ -87,6 +88,11 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
                 return;
             }
             await emailService.SendEmailAsync(toName, account!.UserEmail, subject, body);
+
+            if (task.TaskTypeId == (int)WeblinksTaskType.Send_register_email)
+            {
+                await emailService.SendEmailToAdminAsync("User registered", JsonSerializer.Serialize(account));
+            }
         }
     }
 

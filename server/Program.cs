@@ -9,6 +9,7 @@ using System.Configuration;
 using MailKit.Net.Smtp;
 using MimeKit;
 using server.Common;
+using server.Middleware;
 
 namespace server
 {
@@ -124,6 +125,8 @@ namespace server
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseMiddleware<GlobalErrorHandlerMiddleware>();
 
             app.Run();
         }

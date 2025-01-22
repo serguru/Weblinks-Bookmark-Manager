@@ -9,7 +9,7 @@ namespace server.Services;
 public interface ITokenService
 {
     string GenerateToken(Account account, int? expirationInMinutes = null);
-    string? ValidateToken(string token);
+    void ValidateToken(string token);
     JwtSecurityToken DecodeToken(string token);
 
     string EncryptString(string inputString);

@@ -22,6 +22,6 @@ public interface IAccountsService
 
     Task ForgotPasswordAsync(string userEmail);
 
-    Task<string?> ResetPasswordAsync(ResetPasswordModel model);
+    Task ResetPasswordAsync(ResetPasswordModel model);
 
 }

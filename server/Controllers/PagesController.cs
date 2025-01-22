@@ -59,32 +59,18 @@ public class PagesController : ControllerBase
     [HttpPost("add-update-page")]
     public async Task<IActionResult> AddOrUpdatePage([FromBody] PageModel model)
     {
-        try
+        PageModel result = await _pagesService.AddOrUpdatePageAsync(model);
+        if (model.Id == 0)
         {
-            PageModel result = await _pagesService.AddOrUpdatePageAsync(model);
-            if (model.Id == 0)
+            var account = await _accountsService.GetAccountAsync();
+
+            if (account == null)
             {
-                var account = await _accountsService.GetAccountAsync();
-
-                if (account == null)
-                {
-                    return Unauthorized();
-                }
-
-
-                await _accountsService.AddHistoryEvent(HistoryEventType.User_created_a_page, account.UserEmail);
+                return Unauthorized();
             }
-
-            return Ok(result);
+            await _accountsService.AddHistoryEvent(HistoryEventType.User_created_a_page, account.UserEmail);
         }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(result);
     }
 
     [HttpDelete("delete-page/{pageId}")]
@@ -160,7 +146,7 @@ public class PagesController : ControllerBase
         await _pagesService.DeleteLinkAsync(linkId);
         return Ok();
     }
-    
+
     #endregion
 
     [HttpGet("alive")]

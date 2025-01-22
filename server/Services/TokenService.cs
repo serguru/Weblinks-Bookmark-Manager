@@ -41,7 +41,7 @@ public class TokenService(IConfiguration configuration) : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string? ValidateToken(string token)
+    public void ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
@@ -57,15 +57,14 @@ public class TokenService(IConfiguration configuration) : ITokenService
                 ClockSkew = TimeSpan.Zero
             }, out SecurityToken validatedToken);
 
-            return null;
         }
         catch (SecurityTokenExpiredException e)
         {
-            return "Token expired";
+            throw new ArgumentException("Token expired");
         }
         catch
         {
-            return "Token invalid";
+            throw new ArgumentException("Token invalid");
         }
     }
 
