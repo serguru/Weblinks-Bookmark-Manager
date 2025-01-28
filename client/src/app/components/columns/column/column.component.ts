@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../base/confirm-dialog/confirm-dialog.component';
-import { finalize } from 'rxjs';
+import { finalize, of, tap } from 'rxjs';
 import { LcolumnModel } from '../../../models/LcolumnModel';
 import { MatCardModule } from '@angular/material/card';
 import { LinkComponent } from '../../links/link/link.component';
@@ -42,9 +42,25 @@ export class ColumnComponent {
   constructor(public pagesService: PagesService, public loginService: LoginService,
     private router: Router, private dialog: MatDialog) { }
 
-  drop(event: CdkDragDrop<LinkModel[]>) {
-    moveItemInArray(this.column.links || [], event.previousIndex, event.currentIndex);
-    this.pagesService.saveConfig();
+  drop(e: CdkDragDrop<any>) {
+
+    const o = e.container === e.previousContainer ?
+      of(null).pipe(
+        tap(() => {
+          moveItemInArray(this.column.links || [], e.previousIndex, e.currentIndex);
+        })
+      ) :
+      this.pagesService.moveLinkToColumn(e.item.data, e.container.data).pipe(
+        tap(() => {
+          e.container.data.links.splice(e.currentIndex, 0, e.item.data);
+          const indexToDelete = e.previousContainer.data.links.findIndex((x: any) => x === e.item.data);
+          e.previousContainer.data.links.splice(indexToDelete, 1);
+        })
+      );
+
+    o.subscribe((): void => {
+      this.pagesService.saveConfig();
+    })
   }
 
   delete(): void {

@@ -1,10 +1,14 @@
-<div class="link3-title row-title" cdkDrag [cdkContextMenuTriggerFor]="context_menu" [cdkMenuTriggerFor]="context_menu">
+<div class="link3-title row-title" cdkDrag [cdkDragData]="row" [cdkContextMenuTriggerFor]="context_menu" [cdkMenuTriggerFor]="context_menu">
     {{row.caption}}
 </div>
-<div class="row-container" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
+<div class="row-container" cdkDropList [cdkDropListData]="row"
+cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)"
+[id]="'r' + row.id" 
+[cdkDropListConnectedTo]="pagesService.rowIds"
+>
     <ng-container *ngIf="row.lcolumns?.length; else new_column">
         @for (column of row.lcolumns; track column) {
-        <app-column cdkDrag [row]="row" [column]="column"></app-column>
+        <app-column cdkDrag [cdkDragData]="column" [row]="row" [column]="column"></app-column>
         }
     </ng-container>
     <ng-template #new_column>

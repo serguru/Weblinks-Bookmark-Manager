@@ -122,6 +122,13 @@ public class PagesController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPut("move-column")]
+    public async Task<IActionResult> MoveColumn([FromBody] ColumnMoveModel model)
+    {
+        await _pagesService.ColumnMoveAsync(model);
+        return Ok();
+    }
+
     [HttpDelete("delete-column/{columnId}")]
     public async Task<IActionResult> DeleteColumn(int columnId)
     {
@@ -138,6 +145,13 @@ public class PagesController : ControllerBase
     {
         LinkModel result = await _pagesService.AddOrUpdateLinkAsync(model);
         return Ok(result);
+    }
+
+    [HttpPut("move-link")]
+    public async Task<IActionResult> MoveLink([FromBody] LinkMoveModel model)
+    {
+        await _pagesService.LinkMoveAsync(model);
+        return Ok();
     }
 
     [HttpDelete("delete-link/{linkId}")]

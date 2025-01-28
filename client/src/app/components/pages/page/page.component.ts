@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { LoginService } from '../../../services/login.service';
 import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 import { LrowModel } from '../../../models/LrowModel';
 import { MatIconModule } from '@angular/material/icon';
+import { PageModel } from '../../../models/PageModel';
 
 @Component({
   selector: 'app-page',
@@ -31,7 +32,7 @@ export class PageComponent implements OnInit {
   
   ) { }
 
-    drop(event: CdkDragDrop<LrowModel[]>) {
+    drop(event: CdkDragDrop<any>) {
       moveItemInArray(this.pagesService.activePage?.lrows || [], event.previousIndex, event.currentIndex);
       this.pagesService.saveConfig();
     }

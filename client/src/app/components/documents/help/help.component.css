@@ -19,3 +19,12 @@ mat-card {
     border: #333333 solid 1px;
 }
 
+.appeal {
+    text-align: center; 
+    font-size: large;
+}
+
+h3 {
+    text-align: center;
+    margin: 0px;
+}

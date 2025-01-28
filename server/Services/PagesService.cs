@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using server.Data;
 using server.Data.Entities;
 using server.Data.Models;
@@ -179,6 +180,27 @@ public class PagesService(
         await _columnsRepository.DeleteColumnAsync(columnId);
     }
 
+
+    public async Task ColumnMoveAsync(ColumnMoveModel model)
+    {
+        Lcolumn column = await _columnsRepository.GetColumnByIdAsync(model.ColumnId) ??
+            throw new Exception("Column not found");
+
+        Lrow row = await _rowsRepository.GetRowByIdAsync(model.RowId) ??
+            throw new Exception("Row not found");
+
+
+        if (column.RowId == row.Id)
+        {
+            return;
+        }
+
+        column.RowId = row.Id;
+
+        await _columnsRepository.UpdateColumnAsync(column);
+    }
+
+
     #endregion
 
 
@@ -225,6 +247,27 @@ public class PagesService(
         LinkModel model = _mapper.Map<LinkModel>(entity);
         return model;
     }
+
+    public async Task LinkMoveAsync(LinkMoveModel model)
+    {
+        Link link = await _linksRepository.GetLinkByIdAsync(model.LinkId) ?? 
+            throw new Exception("Link not found");
+
+        Lcolumn column = await _columnsRepository.GetColumnByIdAsync(model.ColumnId) ?? 
+            throw new Exception("Column not found");
+
+
+        if (link.ColumnId == column.Id)
+        {
+            return;
+        }
+
+        link.ColumnId = column.Id;
+
+        await _linksRepository.UpdateLinkAsync(link);
+    }
+
+
 
     public async Task DeleteLinkAsync(int linkId)
     {

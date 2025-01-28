@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../base/confirm-dialog/confirm-dialog.component';
-import { finalize } from 'rxjs';
+import { finalize, of, tap } from 'rxjs';
 import { ColumnComponent } from '../../columns/column/column.component';
 import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
 import { CdkMenuTrigger } from '@angular/cdk/menu';
@@ -41,10 +41,27 @@ export class RowComponent {
 
   @ViewChild('menuTrigger') menuTrigger!: CdkMenuTrigger;
 
-  drop(event: CdkDragDrop<LcolumnModel[]>) {
-    moveItemInArray(this.row.lcolumns || [], event.previousIndex, event.currentIndex);
-    this.pagesService.saveConfig();
+  drop(e: CdkDragDrop<any>) {
+
+    const o = e.container === e.previousContainer ?
+      of(null).pipe(
+        tap(() => {
+          moveItemInArray(this.row.lcolumns || [], e.previousIndex, e.currentIndex);
+        })
+      ) :
+      this.pagesService.moveColumnToRow(e.item.data, e.container.data).pipe(
+        tap(() => {
+          e.container.data.lcolumns.splice(e.currentIndex, 0, e.item.data);
+          const indexToDelete = e.previousContainer.data.lcolumns.findIndex((x: any) => x === e.item.data);
+          e.previousContainer.data.lcolumns.splice(indexToDelete, 1);
+        })
+      );
+
+    o.subscribe((): void => {
+      this.pagesService.saveConfig();
+    })
   }
+
 
   openMenu() {
     this.menuTrigger.open();

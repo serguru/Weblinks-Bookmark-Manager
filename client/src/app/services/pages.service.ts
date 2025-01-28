@@ -13,7 +13,6 @@ import { LinkModel } from '../models/LinkModel';
 import { MessagesService } from './messages.service';
 import { AccountModel } from '../models/AccountModel';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -35,7 +34,6 @@ export class PagesService {
 
   loadingPages: boolean = false;
 
-  
   private accountSubject = new BehaviorSubject<any>(null);
   public account$ = this.accountSubject.asObservable();
   updateAccount(account: AccountModel | null) {
@@ -44,7 +42,7 @@ export class PagesService {
   get account(): AccountModel | null {
     return this.accountSubject.getValue();
   }
-  
+
   checkAlive(): Observable<any> {
     return this.http.get<any>(this.apiUrl + "/alive");
   }
@@ -316,6 +314,48 @@ export class PagesService {
     }
     const config = this.generateConfigStr();
     this.loginService.saveConfig(config).subscribe();
+  }
+
+  get rowIds(): string[] {
+
+    const result: string[] = [];
+
+    this.pages?.forEach(p => {
+      p.lrows?.forEach(r => {
+        result.push('r' + r.id);
+      })
+    })
+
+    return result;
+  }
+
+  get columnIds(): string[] {
+
+    const result: string[] = [];
+
+    this.pages?.forEach(p => {
+      p.lrows?.forEach(r => {
+        r.lcolumns?.forEach(c => {
+          result.push('c' + c.id);
+        })
+      })
+    })
+
+    return result;
+  }
+ 
+  moveLinkToColumn(link: LinkModel, column: LcolumnModel)  {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+    return this.http.put<any>(this.apiUrl + "/move-link", {linkId: link.id, columnId: column.id});
+  }
+
+  moveColumnToRow(column: LcolumnModel, row: LrowModel)  {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+    return this.http.put<any>(this.apiUrl + "/move-column", {columnId: column.id, rowId: row.id});
   }
 
 }

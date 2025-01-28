@@ -1,10 +1,12 @@
-<div class="page-container" *ngIf="pagesService.activePage" cdkDropList cdkDropListOrientation="mixed"
-  (cdkDropListDropped)="drop($event)">
+<div class="page-container" *ngIf="pagesService.activePage" cdkDropList
+  [cdkDropListData]="pagesService.activePage" cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)"
+  >
   <ng-container *ngIf="pagesService.activePage.lrows?.length; else new_row">
     @for (row of pagesService.activePage.lrows; track row) {
-    <app-row [row]="row" ></app-row>
+    <app-row [row]="row"></app-row>
     }
   </ng-container>
+
   <ng-template #new_row>
     <div class="add-row-button">
       <a mat-button [routerLink]="'/add-row/'+pagesService.activePage.id">
@@ -12,4 +14,5 @@
         Add row</a>
     </div>
   </ng-template>
+
 </div>
