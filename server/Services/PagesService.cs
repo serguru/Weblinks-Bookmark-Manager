@@ -256,7 +256,6 @@ public class PagesService(
         Lcolumn column = await _columnsRepository.GetColumnByIdAsync(model.ColumnId) ?? 
             throw new Exception("Column not found");
 
-
         if (link.ColumnId == column.Id)
         {
             return;

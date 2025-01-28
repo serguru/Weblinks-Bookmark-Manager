@@ -347,8 +347,6 @@ public class AccountsService : IAccountsService
                 throw;
             }
         });
-
-
     }
 
     public async Task ResetPasswordAsync(ResetPasswordModel model)

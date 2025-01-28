@@ -320,10 +320,8 @@ export class PagesService {
 
     const result: string[] = [];
 
-    this.pages?.forEach(p => {
-      p.lrows?.forEach(r => {
-        result.push('r' + r.id);
-      })
+    this.activePage?.lrows?.forEach(r => {
+      result.push('r' + r.id);
     })
 
     return result;
@@ -333,29 +331,27 @@ export class PagesService {
 
     const result: string[] = [];
 
-    this.pages?.forEach(p => {
-      p.lrows?.forEach(r => {
-        r.lcolumns?.forEach(c => {
-          result.push('c' + c.id);
-        })
+    this.activePage?.lrows?.forEach(r => {
+      r.lcolumns?.forEach(c => {
+        result.push('c' + c.id);
       })
     })
 
     return result;
   }
- 
-  moveLinkToColumn(link: LinkModel, column: LcolumnModel)  {
+
+  moveLinkToColumn(link: LinkModel, column: LcolumnModel) {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
-    return this.http.put<any>(this.apiUrl + "/move-link", {linkId: link.id, columnId: column.id});
+    return this.http.put<any>(this.apiUrl + "/move-link", { linkId: link.id, columnId: column.id });
   }
 
-  moveColumnToRow(column: LcolumnModel, row: LrowModel)  {
+  moveColumnToRow(column: LcolumnModel, row: LrowModel) {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
-    return this.http.put<any>(this.apiUrl + "/move-column", {columnId: column.id, rowId: row.id});
+    return this.http.put<any>(this.apiUrl + "/move-column", { columnId: column.id, rowId: row.id });
   }
 
 }
