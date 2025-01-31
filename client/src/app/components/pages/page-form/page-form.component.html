@@ -1,5 +1,5 @@
 <div class="form-container">
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-header>
       <mat-card-title>{{formTitle}}</mat-card-title>
     </mat-card-header>
@@ -9,7 +9,7 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Page path</mat-label>
-          <input matInput type="text" formControlName="pagePath" placeholder="Enter page path" >
+          <input matInput type="text" formControlName="pagePath" placeholder="Enter page path">
           <mat-error *ngIf="form.get('pagePath')?.hasError('required')">
             Page path is required
           </mat-error>
@@ -26,16 +26,14 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Caption</mat-label>
-          <input matInput type="text" formControlName="caption" placeholder="Enter page caption">
+          <input  matInput type="text" formControlName="caption" placeholder="Enter page caption">
         </mat-form-field>
 
         <div class="form-field">
-          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid"
-            class="full-width">
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" class="full-width">
             <span>Submit</span>
           </button>
         </div>
-
       </form>
     </mat-card-content>
   </mat-card>

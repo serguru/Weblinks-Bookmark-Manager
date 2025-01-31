@@ -24,6 +24,10 @@ export class ContextMenuComponent {
   @Input() title!: string;
   @Input() addPath!: string;
   @Input() updatePath!: string;
-  @Input() disabled!: boolean;
   @Input() delete!: Function;
+
+  @Input() addDisabled: boolean = false;
+  @Input() updateDisabled: boolean = false;
+  @Input() deleteDisabled: boolean = false;
+
 }

@@ -4,6 +4,7 @@
     padding-bottom: 0px;
     max-width: 300px;
     min-width: 150px;
+    border: 1px solid rgb(188, 188, 188);
 }
 
 .mat-mdc-card-header {

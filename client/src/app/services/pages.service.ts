@@ -29,7 +29,7 @@ export class PagesService {
     this.loginService.userLoggedOut.subscribe(() => {
       this.updateAccount(null);
       this.router.navigate(["/login"]);
-    })
+    });
   }
 
   loadingPages: boolean = false;
@@ -79,7 +79,8 @@ export class PagesService {
       throw new Error('Unauthorized');
     }
 
-    return this.http.post(this.apiUrl + '/add-update-page', { id: id, pagePath: pagePath, caption: caption })
+    return this.http.post(this.apiUrl + '/add-update-page', { id: id, pagePath: pagePath, 
+      caption: caption })
       .pipe(
         tap((response: any) => {
           const pages = this.pages;

@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card appearance="outlined">
     <mat-card-header>
         <mat-card-title>Update Account</mat-card-title>
     </mat-card-header>
@@ -9,7 +9,7 @@
                 <div class="full-width">
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>First Name</mat-label>
-                        <input matInput formControlName="firstName" placeholder="Enter your first name" >
+                        <input matInput formControlName="firstName" placeholder="Enter your first name">
                     </mat-form-field>
                     <app-validation-errors [control]="form.get('firstName')"
                         [messages]="firstNameMessages"></app-validation-errors>
@@ -47,6 +47,6 @@
                     <span>Update</span>
                 </button>
             </div>
-    </form>
+        </form>
     </mat-card-content>
 </mat-card>

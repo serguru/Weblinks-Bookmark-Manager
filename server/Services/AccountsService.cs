@@ -1,20 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using Newtonsoft.Json.Linq;
-using NuGet.Configuration;
+using Newtonsoft.Json;
 using NuGet.Packaging;
 using server.Common;
 using server.Data;
 using server.Data.Entities;
 using server.Data.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Text.Json;
 
 namespace server.Services;
 
@@ -163,6 +154,8 @@ public class AccountsService : IAccountsService
 
             if (page != null)
             {
+                page.ReadOnly = settingsPage.ReadOnly;
+                page.Public = settingsPage.Public;
                 if (page.Lrows != null && page.Lrows.Count > 0 &&
                     settingsPage.Lrows != null && settingsPage.Lrows.Count > 0)
                 {
@@ -189,13 +182,12 @@ public class AccountsService : IAccountsService
             return;
         }
 
-        SettingsModel? settingsModel = JsonSerializer.Deserialize<SettingsModel>(accountModel.Settings);
+        SettingsModel? settingsModel = JsonConvert.DeserializeObject<SettingsModel>(accountModel.Settings);
 
         if (settingsModel == null || settingsModel.Pages == null || settingsModel.Pages.Count == 0)
         {
             return;
         }
-
 
         if (accountModel.Id != settingsModel.Id)
         {
@@ -356,7 +348,7 @@ public class AccountsService : IAccountsService
         try
         {
             token = _tokenService.DecryptString(model.Token);
-            m = JsonSerializer.Deserialize<ForgotPasswordModel>(token);
+            m = JsonConvert.DeserializeObject<ForgotPasswordModel>(token);
         }
         catch 
         {

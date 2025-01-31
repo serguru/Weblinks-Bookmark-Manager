@@ -1,11 +1,9 @@
-<div class="link3-title row-title" cdkDrag [cdkDragData]="row" [cdkContextMenuTriggerFor]="context_menu" [cdkMenuTriggerFor]="context_menu">
+<div class="link3-title row-title" cdkDrag [cdkDragData]="row"
+    [cdkContextMenuTriggerFor]="context_menu" [cdkMenuTriggerFor]="context_menu">
     {{row.caption}}
 </div>
-<div class="row-container" cdkDropList [cdkDropListData]="row"
-cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)"
-[id]="'r' + row.id" 
-[cdkDropListConnectedTo]="pagesService.rowIds"
->
+<div class="row-container" cdkDropList [cdkDropListData]="row" cdkDropListOrientation="mixed"
+    (cdkDropListDropped)="drop($event)" [id]="'r' + row.id" [cdkDropListConnectedTo]="pagesService.rowIds">
     <ng-container *ngIf="row.lcolumns?.length; else new_column">
         @for (column of row.lcolumns; track column) {
         <app-column cdkDrag [cdkDragData]="column" [row]="row" [column]="column"></app-column>
@@ -14,12 +12,14 @@ cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)"
     <ng-template #new_column>
         <a mat-button [routerLink]="'/add-column/'+row.id">
             <mat-icon>add_circle</mat-icon>
-            Add column</a>
+            Add column
+        </a>
     </ng-template>
 </div>
 
 <ng-template #context_menu>
     <app-context-menu [title]="'Row'" [addPath]="'/add-row/'+row.pageId" [updatePath]="'/update-row/'+row.id"
-        [delete]="delete.bind(this)" [disabled]="false">
+        [delete]="delete.bind(this)" 
+        >
     </app-context-menu>
 </ng-template>

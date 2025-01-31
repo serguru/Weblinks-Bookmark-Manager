@@ -14,6 +14,7 @@ import { PagesService } from '../../../services/pages.service';
 import { LoginService } from '../../../services/login.service';
 import { PAGE } from '../../../common/constants';
 import { AccountModel } from '../../../models/AccountModel';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-page-form',
@@ -26,6 +27,7 @@ import { AccountModel } from '../../../models/AccountModel';
     MatIconModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule
   ],
   templateUrl: './page-form.component.html',
   styleUrl: './page-form.component.css'
@@ -83,8 +85,12 @@ export class PageFormComponent implements OnInit {
       })
   }
 
+  get isUpdateMode(): boolean {
+    return !!this.pageModel;
+  }
+
   get formTitle(): string {
-    return this.pageModel ? 'Update Page' : 'Add Page';
+    return this.isUpdateMode ? 'Update Page' : 'Add Page';
   }
 
   onSubmit(): void {

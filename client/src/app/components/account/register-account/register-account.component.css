@@ -3,7 +3,6 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  /* background-color: #f5f5f5; */
   padding: 20px;
 }
 
@@ -11,6 +10,7 @@ mat-card {
   max-width: 600px;
   width: 100%;
   padding: 20px;
+  border: 1px solid rgb(188, 188, 188);
 }
 
 mat-card-header {
@@ -19,23 +19,7 @@ mat-card-header {
 
 .full-width {
   width: 100%;
-  /* margin-bottom: 15px; */
 }
-
-/* .submit-button {
-    margin-top: 20px;
-  } */
-
-/* mat-form-field {
-    margin-bottom: 16px;
-  } */
-
-
-/* 
-button {
-  width: 200px;
-}
- */
 
 .validation-error {
   width: 100%;

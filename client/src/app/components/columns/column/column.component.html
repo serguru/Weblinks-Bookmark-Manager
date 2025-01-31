@@ -23,6 +23,7 @@
 
 <ng-template #context_menu>
     <app-context-menu [title]="'Column'" [addPath]="'/add-column/'+row.id"
-        [updatePath]="'/update-column/'+row.id+'/'+column.id" [delete]="delete.bind(this)" [disabled]="false">
+        [updatePath]="'/update-column/'+row.id+'/'+column.id" [delete]="delete.bind(this)" 
+        >
     </app-context-menu>
 </ng-template>

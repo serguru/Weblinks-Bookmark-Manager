@@ -2,6 +2,7 @@
     max-width: 600px;
     width: 100%;
     padding: 20px;
+    border: 1px solid rgb(188, 188, 188);
   }
   
   mat-card-header {
@@ -10,18 +11,7 @@
   
   .full-width {
     width: 100%;
-    /* margin-bottom: 15px; */
   }
-  
-  /* .submit-button {
-      margin-top: 20px;
-    } */
-  
-  /* mat-form-field {
-      margin-bottom: 16px;
-    } */
-  
-  
   
   .validation-error {
     width: 100%;

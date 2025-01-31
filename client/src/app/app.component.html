@@ -62,11 +62,13 @@
    </mat-menu>
 
    <ng-template #context_menu>
-      <app-context-menu [title]="'Page'" [addPath]="'/add-page'" [updatePath]="'/update-page/'+this.popupPage?.pagePath"
-         [delete]="deletePopupPage.bind(this)" [disabled]="!this.popupPage">
+      <app-context-menu [title]="'Page'" [addPath]="'/add-page'" 
+         [updatePath]="'/update-page/'+this.popupPage?.pagePath"
+         [delete]="deletePopupPage.bind(this)" 
+         [deleteDisabled]="!this.popupPage"
+         >
       </app-context-menu>
    </ng-template>
-
    }
 
 

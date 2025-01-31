@@ -34,9 +34,15 @@ public class SettingsPageModel
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
+    
+    [JsonPropertyName("readOnly")]
+    public bool ReadOnly { get; set; }
+
+    [JsonPropertyName("public")]
+    public bool Public { get; set; }
+
     [JsonPropertyName("lrows")]
     public List<SettingsRowModel> Lrows { get; set; } = new List<SettingsRowModel>();
-
 }
 
 public class SettingsModel

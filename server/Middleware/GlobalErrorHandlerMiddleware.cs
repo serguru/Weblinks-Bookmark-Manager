@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using server.Services;
 
 namespace server.Middleware;
@@ -29,11 +30,15 @@ public class GlobalErrorHandlerMiddleware(RequestDelegate next, IServiceProvider
         var statusCode = StatusCodes.Status500InternalServerError;
         var errorMessage = exception.Message;
 
-        if (errorMessage != null) 
+        var ex = new JObject
         {
-            await emailService.SendEmailToAdminAsync("An exception occurred on the server",
-                JsonConvert.SerializeObject(exception));
-        }
+            ["Message"] = exception.Message,
+            ["StackTrace"] = exception.StackTrace,
+            ["InnerException"] = exception.InnerException?.Message
+        };
+
+        await emailService.SendEmailToAdminAsync("An exception occurred on the server",
+            JsonConvert.SerializeObject(ex));
 
         var response = context.Response;
         response.ContentType = "application/json";

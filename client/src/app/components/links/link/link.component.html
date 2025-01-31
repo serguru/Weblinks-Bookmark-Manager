@@ -5,6 +5,6 @@
 <ng-template #context_menu>
     <app-context-menu [title]="'Link'" [addPath]="'/add-link/'+row.id+'/'+column.id" 
     [updatePath]="'/update-link/'+row.id+'/'+column.id+'/'+link.id"
-        [delete]="delete.bind(this)" [disabled]="false">
+        [delete]="delete.bind(this)">
     </app-context-menu>
 </ng-template>
