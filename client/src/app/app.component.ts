@@ -21,6 +21,7 @@ import { DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } fr
 import { CookieService } from 'ngx-cookie-service';
 import { LoadingSpinnerComponent } from './components/base/loading-spinner/loading-spinner.component';
 import { LoadingService } from './services/loading.service';
+import { MessagesService } from './services/messages.service';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,6 @@ import { LoadingService } from './services/loading.service';
     MatTooltipModule,
     DragDropModule,
     LoadingSpinnerComponent
-
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -46,7 +46,8 @@ export class AppComponent implements OnInit {
     public loginService: LoginService,
     private dialog: MatDialog,
     private cookieService: CookieService,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    private messagesService: MessagesService
      
   ) { }
 
@@ -124,6 +125,11 @@ export class AppComponent implements OnInit {
       throw new Error('popupPage is required');
     }
 
+    if (this.popupPage.readOnly) {
+      this.messagesService.showPageReadOnly(this.popupPage);
+      return;
+    }
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Delete Page',
@@ -156,6 +162,13 @@ export class AppComponent implements OnInit {
     }
     return this.pagesService.account.userName;
   }
-
+  
+  setPageReadOnly() {
+    if (!this.popupPage) {
+      return;
+    }
+    this.popupPage.readOnly = !this.popupPage.readOnly;
+    this.pagesService.saveConfig();
+  }
 
 }

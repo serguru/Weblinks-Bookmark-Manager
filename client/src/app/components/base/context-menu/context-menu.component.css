@@ -1,12 +1,12 @@
 .menu-container {
-    border:  1px solid #7c7c7c;
+    border: 1px solid #7c7c7c;
 }
 
 .menu {
     display: inline-flex;
     flex-direction: column;
     background-color: rgb(255, 255, 255);
-    padding: 6px 12PX;
+    padding: 6px px;
 }
 
 .menu-item {
@@ -42,3 +42,9 @@
 mat-icon {
     margin-right: 1rem;
 }
+
+.separator {
+    width: 100%;
+    color: #7c7c7c;
+}
+

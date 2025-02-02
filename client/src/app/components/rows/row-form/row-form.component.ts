@@ -15,6 +15,7 @@ import { PAGE } from '../../../common/constants';
 import { PageModel } from '../../../models/PageModel';
 import { LrowModel } from '../../../models/LrowModel';
 import { ActivatedRoute } from '@angular/router';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-row-form',
@@ -41,7 +42,8 @@ export class RowFormComponent implements OnInit {
     public loginService: LoginService,
     private router: Router,
     private pagesService: PagesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private messagesService: MessagesService,
   ) {
     this.form = this.fb.group({
       caption: ['']
@@ -71,6 +73,13 @@ export class RowFormComponent implements OnInit {
             this.router.navigate(['/not-found']);
             throw new Error('Page not found');
           }
+
+          if (p.readOnly) {
+            this.messagesService.showPageReadOnly(p);
+            this.router.navigate(['/page/'+p.pagePath]);
+            return;
+          }
+  
           this.pageModel = p;
           return;
         }
@@ -86,7 +95,16 @@ export class RowFormComponent implements OnInit {
           throw new Error('Row not found');
         }
         this.rowModel = r;
-        this.pageModel = this.pagesService.getPageById(r!.pageId)!;
+
+        const p = this.pagesService.getPageById(r!.pageId)!;
+
+        if (p.readOnly) {
+          this.messagesService.showPageReadOnly(p);
+          this.router.navigate(['/page/'+p.pagePath]);
+          return;
+        }
+
+        this.pageModel = p;
         this.form.get('caption')!.setValue(this.rowModel.caption);
       })
   }

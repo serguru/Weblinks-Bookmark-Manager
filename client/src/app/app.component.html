@@ -1,6 +1,5 @@
 <app-loading-spinner />
-<div class="toolbar-content" cdkDropList cdkDropListOrientation="mixed"
-   (cdkDropListDropped)="drop($event)">
+<div class="toolbar-content" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
    <a [routerLink]="['/help']" class="app-title">
       <h2>weblinks</h2>
       <h4>bookmark manager</h4>
@@ -16,15 +15,14 @@
 
       @for (page of pagesService.pages; track page) {
       <a mat-button
-         [class]="isRouteName('/page') && pagesService.activePage?.pagePath === page.pagePath ? 'active-link' : ''"
+         [ngClass]="[isRouteName('/page') && pagesService.activePage?.pagePath === page.pagePath ? 
+         'active-page' : '', page.readOnly ? 'page-read-only' : '']"
          [routerLink]="['/page/'+page.pagePath]" [cdkContextMenuTriggerFor]="context_menu"
          (cdkContextMenuOpened)="onContextMenuOpened(page)" cdkDrag [cdkDragData]="page"
          [id]="'p' + page.id">{{page.caption || page.pagePath }}</a>
       }
    </div>
-
    <span class="spacer"></span>
-
    <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>menu</mat-icon>
    </button>
@@ -46,7 +44,9 @@
       <a *ngIf="!isRouteName('/policy')" mat-menu-item [routerLink]="'/policy'">
          <mat-icon>shield</mat-icon>
          Privacy Policy</a>
+
       <ng-container *ngIf="loginService.isAuthenticated">
+         <hr/>
          <button mat-menu-item (click)="logOut()">
             <mat-icon>logout</mat-icon>
             Log out</button>
@@ -62,11 +62,9 @@
    </mat-menu>
 
    <ng-template #context_menu>
-      <app-context-menu [title]="'Page'" [addPath]="'/add-page'" 
-         [updatePath]="'/update-page/'+this.popupPage?.pagePath"
-         [delete]="deletePopupPage.bind(this)" 
-         [deleteDisabled]="!this.popupPage"
-         >
+      <app-context-menu [title]="'Page'" [addPath]="'/add-page'" [updatePath]="'/update-page/'+this.popupPage?.pagePath"
+         [delete]="deletePopupPage.bind(this)" [deleteDisabled]="!this.popupPage"
+         [pageReadOnly]="setPageReadOnly.bind(this)" [page]="popupPage">
       </app-context-menu>
    </ng-template>
    }

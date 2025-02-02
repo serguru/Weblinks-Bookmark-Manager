@@ -14,6 +14,7 @@ import { PagesService } from '../../../services/pages.service';
 import { LrowModel } from '../../../models/LrowModel';
 import { ActivatedRoute } from '@angular/router';
 import { LcolumnModel } from '../../../models/LcolumnModel';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-column-form',
@@ -41,7 +42,8 @@ export class ColumnFormComponent implements OnInit {
     public loginService: LoginService,
     private router: Router,
     private pagesService: PagesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private messagesService: MessagesService
   ) {
     this.form = this.fb.group({
       caption: ['']
@@ -68,6 +70,19 @@ export class ColumnFormComponent implements OnInit {
           this.router.navigate(['not-found']);
           throw new Error('Row not found');
         }
+
+        const p = this.pagesService.getPageByRowId(+rowId);
+        if (!p) {
+          this.router.navigate(['/not-found']);
+          throw new Error('Page not found');
+        }
+
+        if (p.readOnly) {
+          this.messagesService.showPageReadOnly(p);
+          this.router.navigate(['/page/' + p.pagePath]);
+          return;
+        }
+
         const r = this.pagesService.getRowById(+rowId);
         if (!r) {
           this.router.navigate(['not-found']);

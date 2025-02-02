@@ -79,8 +79,18 @@ export class PagesService {
       throw new Error('Unauthorized');
     }
 
-    return this.http.post(this.apiUrl + '/add-update-page', { id: id, pagePath: pagePath, 
-      caption: caption })
+    if (id > 0) {
+      const p = this.getPageById(id)!;
+      if (p.readOnly) {
+        this.messagesService.showPageReadOnly(p);
+        return of();
+      }
+    }
+
+    return this.http.post(this.apiUrl + '/add-update-page', {
+      id: id, pagePath: pagePath,
+      caption: caption
+    })
       .pipe(
         tap((response: any) => {
           const pages = this.pages;
@@ -107,6 +117,13 @@ export class PagesService {
     if (!pageId) {
       throw new Error('No page id provided');
     }
+
+    const p = this.getPageById(pageId)!;
+    if (p.readOnly) {
+      this.messagesService.showPageReadOnly(p);
+      return of();
+    }
+
     return this.http.delete(this.apiUrl + '/delete-page/' + pageId)
       .pipe(
         tap(() => {
@@ -124,6 +141,12 @@ export class PagesService {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
+
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return of();
+    }
+
 
     return this.http.post(this.apiUrl + '/add-update-row', { id: id, pageId: page.id, caption: caption })
       .pipe(
@@ -150,6 +173,13 @@ export class PagesService {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
+
+    const page = this.getPageById(row.pageId)!;
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return of();
+    }
+
     return this.http.delete(this.apiUrl + '/delete-row/' + row.id)
       .pipe(
         tap(() => {
@@ -167,23 +197,76 @@ export class PagesService {
       );
   }
 
-  getPageById(pageId: number) {
+
+  //#region get X by id
+
+  getPageById(pageId: number): PageModel | undefined {
+    if (!this.pages) {
+      return undefined;
+    }
+    pageId = +pageId;
     const pages = this.pages || [];
-    return pages.find((p: PageModel) => p.id === pageId);
+    return pages.
+      find((p: PageModel) => p.id === pageId);
   }
 
-  getRowById(rowId: number): LrowModel | null {
+  getPageByRowId(rowId: number): PageModel | undefined {
     if (!this.pages) {
-      return null;
+      return undefined;
+    }
+    rowId = +rowId;
+    const page = this.pages.
+      find(x => x.lrows?.
+        find(y => y.id === rowId));
+    return page;
+  }
+
+  getPageByColumnId(columnId: number): PageModel | undefined {
+    if (!this.pages) {
+      return undefined;
+    }
+    columnId = +columnId;
+    const page = this.pages.
+      find(x => x.lrows?.
+        find(y => y.lcolumns?.
+          find(z => z.id === columnId)));
+    return page;
+  }
+
+  getPageByLinkId(linkId: number): PageModel | undefined {
+    if (!this.pages) {
+      return undefined;
+    }
+    linkId = +linkId;
+    const page = this.pages.
+      find(x => x.lrows?.
+        find(y => y.lcolumns?.
+          find(z => z.links?.
+            find(l => l.id === linkId))));
+    return page;
+  }
+
+  getRowById(rowId: number): LrowModel | undefined {
+    if (!this.pages) {
+      return undefined;
     }
     rowId = +rowId;
     const page = this.pages.find(x => x.lrows?.find(y => y.id === rowId));
-    return page?.lrows?.find((r: LrowModel) => r.id === rowId) || null;
+    return page?.lrows?.find((r: LrowModel) => r.id === rowId);
   }
+
+  //#endregion
+
 
   addOrUpdateColumn(row: LrowModel, id: number, caption: string): Observable<LcolumnModel> {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
+    }
+
+    const page = this.getPageById(row.pageId)!;
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return of();
     }
 
     return this.http.post(this.apiUrl + '/add-update-column', { id: id, rowId: row.id, caption: caption })
@@ -211,6 +294,13 @@ export class PagesService {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
+
+    const page = this.getPageById(row.pageId)!;
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return of();
+    }
+
     return this.http.delete(this.apiUrl + '/delete-column/' + column.id)
       .pipe(
         tap(() => {
@@ -227,6 +317,13 @@ export class PagesService {
   addOrUpdateLink(column: LcolumnModel, id: number, aUrl: string, caption: string): Observable<LinkModel> {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
+    }
+
+    const row = this.getRowById(column.rowId)!;
+    const page = this.getPageById(row.pageId)!;
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return of();
     }
 
     return this.http.post(this.apiUrl + '/add-update-link', { id: id, columnId: column.id, aUrl: aUrl, caption: caption })
@@ -255,6 +352,14 @@ export class PagesService {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
+
+    const row = this.getRowById(column.rowId)!;
+    const page = this.getPageById(row.pageId)!;
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return of();
+    }
+
     return this.http.delete(this.apiUrl + '/delete-link/' + link.id)
       .pipe(
         tap(() => {
@@ -280,7 +385,7 @@ export class PagesService {
     if (a.pages?.length) {
       o.pages = [];
       a.pages.forEach((x: any) => {
-        const p: any = { id: x.id };
+        const p: any = { id: x.id, readOnly: x.readOnly };
         // rows
         if (x.lrows?.length) {
           p.lrows = [];
@@ -345,6 +450,14 @@ export class PagesService {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
+
+    const row = this.getRowById(column.rowId)!;
+    const page = this.getPageById(row.pageId)!;
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return of();
+    }
+
     return this.http.put<any>(this.apiUrl + "/move-link", { linkId: link.id, columnId: column.id });
   }
 
@@ -352,6 +465,13 @@ export class PagesService {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
+
+    const page = this.getPageById(row.pageId)!;
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return of();
+    }
+
     return this.http.put<any>(this.apiUrl + "/move-column", { columnId: column.id, rowId: row.id });
   }
 

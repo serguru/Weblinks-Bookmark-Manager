@@ -24,6 +24,12 @@ body {
     --mdc-outlined-card-container-color: #f7f6f6;
     --mdc-outlined-card-outline-width: 0px;
     --mat-menu-item-icon-color: #7c7c7c; 
+
+    --mat-checkbox-label-text-size: large;
+    --mat-checkbox-label-text-color: #7c7c7c;
+    --mat-checkbox-label-text-font: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    --mat-checkbox-label-text-weight: 400;
+
 }
 
 .link3-title {
@@ -45,6 +51,12 @@ body {
     --mat-sys-inverse-on-surface: white;
     --mat-sys-inverse-surface: #4caf50;
     --mat-sys-inverse-primary: white
+}
+
+.warning-snackbar {
+    --mat-sys-inverse-on-surface: white;
+    --mat-sys-inverse-surface: blue;
+    --mat-sys-inverse-primary: white;
 }
 
 .form-row {

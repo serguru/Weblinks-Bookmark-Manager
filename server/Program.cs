@@ -104,16 +104,16 @@ namespace server
             builder.Services.AddHostedService<TasksService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            //builder.Services.AddEndpointsApiExplorer();
+            //builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                //app.UseSwagger();
+                //app.UseSwaggerUI();
                 app.UseCors("Development");
             } else
             {
@@ -132,75 +132,3 @@ namespace server
         }
     }
 }
-
-/*
- 
- using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-
-        // Define CORS policies
-        builder.Services.AddCors(options =>
-        {
-            // Development policy - more permissive
-            options.AddPolicy("Development", policy =>
-            {
-                policy
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .WithExposedHeaders("Content-Disposition"); // Useful for file downloads
-            });
-
-            // Production policy - more restrictive
-            options.AddPolicy("Production", policy =>
-            {
-                policy
-                    .WithOrigins(
-                        "https://your-production-domain.com",
-                        "https://api.your-production-domain.com"
-                    )
-                    .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                    .WithHeaders(
-                        "Authorization",
-                        "Content-Type",
-                        "Accept",
-                        "X-Requested-With"
-                    )
-                    .WithExposedHeaders("Content-Disposition")
-                    .AllowCredentials();
-            });
-        });
-
-        // Add other services
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
-        var app = builder.Build();
-
-        // Configure CORS based on environment
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseCors("Development");
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-        else
-        {
-            app.UseCors("Production");
-        }
-
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
-        app.MapControllers();
-
-        app.Run();
-    }
-}
- */

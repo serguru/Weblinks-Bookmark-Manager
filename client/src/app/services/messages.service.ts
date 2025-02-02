@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PageModel } from '../models/PageModel';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,19 @@ export class MessagesService {
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });
+  }
+
+  showWarning(error: string): void {
+    this.snackBar.open(error, 'Close', {
+      duration: 5000,
+      panelClass: ['warning-snackbar'],
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
+  }
+
+  showPageReadOnly(page: PageModel) {
+    const message: string = `Page ${page.caption} is read only`;
+    this.showWarning(message);
   }
 }

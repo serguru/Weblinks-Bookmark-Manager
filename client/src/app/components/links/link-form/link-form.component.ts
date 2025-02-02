@@ -15,6 +15,7 @@ import { LrowModel } from '../../../models/LrowModel';
 import { ActivatedRoute } from '@angular/router';
 import { LcolumnModel } from '../../../models/LcolumnModel';
 import { LinkModel } from '../../../models/LinkModel';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-link-form',
@@ -42,7 +43,8 @@ export class LinkFormComponent implements OnInit, AfterViewInit {
     public loginService: LoginService,
     private router: Router,
     private pagesService: PagesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private messagesService: MessagesService
   ) {
     this.form = this.fb.group({
       aUrl: ['', [Validators.required]],
@@ -58,8 +60,8 @@ export class LinkFormComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.myInput.nativeElement.focus();
-      this.myInput.nativeElement.select(); 
-  
+      this.myInput.nativeElement.select();
+
     })
   }
 
@@ -88,6 +90,19 @@ export class LinkFormComponent implements OnInit, AfterViewInit {
           this.router.navigate(['not-found']);
           throw new Error('Active Page Row is required');
         }
+
+        const p = this.pagesService.getPageByRowId(+rowId);
+        if (!p) {
+          this.router.navigate(['/not-found']);
+          throw new Error('Page not found');
+        }
+
+        if (p.readOnly) {
+          this.messagesService.showPageReadOnly(p);
+          this.router.navigate(['/page/' + p.pagePath]);
+          return;
+        }
+
         // column
         const columnId = params['columnId'];
         if (!columnId) {

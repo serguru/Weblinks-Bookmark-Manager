@@ -15,6 +15,7 @@ import { LoginService } from '../../../services/login.service';
 import { PAGE } from '../../../common/constants';
 import { AccountModel } from '../../../models/AccountModel';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-page-form',
@@ -42,7 +43,8 @@ export class PageFormComponent implements OnInit {
     public loginService: LoginService,
     private router: Router,
     private pagesService: PagesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private messagesService: MessagesService,
   ) {
     this.form = this.fb.group({
       pagePath: ['', [
@@ -79,6 +81,13 @@ export class PageFormComponent implements OnInit {
           this.router.navigate(['/not-found']);
           throw new Error('Page not found');
         }
+
+        if (pm.readOnly) {
+          this.messagesService.showPageReadOnly(pm);
+          this.router.navigate(['/page/'+pm.pagePath]);
+          return;
+        }
+
         this.pageModel = pm;
         this.form.get('pagePath')!.setValue(this.pageModel.pagePath);
         this.form.get('caption')!.setValue(this.pageModel.caption);

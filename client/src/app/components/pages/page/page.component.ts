@@ -5,10 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { RowComponent } from '../../rows/row/row.component';
 import { PagesService } from '../../../services/pages.service';
 import { LoginService } from '../../../services/login.service';
-import {DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LrowModel } from '../../../models/LrowModel';
 import { MatIconModule } from '@angular/material/icon';
 import { PageModel } from '../../../models/PageModel';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-page',
@@ -25,17 +26,25 @@ import { PageModel } from '../../../models/PageModel';
 })
 export class PageComponent implements OnInit {
 
-  constructor(public pagesService: PagesService, 
+  constructor(public pagesService: PagesService,
     public loginService: LoginService,
-    private router: Router, 
-    private route: ActivatedRoute
-  
+    private router: Router,
+    private route: ActivatedRoute,
+    private messagesService: MessagesService
   ) { }
 
-    drop(event: CdkDragDrop<any>) {
-      moveItemInArray(this.pagesService.activePage?.lrows || [], event.previousIndex, event.currentIndex);
-      this.pagesService.saveConfig();
+  drop(event: CdkDragDrop<any>) {
+    const p = this.pagesService.activePage;
+    if (!p) {
+      return;
     }
+    if (p.readOnly) {
+      this.messagesService.showPageReadOnly(p);
+      return;
+    }
+    moveItemInArray(this.pagesService.activePage?.lrows || [], event.previousIndex, event.currentIndex);
+    this.pagesService.saveConfig();
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

@@ -13,6 +13,7 @@ import { LcolumnModel } from '../../../models/LcolumnModel';
 import {MatCardModule} from '@angular/material/card';
 import { LinkModel } from '../../../models/LinkModel';
 import { ContextMenuComponent } from '../../base/context-menu/context-menu.component';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-link',
@@ -33,10 +34,19 @@ export class LinkComponent {
   @Input() column!: LcolumnModel;
 
   constructor(public pagesService: PagesService, public loginService: LoginService,
-    private router: Router, private dialog: MatDialog) { }
-
+    private router: Router, private dialog: MatDialog,
+        private messagesService: MessagesService) { }
 
   delete(): void {
+
+    const p = this.pagesService.getPageById(this.row.pageId)!;
+
+    if (p.readOnly) {
+      this.messagesService.showPageReadOnly(p);
+      this.router.navigate(['/page/'+p.pagePath]);
+      return;
+    }
+
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {

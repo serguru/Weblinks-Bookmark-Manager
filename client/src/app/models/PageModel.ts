@@ -5,6 +5,7 @@ export interface PageModel {
     accountId: number;
     pagePath: string;
     caption: string | null;
+    readOnly: boolean;
     public: boolean;
     lrows:LrowModel[] | null;
 }

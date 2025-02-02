@@ -15,6 +15,7 @@ import { CdkMenuTrigger } from '@angular/cdk/menu';
 import { DragDropModule, CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LcolumnModel } from '../../../models/LcolumnModel';
 import { MatIconModule } from '@angular/material/icon';
+import { MessagesService } from '../../../services/messages.service';
 
 
 @Component({
@@ -37,11 +38,18 @@ export class RowComponent {
   @Input() row!: LrowModel;
 
   constructor(public pagesService: PagesService, public loginService: LoginService,
-    private router: Router, private dialog: MatDialog) { }
+    private router: Router, private dialog: MatDialog,
+        private messagesService: MessagesService) { }
 
   @ViewChild('menuTrigger') menuTrigger!: CdkMenuTrigger;
 
   drop(e: CdkDragDrop<any>) {
+
+    const page = this.pagesService.getPageById(e.previousContainer.data.pageId)!;
+    if (page.readOnly) {
+      this.messagesService.showPageReadOnly(page);
+      return;
+    }
 
     const o = e.container === e.previousContainer ?
       of(null).pipe(
@@ -68,6 +76,14 @@ export class RowComponent {
   }
 
   delete(): void {
+
+    const p = this.pagesService.getPageById(this.row.pageId)!;
+
+    if (p.readOnly) {
+      this.messagesService.showPageReadOnly(p);
+      this.router.navigate(['/page/'+p.pagePath]);
+      return;
+    }
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
