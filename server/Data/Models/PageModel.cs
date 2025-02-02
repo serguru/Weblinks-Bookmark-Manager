@@ -14,8 +14,11 @@ public partial class PageModel
 
     public string? Caption { get; set; }
 
-    public bool ReadOnly { get; set; }
-    public bool Public { get; set; }
+    public bool IsReadOnly { get; set; }
+
+    public bool IsPublic { get; set; }
+
+    public string? PageDescription { get; set; }
 
     public virtual ICollection<LrowModel> Lrows { get; set; } = new List<LrowModel>();
 }

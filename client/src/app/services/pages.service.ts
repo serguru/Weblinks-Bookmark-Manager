@@ -74,41 +74,62 @@ export class PagesService {
     return this.account?.pages || [];
   }
 
-  addOrUpdatePage(id: number, pagePath: string, caption: string): Observable<PageModel> {
+  addOrUpdatePage(page: PageModel): Observable<PageModel> {
     if (!this.loginService.isAuthenticated) {
       throw new Error('Unauthorized');
     }
 
-    if (id > 0) {
-      const p = this.getPageById(id)!;
-      if (p.readOnly) {
+    if (page.id > 0) {
+      const p = this.getPageById(page.id)!;
+      if (p.isReadOnly) {
         this.messagesService.showPageReadOnly(p);
         return of();
       }
     }
 
-    return this.http.post(this.apiUrl + '/add-update-page', {
-      id: id, pagePath: pagePath,
-      caption: caption
-    })
+    return this.http.post(this.apiUrl + '/add-update-page', page)
       .pipe(
         tap((response: any) => {
           const pages = this.pages;
-          if (id === 0) {
+          if (page.id === 0) {
             pages.push(response);
           } else {
-            const index = pages.findIndex((p: PageModel) => p.id === id);
+            const index = pages.findIndex((p: PageModel) => p.id === page.id);
             if (index === -1) {
               throw new Error('Page not found');
             }
             pages[index].pagePath = response.pagePath;
             pages[index].caption = response.caption;
+            pages[index].isReadOnly = response.isReadOnly;
+            pages[index].isPublic = response.isPublic;
+            pages[index].pageDescription = response.pageDescription;
           }
           this.account!.pages = pages;
-          this.messagesService.showSuccess(`Page ${id === 0 ? 'added' : 'updated'}`);
+          this.messagesService.showSuccess(`Page ${page.id === 0 ? 'added' : 'updated'}`);
         }),
       );
   }
+
+  updatePageReadOnly(id: number, isReadOnly: boolean): Observable<PageModel> {
+    if (!this.loginService.isAuthenticated) {
+      throw new Error('Unauthorized');
+    }
+
+    return this.http.put(this.apiUrl + '/page-read-only', { id: id, isReadOnly: isReadOnly })
+      .pipe(
+        tap((response: any) => {
+          const pages = this.pages;
+          const index = pages.findIndex((p: PageModel) => p.id === id);
+          if (index === -1) {
+            throw new Error('Page not found');
+          }
+          pages[index].isReadOnly = isReadOnly;
+          this.account!.pages = pages;
+        }),
+      );
+  }
+
+
 
   deletePage(pageId: number): Observable<any> {
     if (!this.loginService.isAuthenticated) {
@@ -119,7 +140,7 @@ export class PagesService {
     }
 
     const p = this.getPageById(pageId)!;
-    if (p.readOnly) {
+    if (p.isReadOnly) {
       this.messagesService.showPageReadOnly(p);
       return of();
     }
@@ -142,7 +163,7 @@ export class PagesService {
       throw new Error('Unauthorized');
     }
 
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return of();
     }
@@ -175,7 +196,7 @@ export class PagesService {
     }
 
     const page = this.getPageById(row.pageId)!;
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return of();
     }
@@ -264,7 +285,7 @@ export class PagesService {
     }
 
     const page = this.getPageById(row.pageId)!;
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return of();
     }
@@ -296,7 +317,7 @@ export class PagesService {
     }
 
     const page = this.getPageById(row.pageId)!;
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return of();
     }
@@ -321,7 +342,7 @@ export class PagesService {
 
     const row = this.getRowById(column.rowId)!;
     const page = this.getPageById(row.pageId)!;
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return of();
     }
@@ -355,7 +376,7 @@ export class PagesService {
 
     const row = this.getRowById(column.rowId)!;
     const page = this.getPageById(row.pageId)!;
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return of();
     }
@@ -385,7 +406,7 @@ export class PagesService {
     if (a.pages?.length) {
       o.pages = [];
       a.pages.forEach((x: any) => {
-        const p: any = { id: x.id, readOnly: x.readOnly };
+        const p: any = { id: x.id, isReadOnly: x.isReadOnly };
         // rows
         if (x.lrows?.length) {
           p.lrows = [];
@@ -453,7 +474,7 @@ export class PagesService {
 
     const row = this.getRowById(column.rowId)!;
     const page = this.getPageById(row.pageId)!;
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return of();
     }
@@ -467,7 +488,7 @@ export class PagesService {
     }
 
     const page = this.getPageById(row.pageId)!;
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return of();
     }

@@ -199,6 +199,9 @@ create table pages (
     accountId int not null,
     pagePath varchar(50) not null,
     caption nvarchar(50) null,
+    isReadOnly bit not null default 0,
+    isPublic bit not null default 0,
+    pageDescription nvarchar(max) NULL
     constraint pk_pages_id primary key (id),
     constraint fk_pages_account_id foreign key (accountId) references accounts(id) on delete cascade,
     constraint uq_page_path unique (accountId, pagePath),

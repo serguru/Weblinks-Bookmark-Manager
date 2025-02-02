@@ -13,7 +13,8 @@
 
         <div *ngIf="pageReadOnly" style="padding: 0rem 1rem 1 rem 0rem">
             <hr class="separator" />
-            <mat-checkbox [checked]="page?.readOnly" (change)="pageReadOnly()" >
+            <mat-checkbox [checked]="page?.isReadOnly" (change)="pageReadOnly()"
+                [ngStyle]="{'padding-bottom': '0.5rem', 'padding-left': '0.3rem'}">
                 <div>Read Only</div>
             </mat-checkbox>
         </div>

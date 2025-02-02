@@ -46,7 +46,7 @@ export class RowComponent {
   drop(e: CdkDragDrop<any>) {
 
     const page = this.pagesService.getPageById(e.previousContainer.data.pageId)!;
-    if (page.readOnly) {
+    if (page.isReadOnly) {
       this.messagesService.showPageReadOnly(page);
       return;
     }
@@ -79,7 +79,7 @@ export class RowComponent {
 
     const p = this.pagesService.getPageById(this.row.pageId)!;
 
-    if (p.readOnly) {
+    if (p.isReadOnly) {
       this.messagesService.showPageReadOnly(p);
       this.router.navigate(['/page/'+p.pagePath]);
       return;

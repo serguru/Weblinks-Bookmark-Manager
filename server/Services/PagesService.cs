@@ -73,6 +73,14 @@ public class PagesService(
         PageModel model = _mapper.Map<PageModel>(entity);
         return model;
     }
+
+    public async Task UpdatePageReadOnlyAsync(PageReadOnlyModel model)
+    {
+        var p = await _pagesRepository.GetPageByIdAsync(model.Id);
+        p.IsReadOnly = model.IsReadOnly;
+        await _pagesRepository.UpdatePageAsync(p);
+    }
+
     #endregion
 
     #region Rows
@@ -277,6 +285,7 @@ public class PagesService(
     {
         return await _pagesRepository.CheckDbAlive();
     }
+
 
     #endregion
 

@@ -44,7 +44,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_accounts_id");
 
-            entity.ToTable("accounts");
+            entity.ToTable("accounts", "weblinks");
 
             entity.HasIndex(e => e.UserEmail, "uq_accounts_email").IsUnique();
 
@@ -77,7 +77,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_archiveTasks_id");
 
-            entity.ToTable("archiveTasks");
+            entity.ToTable("archiveTasks", "weblinks");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Comment).HasColumnName("comment");
@@ -104,7 +104,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_eventType_id");
 
-            entity.ToTable("eventType");
+            entity.ToTable("eventType", "weblinks");
 
             entity.HasIndex(e => e.TypeName, "uq_eventType_name").IsUnique();
 
@@ -121,7 +121,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_history_id");
 
-            entity.ToTable("history");
+            entity.ToTable("history", "weblinks");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Comment).HasColumnName("comment");
@@ -144,7 +144,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_lcolumns_id");
 
-            entity.ToTable("lcolumns");
+            entity.ToTable("lcolumns", "weblinks");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Caption)
@@ -161,7 +161,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_links_id");
 
-            entity.ToTable("links");
+            entity.ToTable("links", "weblinks");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AUrl).HasColumnName("aUrl");
@@ -179,7 +179,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_lrows_id");
 
-            entity.ToTable("lrows");
+            entity.ToTable("lrows", "weblinks");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Caption)
@@ -196,7 +196,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_operTasks_id");
 
-            entity.ToTable("operTasks");
+            entity.ToTable("operTasks", "weblinks");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.HistoryId).HasColumnName("historyId");
@@ -217,7 +217,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_pages_id");
 
-            entity.ToTable("pages");
+            entity.ToTable("pages", "weblinks");
 
             entity.HasIndex(e => new { e.AccountId, e.PagePath }, "uq_page_path").IsUnique();
 
@@ -226,6 +226,9 @@ public partial class Links3dbContext : DbContext
             entity.Property(e => e.Caption)
                 .HasMaxLength(50)
                 .HasColumnName("caption");
+            entity.Property(e => e.IsPublic).HasColumnName("isPublic");
+            entity.Property(e => e.IsReadOnly).HasColumnName("isReadOnly");
+            entity.Property(e => e.PageDescription).HasColumnName("pageDescription");
             entity.Property(e => e.PagePath)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -240,7 +243,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_taskType_id");
 
-            entity.ToTable("taskType");
+            entity.ToTable("taskType", "weblinks");
 
             entity.HasIndex(e => e.TypeName, "uq_taskType_name").IsUnique();
 
@@ -259,7 +262,7 @@ public partial class Links3dbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_userMessages_id");
 
-            entity.ToTable("userMessages");
+            entity.ToTable("userMessages", "weblinks");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AccountId).HasColumnName("accountId");

@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
     private cookieService: CookieService,
     public loadingService: LoadingService,
     private messagesService: MessagesService
-     
+
   ) { }
 
   protected selectedTabIndex = 0;
@@ -125,7 +125,7 @@ export class AppComponent implements OnInit {
       throw new Error('popupPage is required');
     }
 
-    if (this.popupPage.readOnly) {
+    if (this.popupPage.isReadOnly) {
       this.messagesService.showPageReadOnly(this.popupPage);
       return;
     }
@@ -162,13 +162,18 @@ export class AppComponent implements OnInit {
     }
     return this.pagesService.account.userName;
   }
-  
+
   setPageReadOnly() {
     if (!this.popupPage) {
       return;
     }
-    this.popupPage.readOnly = !this.popupPage.readOnly;
-    this.pagesService.saveConfig();
+
+    const isReadOnly = !this.popupPage.isReadOnly;
+    const caption = this.popupPage.caption || this.popupPage.pagePath;
+
+    this.pagesService.updatePageReadOnly(this.popupPage.id, isReadOnly ).subscribe(() => {
+      this.messagesService.showSuccess(isReadOnly ? `Page ${caption} is Read Only now` : `Page ${caption} is ediatable now`);
+    });
   }
 
 }

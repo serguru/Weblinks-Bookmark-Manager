@@ -16,7 +16,7 @@
       @for (page of pagesService.pages; track page) {
       <a mat-button
          [ngClass]="[isRouteName('/page') && pagesService.activePage?.pagePath === page.pagePath ? 
-         'active-page' : '', page.readOnly ? 'page-read-only' : '']"
+         'active-page' : '', page.isReadOnly ? 'page-read-only' : '']"
          [routerLink]="['/page/'+page.pagePath]" [cdkContextMenuTriggerFor]="context_menu"
          (cdkContextMenuOpened)="onContextMenuOpened(page)" cdkDrag [cdkDragData]="page"
          [id]="'p' + page.id">{{page.caption || page.pagePath }}</a>

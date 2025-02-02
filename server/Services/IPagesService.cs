@@ -15,6 +15,8 @@ public interface IPagesService
     Task<PageModel> AddOrUpdatePageAsync(PageModel page);
     Task DeletePageAsync(int pageId);
 
+    Task UpdatePageReadOnlyAsync(PageReadOnlyModel model);
+
     // rows
     Task<List<LrowModel>> GetAllRowsAsync(int pageId);
     Task<LrowModel?> GetRowByIdAsync(int rowId);

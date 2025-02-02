@@ -74,7 +74,7 @@ export class RowFormComponent implements OnInit {
             throw new Error('Page not found');
           }
 
-          if (p.readOnly) {
+          if (p.isReadOnly) {
             this.messagesService.showPageReadOnly(p);
             this.router.navigate(['/page/'+p.pagePath]);
             return;
@@ -98,7 +98,7 @@ export class RowFormComponent implements OnInit {
 
         const p = this.pagesService.getPageById(r!.pageId)!;
 
-        if (p.readOnly) {
+        if (p.isReadOnly) {
           this.messagesService.showPageReadOnly(p);
           this.router.navigate(['/page/'+p.pagePath]);
           return;

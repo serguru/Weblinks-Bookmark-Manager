@@ -41,7 +41,7 @@ export class LinkComponent {
 
     const p = this.pagesService.getPageById(this.row.pageId)!;
 
-    if (p.readOnly) {
+    if (p.isReadOnly) {
       this.messagesService.showPageReadOnly(p);
       this.router.navigate(['/page/'+p.pagePath]);
       return;

@@ -82,7 +82,7 @@ export class PageFormComponent implements OnInit {
           throw new Error('Page not found');
         }
 
-        if (pm.readOnly) {
+        if (pm.isReadOnly) {
           this.messagesService.showPageReadOnly(pm);
           this.router.navigate(['/page/'+pm.pagePath]);
           return;
@@ -106,10 +106,17 @@ export class PageFormComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    const pagePath = this.form.get("pagePath")!.value;
-    const caption = this.form.get("caption")!.value;
-    const id = this.pageModel?.id || 0;
-    this.pagesService.addOrUpdatePage(id, pagePath, caption)
+
+    const page: any = {
+      id: this.pageModel?.id || 0,
+      pagePath: this.form.get("pagePath")!.value,
+      caption: this.form.get("caption")!.value,
+      isReadOnly: this.pageModel?.isReadOnly || false,
+      isPublic: this.pageModel?.isPublic || false,
+      pageDescription: this.pageModel?.pageDescription || null,
+    };
+    
+    this.pagesService.addOrUpdatePage(page)
       .pipe(
         finalize(() => {
         })

@@ -154,8 +154,6 @@ public class AccountsService : IAccountsService
 
             if (page != null)
             {
-                page.ReadOnly = settingsPage.ReadOnly;
-                page.Public = settingsPage.Public;
                 if (page.Lrows != null && page.Lrows.Count > 0 &&
                     settingsPage.Lrows != null && settingsPage.Lrows.Count > 0)
                 {

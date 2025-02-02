@@ -97,7 +97,7 @@ export class LinkFormComponent implements OnInit, AfterViewInit {
           throw new Error('Page not found');
         }
 
-        if (p.readOnly) {
+        if (p.isReadOnly) {
           this.messagesService.showPageReadOnly(p);
           this.router.navigate(['/page/' + p.pagePath]);
           return;

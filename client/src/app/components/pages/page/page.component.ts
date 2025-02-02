@@ -38,7 +38,7 @@ export class PageComponent implements OnInit {
     if (!p) {
       return;
     }
-    if (p.readOnly) {
+    if (p.isReadOnly) {
       this.messagesService.showPageReadOnly(p);
       return;
     }

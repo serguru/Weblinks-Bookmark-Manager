@@ -73,6 +73,13 @@ public class PagesController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPut("page-read-only")]
+    public async Task<IActionResult> UpdatePageReadOnly([FromBody] PageReadOnlyModel model)
+    {
+        await _pagesService.UpdatePageReadOnlyAsync(model);
+        return Ok();
+    }
+
     [HttpDelete("delete-page/{pageId}")]
     public async Task<IActionResult> DeletePage(int pageId)
     {
