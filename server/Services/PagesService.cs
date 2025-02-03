@@ -19,6 +19,14 @@ public class PagesService(
     private readonly ILinksRepository _linksRepository = linksRepository;
     private readonly IMapper _mapper = mapper;
 
+    public async Task<List<VwAccountsDatumModel>> GetVwAccountsDatumModelAsync(string searchValue)
+    {
+        List<VwAccountsDatum> raw = await _pagesRepository.GetVwAccountsDatumAsync(searchValue);
+        List<VwAccountsDatumModel> models = _mapper.Map<List<VwAccountsDatumModel>>(raw);
+        return models;
+    }
+
+
     #region Pages
     public async Task<List<PageModel>> GetAllPagesAsync()
     {
@@ -285,7 +293,6 @@ public class PagesService(
     {
         return await _pagesRepository.CheckDbAlive();
     }
-
 
     #endregion
 

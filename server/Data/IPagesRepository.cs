@@ -11,5 +11,7 @@ public interface IPagesRepository
     Task UpdatePageAsync(Page page);
     Task DeletePageAsync(int pageId);
     Task<bool> CheckDbAlive();
+
+    Task<List<VwAccountsDatum>> GetVwAccountsDatumAsync(string searchValue);
 }
 

@@ -25,6 +25,10 @@ public class MappingProfile: Profile
 
         CreateMap<UserMessageModel, UserMessage>();
         CreateMap<UserMessage, UserMessageModel>();
+        
+        CreateMap<VwAccountsDatumModel, VwAccountsDatum>();
+        CreateMap<VwAccountsDatum, VwAccountsDatumModel>();
+       
 
     }
 }

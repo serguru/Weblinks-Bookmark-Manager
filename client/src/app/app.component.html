@@ -14,12 +14,10 @@
       </button>
 
       @for (page of pagesService.pages; track page) {
-      <a mat-button
-         [ngClass]="[isRouteName('/page') && pagesService.activePage?.pagePath === page.pagePath ? 
-         'active-page' : '', page.isReadOnly ? 'page-read-only' : '']"
-         [routerLink]="['/page/'+page.pagePath]" [cdkContextMenuTriggerFor]="context_menu"
-         (cdkContextMenuOpened)="onContextMenuOpened(page)" cdkDrag [cdkDragData]="page"
-         [id]="'p' + page.id">{{page.caption || page.pagePath }}</a>
+      <a mat-button [ngClass]="[isRouteName('/page') && pagesService.activePage?.pagePath === page.pagePath ? 
+         'active-page' : '', page.isReadOnly ? 'page-read-only' : '']" [routerLink]="['/page/'+page.pagePath]"
+         [cdkContextMenuTriggerFor]="context_menu" (cdkContextMenuOpened)="onContextMenuOpened(page)" cdkDrag
+         [cdkDragData]="page" [id]="'p' + page.id">{{page.caption || page.pagePath }}</a>
       }
    </div>
    <span class="spacer"></span>
@@ -31,6 +29,9 @@
          <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">
             <mat-icon>person</mat-icon>
             {{profileCaption}}</a>
+         <a *ngIf="!isRouteName('/search')" mat-menu-item [routerLink]="'/search'">
+            <mat-icon>search</mat-icon>
+            Search</a>
          <a *ngIf="!isRouteName('/contact-us')" mat-menu-item [routerLink]="'/contact-us'">
             <mat-icon>outgoing_mail</mat-icon>
             Contact Us</a>
@@ -46,7 +47,7 @@
          Privacy Policy</a>
 
       <ng-container *ngIf="loginService.isAuthenticated">
-         <hr/>
+         <hr />
          <button mat-menu-item (click)="logOut()">
             <mat-icon>logout</mat-icon>
             Log out</button>

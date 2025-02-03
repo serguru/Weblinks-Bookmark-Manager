@@ -15,6 +15,7 @@ import { TermsComponent } from './components/documents/terms/terms.component';
 import { PolicyComponent } from './components/documents/policy/policy.component';
 import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
+import { SearchComponent } from './components/search/search.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'page', pathMatch: 'full'},
@@ -37,5 +38,6 @@ export const routes: Routes = [
   { path: 'contact-us', component: ContactUsComponent, canActivate: [loginGuard]},
   { path: 'forgot-password', component: ForgotPasswordComponent},
   { path: 'reset-password', component: ResetPasswordComponent},
+  { path: 'search', component: SearchComponent, canActivate: [loginGuard]},
   { path: '**', component: NotFoundComponent}
 ];

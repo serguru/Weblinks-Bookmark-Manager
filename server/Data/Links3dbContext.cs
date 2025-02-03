@@ -38,6 +38,8 @@ public partial class Links3dbContext : DbContext
 
     public virtual DbSet<UserMessage> UserMessages { get; set; }
 
+    public virtual DbSet<VwAccountsDatum> VwAccountsData { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -275,6 +277,52 @@ public partial class Links3dbContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.UserMessages)
                 .HasForeignKey(d => d.AccountId)
                 .HasConstraintName("fk_userMessages_accountId");
+        });
+
+        modelBuilder.Entity<VwAccountsDatum>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vwAccountsData", "weblinks");
+
+            entity.Property(e => e.ColumnCaption)
+                .HasMaxLength(50)
+                .HasColumnName("columnCaption");
+            entity.Property(e => e.ColumnId).HasColumnName("columnId");
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(100)
+                .HasColumnName("firstName");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(100)
+                .HasColumnName("lastName");
+            entity.Property(e => e.LinkAurl).HasColumnName("linkAUrl");
+            entity.Property(e => e.LinkCaption)
+                .HasMaxLength(50)
+                .HasColumnName("linkCaption");
+            entity.Property(e => e.LinkId).HasColumnName("linkId");
+            entity.Property(e => e.PageCaption)
+                .HasMaxLength(50)
+                .HasColumnName("pageCaption");
+            entity.Property(e => e.PageDescription).HasColumnName("pageDescription");
+            entity.Property(e => e.PageId).HasColumnName("pageId");
+            entity.Property(e => e.PageIsPublic).HasColumnName("pageIsPublic");
+            entity.Property(e => e.PageIsReadOnly).HasColumnName("pageIsReadOnly");
+            entity.Property(e => e.PagePath)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("pagePath");
+            entity.Property(e => e.RowCaption)
+                .HasMaxLength(50)
+                .HasColumnName("rowCaption");
+            entity.Property(e => e.RowId).HasColumnName("rowId");
+            entity.Property(e => e.UserEmail)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("userEmail");
+            entity.Property(e => e.UserName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("userName");
         });
 
         OnModelCreatingPartial(modelBuilder);

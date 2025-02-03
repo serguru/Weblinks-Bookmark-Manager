@@ -172,11 +172,17 @@ public class PagesController : ControllerBase
 
     [HttpGet("alive")]
     [AllowAnonymous]
-    //[DisableCors]
     public async Task<IActionResult> AreYouAlive()
     {
         bool dbAlive = await _pagesService.CheckDbAlive();
         return Ok(new { message = $"API is alive. DB is{(dbAlive ? "" : " not")} alive." });
+    }
+
+    [HttpPut("search")]
+    public async Task<ActionResult<List<VwAccountsDatumModel>>> GetVwAccountsDatumModelAsync([FromBody] StringTransportModel model)
+    {
+        var result = await _pagesService.GetVwAccountsDatumModelAsync(model.Value);
+        return Ok(result);
     }
 
 }

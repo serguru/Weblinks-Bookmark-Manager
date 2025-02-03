@@ -1,4 +1,5 @@
-﻿using server.Data.Models;
+﻿using server.Data.Entities;
+using server.Data.Models;
 
 namespace server.Services;
 
@@ -6,6 +7,8 @@ public interface IPagesService
 {
     Task<bool> CheckDbAlive();
 
+    // search
+    Task<List<VwAccountsDatumModel>> GetVwAccountsDatumModelAsync(string searchValue);
 
     // pages
     Task<List<PageModel>> GetAllPagesAsync();
@@ -14,7 +17,6 @@ public interface IPagesService
     Task<PageModel> UpdatePageAsync(PageModel page);
     Task<PageModel> AddOrUpdatePageAsync(PageModel page);
     Task DeletePageAsync(int pageId);
-
     Task UpdatePageReadOnlyAsync(PageReadOnlyModel model);
 
     // rows

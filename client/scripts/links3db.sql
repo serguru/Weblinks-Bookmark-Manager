@@ -1,6 +1,18 @@
 use links3db
 go
 
+if object_id('vwAccountsData') is not null
+begin
+    drop view vwAccountsData;
+end;
+go
+
+if object_id('vwSearchPages', 'U') is not null
+begin
+    drop view vwSearchPages;
+end;
+go
+
 if object_id('archiveTasks', 'U') is not null
 begin
     drop table archiveTasks;
@@ -548,5 +560,34 @@ begin
     end catch;
 end
 go
+
+
+create view vwAccountsData 
+as
+    select 
+	a.id as AccountId,
+	a.userName as userName,
+	a.userEmail as userEmail,
+	a.firstName as firstName,
+	a.lastName as lastName,
+	b.id as pageId,
+    b.pagePath as pagePath,
+    b.caption as pageCaption,
+    b.isReadOnly as pageIsReadOnly,
+    b.isPublic as pageIsPublic,
+    b.pageDescription as pageDescription,
+	c.id as rowId,
+	c.caption as rowCaption,
+	d.id as columnId,
+	d.caption as columnCaption,
+	e.id as linkId,
+	e.caption as linkCaption,
+	e.aUrl as linkAUrl
+	from accounts a
+	join pages b on b.accountId = a.id
+	join lrows c on c.pageId = b.id
+	join lcolumns d on d.rowId = c.id
+	join links e on e.columnId = d.id
+go 
 
 

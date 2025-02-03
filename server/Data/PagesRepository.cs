@@ -101,4 +101,22 @@ public class PagesRepository : BaseRepository, IPagesRepository
 
         return result;
     }
+
+    public async Task<List<VwAccountsDatum>> GetVwAccountsDatumAsync(string searchValue)
+    {
+        IQueryable<VwAccountsDatum> query = _dbContext.VwAccountsData.AsQueryable()
+                .Where(x => x.AccountId == accountId && 
+                (
+                    x.PagePath.Contains(searchValue) ||
+                    (x.PageCaption == null ? "" : x.PageCaption).Contains(searchValue) ||
+                    (x.PageDescription == null ? "" : x.PageDescription).Contains(searchValue) ||
+                    (x.RowCaption == null ? "" : x.RowCaption).Contains(searchValue) ||
+                    (x.ColumnCaption == null ? "" : x.ColumnCaption).Contains(searchValue) ||
+                    x.LinkCaption.Contains(searchValue) ||
+                    x.LinkAurl.Contains(searchValue)
+                ));
+
+        List<VwAccountsDatum> result = await query.ToListAsync();
+        return result;
+    }
 }

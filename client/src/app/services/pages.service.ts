@@ -12,6 +12,7 @@ import { LcolumnModel } from '../models/LcolumnModel';
 import { LinkModel } from '../models/LinkModel';
 import { MessagesService } from './messages.service';
 import { AccountModel } from '../models/AccountModel';
+import { VwAccountsDatumModel } from '../models/VwAccountsDatumModel';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,10 @@ export class PagesService {
       finalize(() => {
         this.loadingPages = false;
       }));
+  }
+
+  getVwAccountsDatum(searchValue: string): Observable<VwAccountsDatumModel[]> {
+    return this.http.put<VwAccountsDatumModel[]>(this.apiUrl+"/search", {value: searchValue});
   }
 
   findPage(pagePath: string): PageModel | null {
