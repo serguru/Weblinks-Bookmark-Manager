@@ -29,6 +29,13 @@
           <input  matInput type="text" formControlName="caption" placeholder="Enter page caption">
         </mat-form-field>
 
+        <div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="pageDescription"></textarea>
+          </mat-form-field>
+        </div>        
+
         <div class="form-field">
           <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" class="full-width">
             <span>Submit</span>

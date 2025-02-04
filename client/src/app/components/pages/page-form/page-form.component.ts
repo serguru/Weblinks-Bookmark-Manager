@@ -53,7 +53,8 @@ export class PageFormComponent implements OnInit {
         Validators.maxLength(50),
         Validators.pattern('^[a-zA-Z0-9-_]+$')
       ]],
-      caption: ['']
+      caption: [''],
+      pageDescription: ['']
     });
   }
 
@@ -91,6 +92,8 @@ export class PageFormComponent implements OnInit {
         this.pageModel = pm;
         this.form.get('pagePath')!.setValue(this.pageModel.pagePath);
         this.form.get('caption')!.setValue(this.pageModel.caption);
+        this.form.get('pageDescription')!.setValue(this.pageModel.pageDescription);
+
       })
   }
 
@@ -113,7 +116,7 @@ export class PageFormComponent implements OnInit {
       caption: this.form.get("caption")!.value,
       isReadOnly: this.pageModel?.isReadOnly || false,
       isPublic: this.pageModel?.isPublic || false,
-      pageDescription: this.pageModel?.pageDescription || null,
+      pageDescription: this.form.get("pageDescription")!.value,
     };
     
     this.pagesService.addOrUpdatePage(page)

@@ -1,1 +1,16 @@
-<p>search works!</p>
+<div class="container">
+  <div class="field-container" id="searchField">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Enter text to search" />
+    </mat-form-field>
+    <div class="search-info">{{searchInfo}}</div>
+  </div>
+  <ag-grid-angular #agGrid style="max-width: 1600px; width: 100%" [style.height.px]="gridHeight"
+    [rowData]="searchResult" [columnDefs]="colDefs" [defaultColDef]="defaultColDef" (gridReady)="onGridReady($event)"
+
+    [tooltipShowDelay]="1000"
+    [tooltipHideDelay]="20000"
+
+    ></ag-grid-angular>
+</div>

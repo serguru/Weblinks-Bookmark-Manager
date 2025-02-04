@@ -105,7 +105,7 @@ public class PagesRepository : BaseRepository, IPagesRepository
     public async Task<List<VwAccountsDatum>> GetVwAccountsDatumAsync(string searchValue)
     {
         IQueryable<VwAccountsDatum> query = _dbContext.VwAccountsData.AsQueryable()
-                .Where(x => x.AccountId == accountId && 
+                .Where(x => x.AccountId == accountId &&
                 (
                     x.PagePath.Contains(searchValue) ||
                     (x.PageCaption == null ? "" : x.PageCaption).Contains(searchValue) ||
@@ -114,7 +114,11 @@ public class PagesRepository : BaseRepository, IPagesRepository
                     (x.ColumnCaption == null ? "" : x.ColumnCaption).Contains(searchValue) ||
                     x.LinkCaption.Contains(searchValue) ||
                     x.LinkAurl.Contains(searchValue)
-                ));
+                ))
+                .OrderBy(x => x.LinkCaption)
+                .ThenBy(x => x.ColumnCaption)
+                .ThenBy(x => x.RowCaption)
+                .ThenBy(x => String.IsNullOrEmpty(x.PageCaption) ? x.PagePath : x.PageCaption);
 
         List<VwAccountsDatum> result = await query.ToListAsync();
         return result;

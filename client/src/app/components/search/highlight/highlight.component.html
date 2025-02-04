@@ -1,0 +1,11 @@
+@if (isLink) {
+    <a 
+    [href]="url" 
+    target="_blank"
+    class="grid-link"
+    [innerHtml] = "value | highlight:searchText"
+    >
+  </a>
+} @else {
+    <span [innerHtml] = "value | highlight:searchText"></span>
+}

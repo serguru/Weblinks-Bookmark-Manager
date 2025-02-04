@@ -1,0 +1,27 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.field-container {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0rem;
+    
+}
+
+.search-info {
+    color: var(--mdc-text-button-label-text-color);
+}
+
+mat-form-field {
+    margin-right: 1rem;
+}
+
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+  }  
+

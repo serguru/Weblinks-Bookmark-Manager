@@ -12,21 +12,21 @@ body {
     --mat-menu-item-label-text-size: large;
     --mat-menu-item-label-text-weight: 400;
     --mdc-text-button-label-text-size: large;
-    --mdc-text-button-label-text-color: #7c7c7c;
+    --mdc-text-button-label-text-color: #434343;
     --mdc-text-button-label-text-font: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     --mdc-text-button-label-text-weight: 400;
-    --mat-menu-item-label-text-color: #7c7c7c;
-    --mat-icon-color: #7c7c7c;
+    --mat-menu-item-label-text-color: #434343;
+    --mat-icon-color: #434343;
     --mat-sys-corner-extra-large: 0.5rem;
     --mdc-dialog-subhead-size: 0.9rem;
     --mdc-dialog-supporting-text-size: 1rem;
     --mdc-elevated-card-container-color: #f7f6f6;
     --mdc-outlined-card-container-color: #f7f6f6;
     --mdc-outlined-card-outline-width: 0px;
-    --mat-menu-item-icon-color: #7c7c7c; 
+    --mat-menu-item-icon-color: #434343;
 
     --mat-checkbox-label-text-size: large;
-    --mat-checkbox-label-text-color: #7c7c7c;
+    --mat-checkbox-label-text-color: #434343;
     --mat-checkbox-label-text-font: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     --mat-checkbox-label-text-weight: 400;
 
@@ -109,5 +109,16 @@ mat-card-title {
 
 .mat-mdc-form-field-infix {
     width: unset !important;
+}
+
+#searchField mat-form-field .mat-mdc-form-field-subscript-wrapper {
+    height: 0px;
+}
+
+.ag-header-cell-text { 
+    font-family: var(--mdc-text-button-label-text-font);
+    color: var(--mdc-text-button-label-text-color);
+    font-size: var(--mdc-text-button-label-text-size);
+    font-weight: var(--mdc-text-button-label-text-weight);
 }
 
