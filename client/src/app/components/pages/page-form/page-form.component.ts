@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, KeyValue } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,8 +14,9 @@ import { PagesService } from '../../../services/pages.service';
 import { LoginService } from '../../../services/login.service';
 import { PAGE } from '../../../common/constants';
 import { AccountModel } from '../../../models/AccountModel';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MessagesService } from '../../../services/messages.service';
+import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
 
 @Component({
   selector: 'app-page-form',
@@ -28,7 +29,8 @@ import { MessagesService } from '../../../services/messages.service';
     MatIconModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ValidationErrorsComponent
   ],
   templateUrl: './page-form.component.html',
   styleUrl: './page-form.component.css'
@@ -58,6 +60,25 @@ export class PageFormComponent implements OnInit {
     });
   }
 
+  pagePathMessages: KeyValue<string, string>[] = [
+    {
+      key: "required",
+      value: "Page Path is required"
+    },
+    {
+      key: "minlength",
+      value: "Page Path must be at least 3 characters long"
+    },
+    {
+      key: "maxlength",
+      value: "Page Path cannot be more than 50 characters long"
+    },
+    {
+      key: "pattern",
+      value: "Page Path can only contain letters, numbers, hyphens, and underscores"
+    },
+  ];
+
   ngOnInit(): void {
 
     this.pagesService.account$
@@ -85,7 +106,7 @@ export class PageFormComponent implements OnInit {
 
         if (pm.isReadOnly) {
           this.messagesService.showPageReadOnly(pm);
-          this.router.navigate(['/page/'+pm.pagePath]);
+          this.router.navigate(['/page/' + pm.pagePath]);
           return;
         }
 
@@ -118,7 +139,7 @@ export class PageFormComponent implements OnInit {
       isPublic: this.pageModel?.isPublic || false,
       pageDescription: this.form.get("pageDescription")!.value,
     };
-    
+
     this.pagesService.addOrUpdatePage(page)
       .pipe(
         finalize(() => {

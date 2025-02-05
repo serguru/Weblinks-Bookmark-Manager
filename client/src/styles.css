@@ -115,6 +115,10 @@ mat-card-title {
     height: 0px;
 }
 
+#pagePathForm mat-form-field .mat-mdc-form-field-subscript-wrapper {
+    height: 0px;
+}
+
 .ag-header-cell-text { 
     font-family: var(--mdc-text-button-label-text-font);
     color: var(--mdc-text-button-label-text-color);

@@ -108,11 +108,15 @@ export class SearchComponent {
     },
     {
       field: "linkAurl",
-      headerName: "URL",
+      headerName: "Link URL",
     },
     {
       field: "columnCaption",
       headerName: "Column Caption",
+    },
+    {
+      field: "rowCaption",
+      headerName: "Row Caption",
     },
     {
       field: "pageCaption",
@@ -135,7 +139,8 @@ export class SearchComponent {
     cellRendererParams: (params: any) => ({
       searchText: this.searchText
     }),
-    cellStyle: { fontSize: 'large' }
+    cellStyle: { fontSize: 'large' },
+    filter: true
   };
 
   onGridReady(params: GridReadyEvent) {

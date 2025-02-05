@@ -1,4 +1,4 @@
-<div class="form-container">
+<div class="form-container" >
   <mat-card appearance="outlined">
     <mat-card-header>
       <mat-card-title>{{formTitle}}</mat-card-title>
@@ -7,26 +7,17 @@
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Page path</mat-label>
-          <input matInput type="text" formControlName="pagePath" placeholder="Enter page path">
-          <mat-error *ngIf="form.get('pagePath')?.hasError('required')">
-            Page path is required
-          </mat-error>
-          <mat-error *ngIf="form.get('pagePath')?.hasError('minlength')">
-            Page path must be at least 3 characters long
-          </mat-error>
-          <mat-error *ngIf="form.get('pagePath')?.hasError('maxlength')">
-            Page path cannot be more than 50 characters long
-          </mat-error>
-          <mat-error *ngIf="form.get('pagePath')?.hasError('pattern')">
-            Page path can only contain letters, numbers, hyphens, and underscores
-          </mat-error>
-        </mat-form-field>
+        <div class="full-width" id="pagePathForm">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Page Path</mat-label>
+            <input matInput type="text" formControlName="pagePath" placeholder="Enter page path, like 'services'">
+          </mat-form-field>
+          <app-validation-errors [control]="form.get('pagePath')" [messages]="pagePathMessages"></app-validation-errors>
+        </div>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Caption</mat-label>
-          <input  matInput type="text" formControlName="caption" placeholder="Enter page caption">
+          <input matInput type="text" formControlName="caption" placeholder="Enter page caption, like 'My Services'">
         </mat-form-field>
 
         <div>
@@ -34,7 +25,7 @@
             <mat-label>Description</mat-label>
             <textarea matInput formControlName="pageDescription"></textarea>
           </mat-form-field>
-        </div>        
+        </div>
 
         <div class="form-field">
           <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" class="full-width">
