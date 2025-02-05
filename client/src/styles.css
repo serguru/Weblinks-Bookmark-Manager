@@ -126,3 +126,6 @@ mat-card-title {
     font-weight: var(--mdc-text-button-label-text-weight);
 }
 
+.short-text {
+    color: var(--mdc-text-button-label-text-color);
+}

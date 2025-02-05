@@ -10,6 +10,7 @@ import { LrowModel } from '../../../models/LrowModel';
 import { MatIconModule } from '@angular/material/icon';
 import { PageModel } from '../../../models/PageModel';
 import { MessagesService } from '../../../services/messages.service';
+import { GetStartedLinkComponent } from '../../documents/get-started/get-started-link/get-started-link.component';
 
 @Component({
   selector: 'app-page',
@@ -19,7 +20,8 @@ import { MessagesService } from '../../../services/messages.service';
     RowComponent,
     MatButtonModule,
     DragDropModule,
-    MatIconModule
+    MatIconModule,
+    GetStartedLinkComponent
   ],
   templateUrl: './page.component.html',
   styleUrl: './page.component.css'

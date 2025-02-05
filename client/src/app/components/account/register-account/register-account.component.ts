@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 import { MessagesService } from '../../../services/messages.service';
 import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
+import { GetStartedLinkComponent } from '../../documents/get-started/get-started-link/get-started-link.component';
 
 @Component({
   selector: 'app-register-account',
@@ -29,7 +30,8 @@ import { ValidationErrorsComponent } from '../../base/validation-errors/validati
     MatSnackBarModule,
     MatProgressSpinnerModule,
     RouterModule,
-    ValidationErrorsComponent
+    ValidationErrorsComponent,
+    GetStartedLinkComponent
   ],
   templateUrl: './register-account.component.html',
   styleUrl: './register-account.component.css'

@@ -12,9 +12,6 @@
     
 }
 
-.search-info {
-    color: var(--mdc-text-button-label-text-color);
-}
 
 mat-form-field {
     margin-right: 1rem;

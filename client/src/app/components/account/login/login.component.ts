@@ -14,7 +14,7 @@ import { PagesService } from '../../../services/pages.service';
 import { MessagesService } from '../../../services/messages.service';
 import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
 import { environment } from '../../../../environments/environment';
-//import { environment } from '../environments/environment';
+import { GetStartedLinkComponent } from '../../documents/get-started/get-started-link/get-started-link.component';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +28,8 @@ import { environment } from '../../../../environments/environment';
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     RouterModule,
-    ValidationErrorsComponent
+    ValidationErrorsComponent,
+    GetStartedLinkComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

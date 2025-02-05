@@ -4,7 +4,7 @@
       <mat-label>Search</mat-label>
       <input matInput [formControl]="searchControl" placeholder="Enter text to search" />
     </mat-form-field>
-    <div class="search-info">{{searchInfo}}</div>
+    <div class="short-text">{{searchInfo}}</div>
   </div>
   <ag-grid-angular #agGrid style="max-width: 1600px; width: 100%" [style.height.px]="gridHeight"
     [rowData]="searchResult" [columnDefs]="colDefs" [defaultColDef]="defaultColDef" (gridReady)="onGridReady($event)"

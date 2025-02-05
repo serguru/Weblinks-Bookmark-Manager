@@ -33,7 +33,7 @@ import { GoodbyeComponent } from '../goodbye/goodbye.component';
     RouterModule,
     UpdateAccountComponent,
     ChangePasswordComponent
-],
+  ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
@@ -52,7 +52,7 @@ export class UserProfileComponent {
 
   }
 
- openDialog(): void {
+  openDialog(): void {
     const dialogRef = this.dialog.open(GoodbyeComponent, {
       width: '300px'
     });
