@@ -25,13 +25,13 @@
       <mat-icon>menu</mat-icon>
    </button>
    <mat-menu #menu>
+      <a *ngIf="!isRouteName('/get-started')" mat-menu-item [routerLink]="'/get-started'">
+         <mat-icon>input</mat-icon>
+         Get Started</a>
       <ng-container *ngIf="loginService.isAuthenticated">
          <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">
             <mat-icon>person</mat-icon>
             {{profileCaption}}</a>
-         <a *ngIf="!isRouteName('/get-started')" mat-menu-item [routerLink]="'/get-started'">
-            <mat-icon>input</mat-icon>
-            Get Started</a>
          <a *ngIf="!isRouteName('/search')" mat-menu-item [routerLink]="'/search'">
             <mat-icon>search</mat-icon>
             Search</a>
