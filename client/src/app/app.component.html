@@ -25,20 +25,25 @@
       <mat-icon>menu</mat-icon>
    </button>
    <mat-menu #menu>
+
+      @if(loginService.isAuthenticated) {
+      <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">
+         <mat-icon>person</mat-icon>
+         {{profileCaption}}</a>
+      }
+
       <a *ngIf="!isRouteName('/get-started')" mat-menu-item [routerLink]="'/get-started'">
          <mat-icon>input</mat-icon>
          Get Started</a>
-      <ng-container *ngIf="loginService.isAuthenticated">
-         <a *ngIf="!isRouteName('/user-profile')" mat-menu-item [routerLink]="'/user-profile'">
-            <mat-icon>person</mat-icon>
-            {{profileCaption}}</a>
-         <a *ngIf="!isRouteName('/search')" mat-menu-item [routerLink]="'/search'">
-            <mat-icon>search</mat-icon>
-            Search</a>
-         <a *ngIf="!isRouteName('/contact-us')" mat-menu-item [routerLink]="'/contact-us'">
-            <mat-icon>outgoing_mail</mat-icon>
-            Contact Us</a>
-      </ng-container>
+
+      @if(loginService.isAuthenticated) {
+      <a *ngIf="!isRouteName('/search')" mat-menu-item [routerLink]="'/search'">
+         <mat-icon>search</mat-icon>
+         Search</a>
+      <a *ngIf="!isRouteName('/contact-us')" mat-menu-item [routerLink]="'/contact-us'">
+         <mat-icon>outgoing_mail</mat-icon>
+         Contact Us</a>
+      }
       <a *ngIf="!isRouteName('/help')" mat-menu-item [routerLink]="'/help'">
          <mat-icon>help</mat-icon>
          Help</a>
@@ -72,9 +77,6 @@
       </app-context-menu>
    </ng-template>
    }
-
-
 </div>
-
 
 <router-outlet />

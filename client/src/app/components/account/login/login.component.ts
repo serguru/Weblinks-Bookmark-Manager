@@ -15,6 +15,7 @@ import { MessagesService } from '../../../services/messages.service';
 import { ValidationErrorsComponent } from '../../base/validation-errors/validation-errors.component';
 import { environment } from '../../../../environments/environment';
 import { GetStartedLinkComponent } from '../../documents/get-started/get-started-link/get-started-link.component';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +31,7 @@ import { GetStartedLinkComponent } from '../../documents/get-started/get-started
     RouterModule,
     ValidationErrorsComponent,
     GetStartedLinkComponent
+
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -45,8 +47,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private pagesService: PagesService,
     private messagesService: MessagesService,
-
-
+    public loadingService: LoadingService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
