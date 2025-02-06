@@ -9,7 +9,7 @@
         <div>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Subject</mat-label>
-            <input matInput formControlName="asubject" placeholder="Enter subject" >
+            <input #focusInput matInput formControlName="asubject" placeholder="Enter subject" >
           </mat-form-field>
           <app-validation-errors [control]="form.get('asubject')" [messages]="asubjectMessages"></app-validation-errors>
         </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule, KeyValue } from '@angular/common';
@@ -36,9 +36,10 @@ import { LoadingService } from '../../../services/loading.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   loginForm: FormGroup;
   hidePassword = true;
+  @ViewChild('focusInput', { static: false }) focusInput!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -54,6 +55,16 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required]]
     });
   }
+
+  ngAfterViewInit() {
+    if (!this.focusInput) { 
+      return;
+    }
+    setTimeout(() => {
+      this.focusInput.nativeElement.focus();
+    })
+  }
+
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {

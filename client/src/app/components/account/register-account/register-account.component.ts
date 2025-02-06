@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, KeyValue } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -36,10 +36,11 @@ import { GetStartedLinkComponent } from '../../documents/get-started/get-started
   templateUrl: './register-account.component.html',
   styleUrl: './register-account.component.css'
 })
-export class RegisterAccountComponent implements OnInit {
+export class RegisterAccountComponent implements OnInit, AfterViewInit {
   registrationForm: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
+  @ViewChild('focusInput', { static: false }) focusInput!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -62,6 +63,16 @@ export class RegisterAccountComponent implements OnInit {
       confirmPassword: ['']
     }, { validator: this.loginService.passwordMatchValidator });
   }
+
+  ngAfterViewInit() {
+    if (!this.focusInput) {
+      return;
+    }
+    setTimeout(() => {
+      this.focusInput.nativeElement.focus();
+    })
+  }
+
 
   firstNameMessages: KeyValue<string, string>[] = [
     {

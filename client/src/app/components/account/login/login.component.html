@@ -14,7 +14,7 @@
         <div>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email" placeholder="Enter your email">
+            <input #focusInput matInput type="email" formControlName="email" placeholder="Enter your email">
           </mat-form-field>
           <app-validation-errors [control]="loginForm.get('email')" [messages]="emailMessages"></app-validation-errors>
         </div>

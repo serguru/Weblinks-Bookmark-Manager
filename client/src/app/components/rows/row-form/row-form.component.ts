@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
@@ -31,11 +31,13 @@ import { MessagesService } from '../../../services/messages.service';
   templateUrl: './row-form.component.html',
   styleUrl: './row-form.component.css'
 })
-export class RowFormComponent implements OnInit {
+export class RowFormComponent implements OnInit , AfterViewInit {
   form: FormGroup;
 
   pageModel: PageModel | null = null;
   rowModel: LrowModel | null = null;
+
+  @ViewChild('focusInput', { static: false }) focusInput!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -48,6 +50,15 @@ export class RowFormComponent implements OnInit {
     this.form = this.fb.group({
       caption: ['']
     });
+  }
+
+  ngAfterViewInit() {
+    if (!this.focusInput) { 
+      return;
+    }
+    setTimeout(() => {
+      this.focusInput.nativeElement.focus();
+    })
   }
 
   ngOnInit(): void {

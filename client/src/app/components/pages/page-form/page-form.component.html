@@ -10,7 +10,7 @@
         <div class="full-width" id="pagePathForm">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Page Path</mat-label>
-            <input matInput type="text" formControlName="pagePath" placeholder="Enter page path, like 'services'">
+            <input #focusInput matInput type="text" formControlName="pagePath" placeholder="Enter page path, like 'services'">
           </mat-form-field>
           <app-validation-errors [control]="form.get('pagePath')" [messages]="pagePathMessages"></app-validation-errors>
         </div>

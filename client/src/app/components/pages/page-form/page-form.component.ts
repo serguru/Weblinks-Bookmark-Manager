@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule, KeyValue } from '@angular/common';
@@ -35,10 +35,11 @@ import { ValidationErrorsComponent } from '../../base/validation-errors/validati
   templateUrl: './page-form.component.html',
   styleUrl: './page-form.component.css'
 })
-export class PageFormComponent implements OnInit {
+export class PageFormComponent implements OnInit, AfterViewInit {
   form: FormGroup;
-
   pageModel!: PageModel;
+  
+  @ViewChild('focusInput', { static: false }) focusInput!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -59,6 +60,16 @@ export class PageFormComponent implements OnInit {
       pageDescription: ['']
     });
   }
+
+  ngAfterViewInit() {
+    if (!this.focusInput) {
+      return;
+    }
+    setTimeout(() => {
+      this.focusInput.nativeElement.focus();
+    })
+  }
+    
 
   pagePathMessages: KeyValue<string, string>[] = [
     {

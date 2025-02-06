@@ -1,5 +1,5 @@
 import { AgGridAngular } from 'ag-grid-angular';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -39,7 +39,7 @@ ModuleRegistry.registerModules([AllCommunityModule, ColumnAutoSizeModule, Client
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit, AfterViewInit {
 
   constructor(
     public pagesService: PagesService
@@ -50,6 +50,7 @@ export class SearchComponent {
   gridHeight!: number;
   @ViewChild('agGrid') agGrid!: AgGridAngular;
   @ViewChild('agGrid', { read: ElementRef }) gridElementRef!: ElementRef;
+  @ViewChild('focusInput', { static: false }) focusInput!: ElementRef;
 
   private resizeListener!: () => void;
 
@@ -74,6 +75,15 @@ export class SearchComponent {
       return `No serch text provided`
     }
     return `Search for "${this.searchText}" result: ${this.rowsCount} ${this.rowString} found`
+  }
+
+  ngAfterViewInit() {
+    if (!this.focusInput) {
+      return;
+    }
+    setTimeout(() => {
+      this.focusInput.nativeElement.focus();
+    })
   }
 
   ngOnInit(): void {

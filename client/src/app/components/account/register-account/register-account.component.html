@@ -11,7 +11,7 @@
                     <div class="full-width">
                         <mat-form-field appearance="outline" class="full-width">
                             <mat-label>First Name</mat-label>
-                            <input matInput formControlName="firstName" placeholder="Enter your first name" >
+                            <input #focusInput matInput formControlName="firstName" placeholder="Enter your first name" >
                         </mat-form-field>
                         <app-validation-errors [control]="registrationForm.get('firstName')"
                             [messages]="firstNameMessages"></app-validation-errors>

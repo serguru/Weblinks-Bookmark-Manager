@@ -34,7 +34,6 @@ import { MessagesService } from '../../../services/messages.service';
 })
 export class LinkFormComponent implements OnInit, AfterViewInit {
   form: FormGroup;
-
   columnModel!: LcolumnModel;
   linkModel: LinkModel | null = null;
 

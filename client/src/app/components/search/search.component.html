@@ -2,7 +2,7 @@
   <div class="field-container" id="searchField">
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
-      <input matInput [formControl]="searchControl" placeholder="Enter text to search" />
+      <input #focusInput matInput [formControl]="searchControl" placeholder="Enter text to search" />
     </mat-form-field>
     <div class="short-text">{{searchInfo}}</div>
   </div>
