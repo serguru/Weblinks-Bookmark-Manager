@@ -5,7 +5,7 @@
       <h4>bookmark manager</h4>
    </a>
 
-   @if (!this.loadingService.isLoading()) {
+   @if (!loadingService.isLoading()) {
    <div *ngIf="loginService.isAuthenticated" class="links">
       <button *ngIf="!pagesService.loadingPages && (!pagesService.pages || 
             pagesService.pages.length === 0)" mat-button [routerLink]="'/add-page'">

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, KeyValue } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,8 +35,9 @@ import { AccountModel } from '../../../../models/AccountModel';
   templateUrl: './update-account.component.html',
   styleUrl: './update-account.component.css'
 })
-export class UpdateAccountComponent implements OnInit {
+export class UpdateAccountComponent implements OnInit, AfterViewInit {
   form: FormGroup;
+  @ViewChild('focusInput', { static: false }) focusInput!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -57,6 +58,15 @@ export class UpdateAccountComponent implements OnInit {
       ]],
       userEmail: ['', [Validators.required, Validators.email]],
     });
+  }
+
+  ngAfterViewInit() {
+    if (!this.focusInput) {
+      return;
+    }
+    setTimeout(() => {
+      this.focusInput.nativeElement.focus();
+    })
   }
 
   firstNameMessages: KeyValue<string, string>[] = [

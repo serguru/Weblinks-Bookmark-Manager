@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PageModel } from '../../../models/PageModel';
 import { MessagesService } from '../../../services/messages.service';
 import { GetStartedLinkComponent } from '../../documents/get-started/get-started-link/get-started-link.component';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'app-page',
@@ -32,7 +33,8 @@ export class PageComponent implements OnInit {
     public loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
-    private messagesService: MessagesService
+    private messagesService: MessagesService,
+    public loadingService: LoadingService
   ) { }
 
   drop(event: CdkDragDrop<any>) {

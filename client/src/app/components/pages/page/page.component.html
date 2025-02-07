@@ -15,6 +15,7 @@
     </div>
   </ng-template>
 </div>
-} @else {
+} 
+@else if (!loadingService.isLoading()) {
   <app-get-started-link></app-get-started-link>
 }

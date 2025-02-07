@@ -72,7 +72,8 @@ export class PagesService {
     this.activePageSubject.next(page);
   }
   get activePage(): PageModel | null {
-    return this.activePageSubject.getValue();
+    const result = this.activePageSubject.getValue();
+    return result;
   }
 
   get pages(): PageModel[] {
