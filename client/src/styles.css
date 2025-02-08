@@ -3,7 +3,14 @@ body {
     height: 100%;
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-    background-color:#fafafa
+}
+
+body {
+    background-image: url("assets/background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 :root {

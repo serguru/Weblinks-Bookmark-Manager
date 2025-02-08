@@ -5,11 +5,19 @@
     width: 100%;
 }
 
+.col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f7f6f6;
+    width: 100%;
+    max-width: 1600px;
+}
+
 .field-container {
     display: flex;
     align-items: center;
     padding: 1rem 0rem;
-    
 }
 
 
