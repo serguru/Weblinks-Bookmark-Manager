@@ -27,7 +27,6 @@ import { MessagesService } from '../../../services/messages.service';
     MatButtonModule,
     CdkContextMenuTrigger,
     ContextMenuComponent,
-    CdkMenuTrigger,
     DragDropModule,
     MatIconModule
   ],
@@ -108,6 +107,14 @@ export class RowComponent {
     });
   }
 
+  onHeaderClick(e: MouseEvent) {
+    if (e.ctrlKey) {
+      this.row.lcolumns?.sort((b,a) => (a.caption || "").localeCompare(b.caption || ""));
+    } else {
+      this.row.lcolumns?.sort((a,b) => (a.caption || "").localeCompare(b.caption || ""));  
+    }
+    this.pagesService.saveConfig();
+  }
 
 
 

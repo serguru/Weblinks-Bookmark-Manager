@@ -1,5 +1,5 @@
 <div class="link3-title row-title" cdkDrag [cdkDragData]="row"
-    [cdkContextMenuTriggerFor]="context_menu" [cdkMenuTriggerFor]="context_menu">
+    [cdkContextMenuTriggerFor]="context_menu" (click)="onHeaderClick($event)">
     {{row.caption}}
 </div>
 <div class="row-container" cdkDropList [cdkDropListData]="row" cdkDropListOrientation="mixed"

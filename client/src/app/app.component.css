@@ -5,6 +5,7 @@
   align-items: center;
   max-height: 150px;
   overflow: auto;
+  border-bottom: 1px solid rgb(188, 188, 188);
 }
 
 .links {

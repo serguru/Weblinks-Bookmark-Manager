@@ -29,7 +29,6 @@ import { MessagesService } from '../../../services/messages.service';
     CdkContextMenuTrigger,
     MatCardModule,
     ContextMenuComponent,
-    CdkMenuTrigger,
     DragDropModule,
     MatIconModule
   ],
@@ -77,7 +76,7 @@ export class ColumnComponent {
 
     if (p.isReadOnly) {
       this.messagesService.showPageReadOnly(p);
-      this.router.navigate(['/page/'+p.pagePath]);
+      this.router.navigate(['/page/' + p.pagePath]);
       return;
     }
 
@@ -104,7 +103,14 @@ export class ColumnComponent {
     });
   }
 
-
+  onHeaderClick(e: MouseEvent) {
+    if (e.ctrlKey) {
+      this.column.links?.sort((b,a) => a.caption.localeCompare(b.caption));
+    } else {
+      this.column.links?.sort((a,b) => a.caption.localeCompare(b.caption));
+    }
+    this.pagesService.saveConfig();
+  }
 
 
 }
