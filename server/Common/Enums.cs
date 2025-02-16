@@ -15,4 +15,5 @@ public enum WeblinksTaskType
 {
     Send_register_email = 1,
     Send_forgot_email = 2,
+    Send_alive_email = 3
 };

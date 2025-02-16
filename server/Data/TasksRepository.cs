@@ -5,6 +5,7 @@ using server.Data.Entities;
 using System.Data;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace server.Data;
 
@@ -43,6 +44,29 @@ public class TasksRepository(Links3dbContext dbContext, IHttpContextAccessor htt
     public async Task AddOperTaskAsync(OperTask task)
     {
         await _dbContext.OperTasks.AddAsync(task);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task AddOrUpdateAliveAsync()
+    {
+        SystemInfo? systemInfo = await _dbContext.SystemInfos.FirstOrDefaultAsync(x => x.Id == 1);
+
+        if ( systemInfo == null)
+        {
+            systemInfo = new SystemInfo()
+            {
+                Id = 1,
+                Comment = "Alive",
+                UtcDate = DateTime.UtcNow
+
+            };
+            await _dbContext.SystemInfos.AddAsync(systemInfo);
+        } else
+        {
+            systemInfo.UtcDate = DateTime.UtcNow;
+            _dbContext.SystemInfos.Update(systemInfo);
+        }
+
         await _dbContext.SaveChangesAsync();
     }
 }

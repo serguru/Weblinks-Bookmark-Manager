@@ -124,6 +124,8 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
                     JsonConvert.SerializeObject(account));
             }
         }
+
+        await tasksRepository.AddOrUpdateAliveAsync();
     }
 
 }

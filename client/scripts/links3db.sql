@@ -1,19 +1,32 @@
 use links3db
 go
 
+if object_id('UpdateSystemInfo') is not null
+begin
+    drop procedure UpdateSystemInfo;
+end;
+go
+
+
 if object_id('vwAccountsData') is not null
 begin
     drop view vwAccountsData;
 end;
 go
 
-if object_id('vwSearchPages', 'U') is not null
+if object_id('vwSearchPages') is not null
 begin
     drop view vwSearchPages;
 end;
 go
 
-if object_id('archiveTasks', 'U') is not null
+if object_id('systemInfo') is not null
+begin
+    drop table systemInfo;
+end;
+go
+
+if object_id('archiveTasks') is not null
 begin
     drop table archiveTasks;
 end;
@@ -473,6 +486,14 @@ create table archiveTasks (
     constraint pk_archiveTasks_id primary key (id),
     constraint fk_archiveTasks_taskTypeId foreign key (taskTypeId) references taskType(id),
     constraint fk_archiveTasks_historyId foreign key (historyId) references history(id)
+); 
+go
+
+create table systemInfo (
+    id int not null,
+    comment nvarchar(max) null,
+    utcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
+    constraint pk_systemInfo_id primary key (id)
 ); 
 go
 

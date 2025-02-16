@@ -34,6 +34,8 @@ public partial class Links3dbContext : DbContext
 
     public virtual DbSet<Page> Pages { get; set; }
 
+    public virtual DbSet<SystemInfo> SystemInfos { get; set; }
+
     public virtual DbSet<TaskType> TaskTypes { get; set; }
 
     public virtual DbSet<UserMessage> UserMessages { get; set; }
@@ -239,6 +241,21 @@ public partial class Links3dbContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.Pages)
                 .HasForeignKey(d => d.AccountId)
                 .HasConstraintName("fk_pages_account_id");
+        });
+
+        modelBuilder.Entity<SystemInfo>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_systemInfo_id");
+
+            entity.ToTable("systemInfo", "weblinks");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Comment).HasColumnName("comment");
+            entity.Property(e => e.UtcDate)
+                .HasDefaultValueSql("((sysdatetimeoffset() AT TIME ZONE 'UTC'))")
+                .HasColumnName("utcDate");
         });
 
         modelBuilder.Entity<TaskType>(entity =>
