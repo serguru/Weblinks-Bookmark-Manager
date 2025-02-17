@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using server.Data.Entities;
 
 namespace server.Data;
@@ -249,13 +247,10 @@ public partial class Links3dbContext : DbContext
 
             entity.ToTable("systemInfo", "weblinks");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Comment).HasColumnName("comment");
-            entity.Property(e => e.UtcDate)
-                .HasDefaultValueSql("((sysdatetimeoffset() AT TIME ZONE 'UTC'))")
-                .HasColumnName("utcDate");
+            entity.Property(e => e.UtcEndDate).HasColumnName("utcEndDate");
+            entity.Property(e => e.UtcStartDate).HasColumnName("utcStartDate");
         });
 
         modelBuilder.Entity<TaskType>(entity =>

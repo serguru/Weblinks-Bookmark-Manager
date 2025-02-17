@@ -19,8 +19,6 @@ namespace server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
-
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -63,8 +61,6 @@ namespace server
                 options.EnableDetailedErrors();
             });
 
-
-
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("Development", policy =>
@@ -83,11 +79,9 @@ namespace server
                         )
                         .AllowAnyMethod()
                         .AllowAnyHeader();
-                    //  .AllowCredentials();
                 });
             });
 
-            // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
             builder.Services.AddScoped<ILinksRepository, LinksRepository>();
@@ -103,17 +97,10 @@ namespace server
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddHostedService<TasksService>();
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            //builder.Services.AddEndpointsApiExplorer();
-            //builder.Services.AddSwaggerGen();
-
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                //app.UseSwagger();
-                //app.UseSwaggerUI();
                 app.UseCors("Development");
             } else
             {
@@ -121,13 +108,9 @@ namespace server
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
             app.MapControllers();
-
             app.UseMiddleware<GlobalErrorHandlerMiddleware>();
-
             app.Run();
         }
     }

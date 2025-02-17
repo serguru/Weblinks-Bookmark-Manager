@@ -8,52 +8,31 @@ using System.Net;
 
 namespace server.Services;
 
-public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration configuration) : IHostedService
+public class TasksService(IServiceScopeFactory scopeFactory, 
+    IConfiguration configuration) : BackgroundService
 {
     private readonly IConfiguration _configuration = configuration;
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
     private readonly CancellationTokenSource _stoppingCts = new(); // For graceful shutdown
-    private Task _executingTask;
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        _executingTask = Task.Run(() => ExecuteAsync(_stoppingCts.Token), cancellationToken);
-        return Task.CompletedTask;
-    }
+        using var scope = _scopeFactory.CreateScope();
+        var tasksRepository = scope.ServiceProvider.GetRequiredService<ITasksRepository>();
+        SystemInfo systemInfo = await tasksRepository.AddSystemInfoAsync("Tasks service ExecuteAsync called");
 
-    public async Task StopAsync(CancellationToken cancellationToken)
-    {
-        _stoppingCts.Cancel();
-
-        if (_executingTask != null)
-        {
-            try
-            {
-                await _executingTask.WaitAsync(cancellationToken); 
-            }
-            catch (OperationCanceledException)
-            {
-            }
-        }
-    }
-
-    public async Task ExecuteAsync(CancellationToken cancellationToken)
-    {
         while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
-                await Task.Delay(TimeSpan.FromMinutes(Convert.ToInt32(_configuration["TasksService:IntervalInMinutes"])), cancellationToken);
                 await DoWork();
             }
-
             catch (OperationCanceledException)
             {
                 break;
             }
             catch (Exception ex)
             {
-                using var scope = _scopeFactory.CreateScope();
                 var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
                 var exception = new JObject
                 {
@@ -65,13 +44,26 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
                     JsonConvert.SerializeObject(exception));
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
+            await Task.Delay(TimeSpan.FromMinutes(Convert.ToInt32(_configuration["TasksService:IntervalInMinutes"])), cancellationToken);
         }
+    }
+
+    public override async Task StopAsync(CancellationToken cancellationToken)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var tasksRepository = scope.ServiceProvider.GetRequiredService<ITasksRepository>();
+        SystemInfo systemInfo = await tasksRepository.AddSystemInfoAsync("Tasks service StopAsync called");
+        await base.StopAsync(cancellationToken);
     }
 
     private async Task DoWork()
     {
         using var scope = _scopeFactory.CreateScope();
         var tasksRepository = scope.ServiceProvider.GetRequiredService<ITasksRepository>();
+
+        SystemInfo systemInfo = await tasksRepository.AddAliveStartAsync();
+
+
         var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
         var accountRepository = scope.ServiceProvider.GetRequiredService<IAccountsRepository>();
         var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
@@ -125,7 +117,7 @@ public class TasksService(IServiceScopeFactory scopeFactory, IConfiguration conf
             }
         }
 
-        await tasksRepository.AddOrUpdateAliveAsync();
+        await tasksRepository.UpdateAliveEndAsync(systemInfo);
     }
 
 }

@@ -11,8 +11,10 @@ a.accountId >= 5
 
 SELECT TOP (1000) [id]
       ,[comment]
-      ,[utcDate]
-	  ,SWITCHOFFSET([utcDate], DATEPART(TZOFFSET, SYSDATETIMEOFFSET())) as locaTime
-FROM [weblinks_db].[weblinks].[systemInfo]
-
+      ,[utcStartDate]
+      ,[utcEndDate]
+    ,FORMAT([utcStartDate] AT TIME ZONE 'UTC' AT TIME ZONE 'Pacific Standard Time', 'HH:mm') AS LocalStart
+    ,FORMAT([utcEndDate] AT TIME ZONE 'UTC' AT TIME ZONE 'Pacific Standard Time', 'HH:mm') AS LocalEnd
+    ,DATEDIFF(MINUTE, [utcStartDate], [utcEndDate]) as 'Interval in min'
+FROM [weblinks].[systemInfo]
 

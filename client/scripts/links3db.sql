@@ -1,12 +1,6 @@
 use links3db
 go
 
-if object_id('UpdateSystemInfo') is not null
-begin
-    drop procedure UpdateSystemInfo;
-end;
-go
-
 
 if object_id('vwAccountsData') is not null
 begin
@@ -490,9 +484,10 @@ create table archiveTasks (
 go
 
 create table systemInfo (
-    id int not null,
+    id int identity(1,1) not null,
     comment nvarchar(max) null,
-    utcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
+    utcStartDate datetime2(7) not null,
+    utcEndDate datetime2(7) null,
     constraint pk_systemInfo_id primary key (id)
 ); 
 go

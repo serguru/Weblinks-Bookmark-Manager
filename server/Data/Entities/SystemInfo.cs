@@ -9,5 +9,7 @@ public partial class SystemInfo
 
     public string? Comment { get; set; }
 
-    public DateTime? UtcDate { get; set; }
+    public DateTime UtcStartDate { get; set; }
+
+    public DateTime? UtcEndDate { get; set; }
 }

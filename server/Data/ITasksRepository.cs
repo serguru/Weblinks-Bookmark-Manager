@@ -8,6 +8,9 @@ public interface ITasksRepository
     Task AddOperTaskAsync(OperTask task);
     Task<List<OperTask>> OperTasksAsync(WeblinksTaskType? taskType = null);
     Task ArchiveOperTask(int operTaskId, string comment, string subject, string body);
-    Task AddOrUpdateAliveAsync();
+    Task<SystemInfo> AddAliveStartAsync();
+    Task UpdateAliveEndAsync(SystemInfo systemInfo);
+
+    Task<SystemInfo> AddSystemInfoAsync(string message);
 }
 

@@ -3,13 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using server.Common;
 using server.Data.Entities;
 using System.Data;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace server.Data;
 
-public class TasksRepository(Links3dbContext dbContext, IHttpContextAccessor httpContextAccessor) : BaseRepository(dbContext, httpContextAccessor), ITasksRepository
+public class TasksRepository(Links3dbContext dbContext, IHttpContextAccessor httpContextAccessor) : 
+    BaseRepository(dbContext, httpContextAccessor), ITasksRepository
 {
     public async Task<List<OperTask>> OperTasksAsync(WeblinksTaskType? taskType = null)
     {
@@ -25,7 +23,7 @@ public class TasksRepository(Links3dbContext dbContext, IHttpContextAccessor htt
         }
 
         List<OperTask> result = await query.ToListAsync();
-        
+
         return result;
     }
 
@@ -47,26 +45,38 @@ public class TasksRepository(Links3dbContext dbContext, IHttpContextAccessor htt
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task AddOrUpdateAliveAsync()
+    public async Task<SystemInfo> AddAliveStartAsync()
     {
-        SystemInfo? systemInfo = await _dbContext.SystemInfos.FirstOrDefaultAsync(x => x.Id == 1);
-
-        if ( systemInfo == null)
+        var systemInfo = new SystemInfo()
         {
-            systemInfo = new SystemInfo()
-            {
-                Id = 1,
-                Comment = "Alive",
-                UtcDate = DateTime.UtcNow
+            Comment = "Alive",
+            UtcStartDate = DateTime.UtcNow
+        };
 
-            };
-            await _dbContext.SystemInfos.AddAsync(systemInfo);
-        } else
-        {
-            systemInfo.UtcDate = DateTime.UtcNow;
-            _dbContext.SystemInfos.Update(systemInfo);
-        }
+        await _dbContext.SystemInfos.AddAsync(systemInfo);
+        await _dbContext.SaveChangesAsync();
+        return systemInfo;
+    }
 
+    public async Task UpdateAliveEndAsync(SystemInfo systemInfo)
+    {
+        systemInfo.UtcEndDate = DateTime.UtcNow;
+        _dbContext.SystemInfos.Update(systemInfo);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<SystemInfo> AddSystemInfoAsync(string message)
+    {
+        var systemInfo = new SystemInfo()
+        {
+            Comment = message,
+            UtcStartDate = DateTime.UtcNow
+        };
+
+        await _dbContext.SystemInfos.AddAsync(systemInfo);
+        await _dbContext.SaveChangesAsync();
+        return systemInfo;
+    }
+
+
 }

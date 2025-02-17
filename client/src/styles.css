@@ -77,9 +77,9 @@ body {
     flex-direction: column;
     align-items: center;
 }
-  
+
 mat-card-title {
-    color: var(--mdc-text-button-label-text-color);    
+    color: var(--mdc-text-button-label-text-color);
 }
 
 .form-container {
@@ -87,23 +87,23 @@ mat-card-title {
     justify-content: center;
     align-items: center;
     height: 100vh;
-  }
-  
+}
+
 .form-container mat-card {
     max-width: 400px;
     width: 90%;
     padding: 20px;
     border: 1px solid rgb(188, 188, 188);
-  }
-  
+}
+
 .form-container .full-width {
     width: 100%;
     margin-bottom: 15px;
-  }
-  
+}
+
 .form-container mat-card-header {
     margin-bottom: 20px;
-  }
+}
 
 .form-container button mat-spinner {
     display: inline-block;
@@ -126,7 +126,7 @@ mat-card-title {
     height: 0px;
 }
 
-.ag-header-cell-text { 
+.ag-header-cell-text {
     font-family: var(--mdc-text-button-label-text-font);
     color: var(--mdc-text-button-label-text-color);
     font-size: var(--mdc-text-button-label-text-size);
@@ -135,4 +135,14 @@ mat-card-title {
 
 .short-text {
     color: var(--mdc-text-button-label-text-color);
+}
+
+.validation-error {
+    width: 100%;
+    padding-bottom: 0.5rem;
+    margin-top: -10px;
+}
+
+.full-width {
+    width: 100%;
 }
