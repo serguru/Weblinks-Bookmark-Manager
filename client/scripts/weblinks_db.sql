@@ -1,98 +1,97 @@
-use links3db
+use weblinks_db
 go
 
-
-if object_id('vwAccountsData') is not null
+if object_id('weblinks.vwAccountsData') is not null
 begin
-    drop view vwAccountsData;
+    drop view weblinks.vwAccountsData;
 end;
 go
 
-if object_id('vwSearchPages') is not null
+if object_id('weblinks.vwSearchPages') is not null
 begin
-    drop view vwSearchPages;
+    drop view weblinks.vwSearchPages;
 end;
 go
 
-if object_id('systemInfo') is not null
+if object_id('weblinks.systemInfo') is not null
 begin
-    drop table systemInfo;
+    drop table weblinks.systemInfo;
 end;
 go
 
-if object_id('archiveTasks') is not null
+if object_id('weblinks.archiveTasks') is not null
 begin
-    drop table archiveTasks;
+    drop table weblinks.archiveTasks;
 end;
 go
 
-if object_id('operTasks', 'U') is not null
+if object_id('weblinks.operTasks') is not null
 begin
-    drop table operTasks;
+    drop table weblinks.operTasks;
 end;
 go
 
-if object_id('taskType', 'U') is not null
+if object_id('weblinks.taskType') is not null
 begin
-    drop table taskType;
+    drop table weblinks.taskType;
 end;
 go
 
-if object_id('history', 'U') is not null
+if object_id('weblinks.history') is not null
 begin
-    drop table history;
+    drop table weblinks.history;
 end;
 go
 
-if object_id('eventType', 'U') is not null
+if object_id('weblinks.eventType') is not null
 begin
-    drop table eventType;
+    drop table weblinks.eventType;
 end;
 go
 
-if object_id('userMessages', 'U') is not null
+if object_id('weblinks.userMessages') is not null
 begin
-    drop table userMessages;
+    drop table weblinks.userMessages;
 end;
 go
 
-if object_id('links', 'U') is not null
+if object_id('weblinks.links') is not null
 begin
-    drop table links;
+    drop table weblinks.links;
 end;
 go
 
-if object_id('lcolumns', 'U') is not null
+if object_id('weblinks.lcolumns') is not null
 begin
-    drop table lcolumns;
+    drop table weblinks.lcolumns;
 end;
 go
 
-if object_id('lrows', 'U') is not null
+if object_id('weblinks.lrows') is not null
 begin
-    drop table lrows;
+    drop table weblinks.lrows;
 end;
 go
 
-if object_id('pages', 'U') is not null
+if object_id('weblinks.pages') is not null
 begin
-    drop table pages;
+    drop table weblinks.pages;
 end;
 go
 
-if object_id('accounts', 'U') is not null
+if object_id('weblinks.accounts') is not null
 begin
-    drop table accounts;
+    drop table weblinks.accounts;
 end;
 go
 
-if object_id('GenerateSalt') is not null
+if object_id('weblinks.GenerateSalt') is not null
 begin
-    drop procedure GenerateSalt;
+    drop procedure weblinks.GenerateSalt;
 end;
 go
 
-create procedure GenerateSalt
+create procedure weblinks.GenerateSalt
 @salt nvarchar(24) output
 as
 begin
@@ -100,13 +99,13 @@ begin
 end
 go
 
-if object_id('HashPassword') is not null
+if object_id('weblinks.HashPassword') is not null
 begin
-    drop procedure HashPassword;
+    drop procedure weblinks.HashPassword;
 end;
 go
 
-create procedure HashPassword
+create procedure weblinks.HashPassword
 @password nvarchar(max),
 @salt nvarchar(24),
 @hashedPassword nvarchar(max) output
@@ -116,13 +115,13 @@ begin
 end
 go
 
-if object_id('ValidateEmail') is not null
+if object_id('weblinks.ValidateEmail') is not null
 begin
-    drop function ValidateEmail;
+    drop function weblinks.ValidateEmail;
 end;
 go
 
-create function ValidateEmail
+create function weblinks.ValidateEmail
 (
     @email varchar(max)
 )
@@ -148,12 +147,12 @@ begin
 end
 go
 
-if object_id('VerifyPassword') is not null
+if object_id('weblinks.VerifyPassword') is not null
 begin
-    drop procedure VerifyPassword;
+    drop procedure weblinks.VerifyPassword;
 end;
 go
-create procedure VerifyPassword
+create procedure weblinks.VerifyPassword
     @providedPassword nvarchar(max),
     @storedHash nvarchar(max),
     @salt nvarchar(24),
@@ -166,13 +165,13 @@ begin
 end
 go
 
-if object_id('ValidateLimitedString') is not null
+if object_id('weblinks.ValidateLimitedString') is not null
 begin
-    drop function ValidateLimitedString;
+    drop function weblinks.ValidateLimitedString;
 end;
 go
 
-create function ValidateLimitedString
+create function weblinks.ValidateLimitedString
 (
     @name varchar(max)
 )
@@ -190,7 +189,7 @@ begin
 end
 go
 
-create table accounts (
+create table weblinks.accounts (
     id int identity(1,1) not null,
     userName varchar(50) not null,
     userEmail varchar(255) not null,
@@ -210,10 +209,10 @@ create table accounts (
 );
 go
 
-alter table accounts add constraint df_accounts_isAdmin default 0 for isAdmin
+alter table weblinks.accounts add constraint df_accounts_isAdmin default 0 for isAdmin
 go
 
-create table pages (
+create table weblinks.pages (
     id int identity(1,1) not null,
     accountId int not null,
     pagePath varchar(50) not null,
@@ -222,53 +221,53 @@ create table pages (
     isPublic bit not null default 0,
     pageDescription nvarchar(max) NULL
     constraint pk_pages_id primary key (id),
-    constraint fk_pages_account_id foreign key (accountId) references accounts(id) on delete cascade,
+    constraint fk_pages_account_id foreign key (accountId) references weblinks.accounts(id) on delete cascade,
     constraint uq_page_path unique (accountId, pagePath),
     constraint uq_page_path_len check(len(pagePath) >= 3),
     constraint ch_pages_path_characters check (weblinks.ValidateLimitedString(pagePath) = 1),
 ); 
 go
 
-create table lrows (
+create table weblinks.lrows (
     id int identity(1,1) not null,
     pageId int not null,
     caption nvarchar(50) null,
     constraint pk_lrows_id primary key (id),
-    constraint fk_lrows_page_id foreign key (pageId) references pages(id) on delete cascade,
+    constraint fk_lrows_page_id foreign key (pageId) references weblinks.pages(id) on delete cascade,
 ); 
 go
 
-create table lcolumns (
+create table weblinks.lcolumns (
     id int identity(1,1) not null,
     rowId int not null,
     caption nvarchar(50) null,
     constraint pk_lcolumns_id primary key (id),
-    constraint fk_lcolumns_row_id foreign key (rowId) references lrows(id) on delete cascade,
+    constraint fk_lcolumns_row_id foreign key (rowId) references weblinks.lrows(id) on delete cascade,
 ); 
 go
 
-create table links (
+create table weblinks.links (
     id int identity(1,1) not null,
     columnId int not null,
     aUrl nvarchar(max) not null,
     caption nvarchar(50) not null,
     constraint pk_links_id primary key (id),
-    constraint fk_links_column_id foreign key (columnId) references lcolumns(id) on delete cascade,
+    constraint fk_links_column_id foreign key (columnId) references weblinks.lcolumns(id) on delete cascade,
 ); 
 go
 
-create table userMessages (
+create table weblinks.userMessages (
     id int identity(1,1) not null,
     accountId int not null,
     asubject nvarchar(max) not null,
     amessage nvarchar(max) not null,
     utcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
     constraint pk_userMessages_id primary key (id),
-    constraint fk_userMessages_accountId foreign key (accountId) references accounts(id) on delete cascade,
+    constraint fk_userMessages_accountId foreign key (accountId) references weblinks.accounts(id) on delete cascade,
 ); 
 go
 
-create table eventType (
+create table weblinks.eventType (
     id int not null,
     typeName varchar(50) not null,
     constraint pk_eventType_id primary key (id),
@@ -277,27 +276,27 @@ create table eventType (
 go
 
 -- event types
-insert into eventType values (1, 'User registered');
-insert into eventType values (2, 'User logged in');
-insert into eventType values (3, 'User retrieved the account');
-insert into eventType values (4, 'User deleted the account');
-insert into eventType values (5, 'User created a page');
-insert into eventType values (6, 'User deleted a page');
-insert into eventType values (7, 'User forgot password');
+insert into weblinks.eventType values (1, 'User registered');
+insert into weblinks.eventType values (2, 'User logged in');
+insert into weblinks.eventType values (3, 'User retrieved the account');
+insert into weblinks.eventType values (4, 'User deleted the account');
+insert into weblinks.eventType values (5, 'User created a page');
+insert into weblinks.eventType values (6, 'User deleted a page');
+insert into weblinks.eventType values (7, 'User forgot password');
 go
 
-create table history (
+create table weblinks.history (
     id int identity(1,1) not null,
     eventTypeId int not null,
     userEmail varchar(255) null,
     utcDate datetime2(7) default sysdatetimeoffset() at time zone 'UTC',
     comment nvarchar(max) null,
     constraint pk_history_id primary key (id),
-    constraint fk_history_eventTypeId foreign key (eventTypeId) references eventType(id)
+    constraint fk_history_eventTypeId foreign key (eventTypeId) references weblinks.eventType(id)
 ); 
 go
 
-create table taskType (
+create table weblinks.taskType (
     id int not null,
     typeName varchar(50) not null,
     emailSubject nvarchar(max) null,
@@ -384,7 +383,7 @@ declare @template nvarchar(max) =
 </html>
 '
 ;
-insert into taskType values (1, 'Send registration email', 'User registered', @template);
+insert into weblinks.taskType values (1, 'Send registration email', 'User registered', @template);
 
 set @template = 
 '
@@ -454,22 +453,22 @@ set @template =
 </body>
 </html>
 '
-insert into taskType values (2, 'Send forgot password email', 'Forgot passwod', @template);
+insert into weblinks.taskType values (2, 'Send forgot password email', 'Forgot passwod', @template);
 go
 
 --#endregion
 
-create table operTasks (
+create table weblinks.operTasks (
     id int identity(1,1) not null,
     historyId int not null,
     taskTypeId int not null,
     constraint pk_operTasks_id primary key (id),
-    constraint fk_operTasks_taskTypeId foreign key (taskTypeId) references taskType(id),
-    constraint fk_operTasks_historyId foreign key (historyId) references history(id)
+    constraint fk_operTasks_taskTypeId foreign key (taskTypeId) references weblinks.taskType(id),
+    constraint fk_operTasks_historyId foreign key (historyId) references weblinks.history(id)
 ); 
 go
 
-create table archiveTasks (
+create table weblinks.archiveTasks (
     id int identity(1,1) not null,
     historyId int not null,
     taskTypeId int not null,
@@ -478,12 +477,12 @@ create table archiveTasks (
     sentEmailSubject nvarchar(max) null,
     sentEmailBody nvarchar(max) null,
     constraint pk_archiveTasks_id primary key (id),
-    constraint fk_archiveTasks_taskTypeId foreign key (taskTypeId) references taskType(id),
-    constraint fk_archiveTasks_historyId foreign key (historyId) references history(id)
+    constraint fk_archiveTasks_taskTypeId foreign key (taskTypeId) references weblinks.taskType(id),
+    constraint fk_archiveTasks_historyId foreign key (historyId) references weblinks.history(id)
 ); 
 go
 
-create table systemInfo (
+create table weblinks.systemInfo (
     id int identity(1,1) not null,
     comment nvarchar(max) null,
     utcStartDate datetime2(7) not null,
@@ -493,13 +492,13 @@ create table systemInfo (
 go
 
 
-if object_id('ValidateNewAccount') is not null
+if object_id('weblinks.ValidateNewAccount') is not null
 begin
-    drop procedure ValidateNewAccount;
+    drop procedure weblinks.ValidateNewAccount;
 end;
 go
 
-create procedure ValidateNewAccount
+create procedure weblinks.ValidateNewAccount
     @userName varchar(max),
     @userEmail varchar(max),
     @existingAccountId int,
@@ -537,13 +536,13 @@ begin
 end
 go
 
-if object_id('ArchiveOperTask') is not null
+if object_id('weblinks.ArchiveOperTask') is not null
 begin
-    drop procedure ArchiveOperTask;
+    drop procedure weblinks.ArchiveOperTask;
 end;
 go
 
-create procedure ArchiveOperTask
+create procedure weblinks.ArchiveOperTask
     @operTaskId int,
     @comment nvarchar(max),
     @subject nvarchar(max),
@@ -553,7 +552,7 @@ begin
     begin transaction;
 
     begin try
-        insert into archiveTasks (historyId, taskTypeId, comment, sentEmailSubject, sentEmailBody)
+        insert into weblinks.archiveTasks (historyId, taskTypeId, comment, sentEmailSubject, sentEmailBody)
             select historyId, taskTypeId, @comment, @subject, @body
             from operTasks
             where   
@@ -578,7 +577,7 @@ end
 go
 
 
-create view vwAccountsData 
+create view weblinks.vwAccountsData 
 as
     select 
 	a.id as AccountId,
@@ -599,11 +598,9 @@ as
 	e.id as linkId,
 	e.caption as linkCaption,
 	e.aUrl as linkAUrl
-	from accounts a
-	join pages b on b.accountId = a.id
-	join lrows c on c.pageId = b.id
-	join lcolumns d on d.rowId = c.id
-	join links e on e.columnId = d.id
+	from weblinks.accounts a
+	join weblinks.pages b on b.accountId = a.id
+	join weblinks.lrows c on c.pageId = b.id
+	join weblinks.lcolumns d on d.rowId = c.id
+	join weblinks.links e on e.columnId = d.id
 go 
-
-
